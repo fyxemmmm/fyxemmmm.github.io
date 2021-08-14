@@ -204,7 +204,7 @@ clicklove:
 # profile in about page, including avatars, career, and personal introductions.
 # 在”关于”页面中配置个人信息，包括头像、职业和个人介绍.
 profile:
-  avatar: https://cdn.jsdelivr.net/gh/fyxemmmm/fyxemmmm.github.io/medias/avatar3.jpg
+  avatar: https://cdn.jsdelivr.net/gh/fyxemmmm/fyxemmmm.github.io/medias/avatar.jpg
   career: Software Engineer
   introduction: 后端研发攻城狮，三年开发经验，励志成为一名杰出的架构师，研究系统架构及分布式理论。  坐标上海，继续前行。
 
