@@ -75,11 +75,11 @@ music:
   enable: true
   title: #非吸底模式有效
     enable: true
-    show: 聆听音乐
+    show: 你的安静
   autoHide: true    # hide automaticaly
-  server: tencent   #require	music platform: netease, tencent, kugou, xiami, baidu
-  type: playlist    #require song, playlist, album, search, artist
-  id: 2709857798     #require	song id / playlist id / album id / search keyword
+  server: netease   #require	music platform: netease, tencent, kugou, xiami, baidu
+  type: song    #require song, playlist, album, search, artist
+  id: 543988258     #require	song id / playlist id / album id / search keyword
   fixed: false       # 开启吸底模式
   autoplay: true   # 是否自动播放
   theme: '#542674'  # 播放器主题颜色
@@ -409,7 +409,6 @@ libs:
     animate: https://cdn.jsdelivr.net/gh/fyxemmmm/fyxemmmm.github.io/libs/animate/animate.min.css # V3.5.1
     lightgallery: https://cdn.jsdelivr.net/gh/fyxemmmm/fyxemmmm.github.io/libs/lightGallery/css/lightgallery.min.css # V1.6.11
     aplayer: https://cdn.jsdelivr.net/gh/fyxemmmm/fyxemmmm.github.io/libs/aplayer/APlayer.min.css
-    # aplayer: https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css
     dplayer: https://cdn.jsdelivr.net/gh/fyxemmmm/fyxemmmm.github.io/libs/dplayer/DPlayer.min.css
     gitalk: https://cdn.jsdelivr.net/gh/fyxemmmm/fyxemmmm.github.io/libs/gitalk/gitalk.css
     jqcloud: https://cdn.jsdelivr.net/gh/fyxemmmm/fyxemmmm.github.io/libs/jqcloud/jqcloud.css
