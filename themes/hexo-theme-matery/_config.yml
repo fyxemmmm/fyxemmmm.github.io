@@ -79,14 +79,14 @@ music:
   autoHide: true    # hide automaticaly
   server: tencent   #require	music platform: netease, tencent, kugou, xiami, baidu
   type: playlist    #require song, playlist, album, search, artist
-  id: 7588764455     #require	song id / playlist id / album id / search keyword
+  id: 2709857798     #require	song id / playlist id / album id / search keyword
   fixed: false       # 开启吸底模式
-  autoplay: false   # 是否自动播放
+  autoplay: true   # 是否自动播放
   theme: '#542674'  # 播放器主题颜色
   loop: 'all'       # 音频循环播放, 可选值: 'all', 'one', 'none'
   order: 'random'   # 音频循环顺序, 可选值: 'list', 'random'
   preload: 'auto'   # 预加载，可选值: 'none', 'metadata', 'auto'
-  volume: 0.7       # 默认音量，请注意播放器会记忆用户设置，用户手动设置音量后默认音量即失效
+  volume: 0.4       # 默认音量，请注意播放器会记忆用户设置，用户手动设置音量后默认音量即失效
   listFolded: false  # 列表默认折叠
   hideLrc: false     # 隐藏歌词
 
@@ -349,7 +349,7 @@ changyan:
 # 配置是否在 header 中显示 fork me on github 的图标，默认为true，你可以修改为你的仓库地址.
 githubLink:
   enable: true
-  url: https://github.com/fyxemmmm/hexo-theme-matery
+  url: https://github.com/fyxemmmm/fyxemmmm.github.io
   title: Fork Me
 
 # The configuration of the Twikoo comment module is not activated by default.
@@ -409,6 +409,7 @@ libs:
     animate: https://cdn.jsdelivr.net/gh/fyxemmmm/fyxemmmm.github.io/libs/animate/animate.min.css # V3.5.1
     lightgallery: https://cdn.jsdelivr.net/gh/fyxemmmm/fyxemmmm.github.io/libs/lightGallery/css/lightgallery.min.css # V1.6.11
     aplayer: https://cdn.jsdelivr.net/gh/fyxemmmm/fyxemmmm.github.io/libs/aplayer/APlayer.min.css
+    # aplayer: https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css
     dplayer: https://cdn.jsdelivr.net/gh/fyxemmmm/fyxemmmm.github.io/libs/dplayer/DPlayer.min.css
     gitalk: https://cdn.jsdelivr.net/gh/fyxemmmm/fyxemmmm.github.io/libs/gitalk/gitalk.css
     jqcloud: https://cdn.jsdelivr.net/gh/fyxemmmm/fyxemmmm.github.io/libs/jqcloud/jqcloud.css
@@ -562,7 +563,7 @@ instantpage:
 # banner 是否每日切换.
 # 若为 false, 则 banner 默认为 /medias/banner/0.jpg
 banner:
-  enable: false
+  enable: true
 
 #ICP备案信息尾部显示
 icp:
