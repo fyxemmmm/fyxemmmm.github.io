@@ -7,5 +7,5 @@
 3. hexo s
 4. hexo d
 
-> 访问我的 [blog](fyxemmmm.github.io)
+> 访问我的 [blog](https://fyxemmmm.github.io)
 
