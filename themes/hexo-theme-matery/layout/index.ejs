@@ -58,7 +58,7 @@
             <% if (post.hide != true)  { %> <!-- 隐藏某个文章 -->
             <div class="article col s12 m6 l4" data-aos="zoom-in">
                 <div class="card">
-                    <a href="<%- url_for(post.path) %>">
+                    <a href="<%- url_for(post.path) %>" target="_blank">
                         <div class="card-image">
                             <% if (post.img) { %>
                             <img src="<%- url_for(post.img) %>" class="responsive-img" alt="<%= post.title %>">
