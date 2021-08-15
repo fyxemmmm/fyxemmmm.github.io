@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
-  <title>feixiangの博客</title>
+  <title>yuxuanの博客</title>
   
-  <subtitle>feixiangの博客</subtitle>
+  <subtitle>yuxuanの博客</subtitle>
   <link href="https://fyxemmmm.github.io/atom.xml" rel="self"/>
   
   <link href="https://fyxemmmm.github.io/"/>
@@ -10,7 +10,7 @@
   <id>https://fyxemmmm.github.io/</id>
   
   <author>
-    <name>feixiang</name>
+    <name>yuxuan</name>
     
   </author>
   
