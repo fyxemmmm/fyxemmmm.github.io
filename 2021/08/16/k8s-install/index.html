@@ -4,7 +4,7 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="keywords" content="分类: Markdown, yuxuanの博客">
+    <meta name="keywords" content="Kubernetes高可用集群搭建, yuxuanの博客">
     <meta name="description" content="">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
@@ -16,7 +16,7 @@
     <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-    <title>分类: Markdown | yuxuanの博客</title>
+    <title>Kubernetes高可用集群搭建 | yuxuanの博客</title>
     <link rel="icon" type="image/png" href="/favicon.png">
 
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/fyxemmmm/fyxemmmm.github.io/libs/awesome/css/all.css">
@@ -265,186 +265,360 @@
 
 </header>
 
-    <div class="bg-cover pd-header about-cover">
-    <div class="container">
-    <div class="row">
-    <div class="col s10 offset-s1 m8 offset-m2 l8 offset-l2">
-        <div class="brand">
-            <div class="title center-align">
-                
-                yuxuanの博客
-                
-            </div>
+    
 
-            <div class="description center-align">
-                
-                <span id="subtitle"></span>
-                <script src="https://cdn.jsdelivr.net/npm/typed.js@2.0.11"></script>
-                <script>
-                    var typed = new Typed("#subtitle", {
-                        strings: [ 
-                            
-                                "你的善良必须有点锋芒，不然就等于零。",
-                            
-                                "Your kindness must be a little sharp, otherwise it&#39;s zero.",
-                            
-                        ],
-                        startDelay: 300,
-                        typeSpeed: 100,
-                        loop: true,
-                        backSpeed: 50,
-                        showCursor: true
-                    });
-                </script>
-                
+
+
+<div class="bg-cover pd-header post-cover" style="background-image: url('https://image.fyxemmmm.cn/blog/images/img6.jpeg')">
+    <div class="container" style="right: 0px;left: 0px;">
+        <div class="row">
+            <div class="col s12 m12 l12">
+                <div class="brand">
+                    <h1 class="description center-align post-title">Kubernetes高可用集群搭建</h1>
+                </div>
             </div>
         </div>
     </div>
 </div>
 
 
-<script>
-    $('.bg-cover').css('background-image', 'url(https://cdn.jsdelivr.net/gh/fyxemmmm/fyxemmmm.github.io/medias/banner/0.jpg)');
-</script>
 
 
-    </div>
-</div>
-
-<main class="content">
+<main class="container content">
 
     
-
-<div id="category-cloud" class="container chip-container">
+    <!-- 文章内容详情 -->
+<div id="artDetail">
     <div class="card">
-        <div class="card-content">
-            <div class="tag-title center-align">
-                <i class="fas fa-bookmark"></i>&nbsp;&nbsp;文章分类
+        <div class="card-content article-info">
+            <div class="row tag-cate">
+                <div class="col s7">
+                    
+                    <div class="article-tag">
+                        
+                            <a href="/tags/golang/">
+                                <span class="chip bg-color">golang</span>
+                            </a>
+                        
+                            <a href="/tags/kubernetes/">
+                                <span class="chip bg-color">kubernetes</span>
+                            </a>
+                        
+                    </div>
+                    
+                </div>
+                <div class="col s5 right-align">
+                    
+                    <div class="post-cate">
+                        <i class="fas fa-bookmark fa-fw icon-category"></i>
+                        
+                            <a href="/categories/golang/" class="post-category">
+                                golang
+                            </a>
+                        
+                    </div>
+                    
+                </div>
             </div>
-            <div class="tag-chips">
+
+            <div class="post-info">
                 
+                <div class="post-date info-break-policy">
+                    <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
+                    2021-08-16
+                </div>
                 
+
                 
-                <a href="/categories/Markdown/" title="Markdown: 2">
-                    <span class="chip center-align waves-effect waves-light
-                             chip-active "
-                            style="background-color: #F9EBEA;">Markdown
-                        <span class="tag-length">2</span>
-                    </span>
-                </a>
+
                 
+
+                
+                <div class="info-break-policy">
+                    <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
+                    2 分
+                </div>
+                
+
                 
             </div>
         </div>
-    </div>
-</div>
+        <hr class="clearfix">
 
+        
+        <!-- 是否加载使用自带的 prismjs. -->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fyxemmmm/fyxemmmm.github.io/libs/prism/prism.css">
+        
+
+        
+
+        <div class="card-content article-card-content">
+            <div id="articleContent">
+                <h1 id="k8s-高可用集群搭建"><a href="#k8s-高可用集群搭建" class="headerlink" title="k8s 高可用集群搭建"></a>k8s 高可用集群搭建</h1><p><code>docker的安装自行搞定即可, 尽量不要用太高版本到version.19即可</code></p>
+<p><strong>本文基于centos的操作系统，kubeadm来作为搭建方式</strong></p>
+<ol>
+<li><p>新建yum源</p>
+<pre class="line-numbers language-shell" data-language="shell"><code class="language-shell">sudo cat &lt;&lt;EOF &gt; /etc/yum.repos.d/kubernetes.repo
+[kubernetes]
+name=Kubernetes
+baseurl=https://mirrors.aliyun.com/kubernetes/yum/repos/kubernetes-el7-x86_64/
+enabled=1
+gpgcheck=1
+repo_gpgcheck=1
+gpgkey=https://mirrors.aliyun.com/kubernetes/yum/doc/yum-key.gpg
+https://mirrors.aliyun.com/kubernetes/yum/doc/rpm-package-key.gpg
+EOF
+
+sudo yum makecache
+sudo yum -y install kubelet-1.20.2  kubeadm-1.20.2  kubectl-1.20.2
+sudo systemctl enable kubelet<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></li>
+<li><p>使用systemd作为docker的cgroup driver</p>
+<pre class="line-numbers language-shell" data-language="shell"><code class="language-shell">sudo vi  /etc/docker/daemon.json   （没有则创建）
+加入
+{
+  "exec-opts": ["native.cgroupdriver=systemd"]
+}
+
+systemctl daemon-reload  &amp;&amp; systemctl restart docker<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></li>
+<li><p>切换到root用户执行 <strong>关键步骤</strong></p>
+<pre class="line-numbers language-shell" data-language="shell"><code class="language-shell"># （如果是重置机器，需要执行）
+kubeadm reset
+rm /etc/cni/net.d -fr
+iptables -F 
+yum -y remove kubelet-1.18.6  kubeadm-1.18.6  kubectl-1.18.6
+# （重置end）
+
+yum -y install kubelet-1.20.2  kubeadm-1.20.2  kubectl-1.20.2
+
+echo 1 &gt; /proc/sys/net/ipv4/ip_forward
+modprobe br_netfilter
+echo 1 &gt; /proc/sys/net/bridge/bridge-nf-call-iptables
+
+systemctl daemon-reload  # 可能会报错 可以不执行这个
+systemctl enable kubelet<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></li>
+<li><p>master节点执行以下命令</p>
+<pre class="line-numbers language-shell" data-language="shell"><code class="language-shell">#主机执行：
+kubeadm init --image-repository registry.cn-hangzhou.aliyuncs.com/google_containers  --kubernetes-version=1.20.2 --pod-network-cidr=10.244.0.0/16 --service-cidr=10.96.0.0/12  
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre></li>
+<li><p>得到token之后给worker依次执行， 加入到集群当中去， <code>初步就完成了集群的搭建</code> <strong>还差一个网络插件</strong></p>
+<pre class="line-numbers language-shell" data-language="shell"><code class="language-shell">#得到token后，给另外worker去执行
+kubeadm join 192.168.0.191:6443 --token zx5rj1.19yqkv7q2uehatit \
+--discovery-token-ca-cert-hash sha256:b5a066c56e73896dc14530d5464eadd45732de6bd3806e878c80ed589e4ea502<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre></li>
+<li><p>给节点做一些完善工作</p>
+<pre class="line-numbers language-shell" data-language="shell"><code class="language-shell">#然后退出到普通用户, 用kubectl命令执行
+#去除主节点污点
+kubectl taint nodes --all node-role.kubernetes.io/master-   # (后面一个 – 是需要的)
+
+给工作节点打标签
+kubectl label node huawei-worker  node-role.kubernetes.io/node=node<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></li>
+<li><p>我们需要让外网也可以访问， <strong>也就是通过kubectl客户端工具能连接主机的外部ip地址，需要做此工作</strong></p>
+<pre class="line-numbers language-shell" data-language="shell"><code class="language-shell">#让外网可以访问
+#先删除 apiserver的证书和key
+#主节点上
+cd /etc/kubernetes/pki &amp;&amp; rm -f apiserver.key &amp;&amp; rm -f  apiserver.crt
+sudo kubeadm init phase certs apiserver   --apiserver-cert-extra-sans 121.36.226.197
+kubeadm alpha certs renew apiserver<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></li>
+<li><p>安装网络插件， <strong>这里我们选择flannel</strong></p>
+<pre class="line-numbers language-shell" data-language="shell"><code class="language-shell">https://github.com/flannel-io/flannel
+For Kubernetes v1.17+ kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
+# apply里面的镜像要替换下，可以用katacoda<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre></li>
+</ol>
+<h3 id="大功告成啦-可以愉快的玩耍了！"><a href="#大功告成啦-可以愉快的玩耍了！" class="headerlink" title="大功告成啦~   可以愉快的玩耍了！"></a>大功告成啦~   可以愉快的玩耍了！</h3>
+                
+            </div>
+            <hr/>
+
+            
+
+
+
+            <div class="tag_share" style="display: block;">
+                <div class="post-meta__tag-list" style="display: inline-block;">
+                    
+                        <div class="article-tag">
+                            
+                                <a href="/tags/golang/">
+                                    <span class="chip bg-color">golang</span>
+                                </a>
+                            
+                                <a href="/tags/kubernetes/">
+                                    <span class="chip bg-color">kubernetes</span>
+                                </a>
+                            
+                        </div>
+                    
+                </div>
+                <div class="post_share" style="zoom: 80%; width: fit-content; display: inline-block; float: right; margin: -0.15rem 0;">
+                    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/fyxemmmm/fyxemmmm.github.io/libs/share/css/share.min.css">
+<div id="article-share">
+
+    
+    <div class="social-share" data-sites="qq,wechat,weibo" data-wechat-qrcode-helper="<p>微信扫一扫即可分享！</p>"></div>
+    <script src="https://cdn.jsdelivr.net/gh/fyxemmmm/fyxemmmm.github.io/libs/share/js/social-share.min.js"></script>
+    
 
     
 
-    <article id="articles" class="container articles">
-        <div class="row tags-posts">
+</div>
+
+                </div>
+            </div>
             
-            <div class="article tag-post col s12 m6 l4" data-aos="zoom-in">
-                <div class="card">
-                    <a href="/2021/08/14/post-title-with-whitespace-copy/">
-                        <div class="card-image tag-image">
+        </div>
+    </div>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+<article id="prenext-posts" class="prev-next articles">
+    <div class="row article-row">
+        
+        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
+            <div class="article-badge left-badge text-color">
+                <i class="far fa-dot-circle"></i>&nbsp;本篇
+            </div>
+            <div class="card">
+                <a href="/2021/08/16/k8s-install/">
+                    <div class="card-image">
+                        
+                        <img src="https://image.fyxemmmm.cn/blog/images/img6.jpeg" class="responsive-img" alt="Kubernetes高可用集群搭建">
+                        
+                        <span class="card-title">Kubernetes高可用集群搭建</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            基于kubeadm, 快速搭建k8s集群
+                        
+                    </div>
+                    <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2021-08-16
+                            </span>
+                        <span class="publish-author">
                             
-                            <img src="https://image.fyxemmmm.cn/blog/images/img1.jpg" class="responsive-img" alt="post title with whitespace">
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
                             
-                            <span class="card-title">post title with whitespace</span>
-                        </div>
+                            <a href="/categories/golang/" class="post-category">
+                                    golang
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/golang/">
+                        <span class="chip bg-color">golang</span>
                     </a>
-                    <div class="card-content article-content">
-                        <div class="summary block-with-text">
-                            
-                                这是你自定义的文章摘要内容，如果这个属性有值，文章卡片摘要就显示这段文字，否则程序会自动截取文章的部分内容作为摘要
-                            
-                        </div>
-                        <div class="publish-info">
+                    
+                    <a href="/tags/kubernetes/">
+                        <span class="chip bg-color">kubernetes</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge right-badge text-color">
+                下一篇&nbsp;<i class="fas fa-chevron-right"></i>
+            </div>
+            <div class="card">
+                <a href="/2021/08/14/post-title-with-whitespace-copy/">
+                    <div class="card-image">
+                        
+                        <img src="https://image.fyxemmmm.cn/blog/images/img1.jpg" class="responsive-img" alt="golang context实现原理">
+                        
+                        <span class="card-title">golang context实现原理</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            我们来瞧一瞧golang的context是如何实现的~
+                        
+                    </div>
+                    <div class="publish-info">
                             <span class="publish-date">
                                 <i class="far fa-clock fa-fw icon-date"></i>2021-08-14
                             </span>
-                            <span class="publish-author">
-                                
-                                <i class="fas fa-bookmark fa-fw icon-category"></i>
-                                
-                                <a href="/categories/Markdown/" class="post-category">
-                                    Markdown
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/golang/" class="post-category">
+                                    golang
                                 </a>
-                                
-                                
-                            </span>
-                        </div>
+                            
+                            
+                        </span>
                     </div>
-
-                    
-                    <div class="card-action article-tags">
-                        
-                        <a href="/tags/Typora/">
-                            <span class="chip bg-color">Typora</span>
-                        </a>
-                        
-                        <a href="/tags/Markdown/">
-                            <span class="chip bg-color">Markdown</span>
-                        </a>
-                        
-                    </div>
-                    
                 </div>
-            </div>
-            
-            <div class="article tag-post col s12 m6 l4" data-aos="zoom-in">
-                <div class="card">
-                    <a href="/2021/08/13/post-title-with-whitespace/">
-                        <div class="card-image tag-image">
-                            
-                            <img src="https://image.fyxemmmm.cn/blog/images/img4.jpeg" class="responsive-img" alt="post title">
-                            
-                            <span class="card-title">post title</span>
-                        </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/golang/">
+                        <span class="chip bg-color">golang</span>
                     </a>
-                    <div class="card-content article-content">
-                        <div class="summary block-with-text">
-                            
-                                testing...... 摘要~~
-                            
-                        </div>
-                        <div class="publish-info">
-                            <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2021-08-13
-                            </span>
-                            <span class="publish-author">
-                                
-                                <i class="fas fa-bookmark fa-fw icon-category"></i>
-                                
-                                <a href="/categories/Markdown/" class="post-category">
-                                    Markdown
-                                </a>
-                                
-                                
-                            </span>
-                        </div>
-                    </div>
-
                     
-                    <div class="card-action article-tags">
-                        
-                        <a href="/tags/Typora/">
-                            <span class="chip bg-color">Typora</span>
-                        </a>
-                        
-                        <a href="/tags/Markdown/">
-                            <span class="chip bg-color">Markdown</span>
-                        </a>
-                        
-                    </div>
+                    <a href="/tags/context/">
+                        <span class="chip bg-color">context</span>
+                    </a>
                     
                 </div>
+                
             </div>
-            
         </div>
-    </article>
+        
+    </div>
+</article>
+
+</div>
+
+
+
+<!-- 代码块功能依赖 -->
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/fyxemmmm/fyxemmmm.github.io/libs/codeBlock/codeBlockFuction.js"></script>
+
+<!-- 代码语言 -->
+
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/fyxemmmm/fyxemmmm.github.io/libs/codeBlock/codeLang.js"></script>
+
+
+<!-- 代码块复制 -->
+
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/fyxemmmm/fyxemmmm.github.io/libs/codeBlock/codeCopy.js"></script>
+
+
+<!-- 代码块收缩 -->
+
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/fyxemmmm/fyxemmmm.github.io/libs/codeBlock/codeShrink.js"></script>
+
+
+    
+
 </main>
 
 
@@ -470,7 +644,7 @@
 
             <!-- 
                 &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                        class="white-color">73</span>
+                        class="white-color">2.2k</span>
             
             
             

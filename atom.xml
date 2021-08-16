@@ -6,7 +6,7 @@
   <link href="https://fyxemmmm.github.io/atom.xml" rel="self"/>
   
   <link href="https://fyxemmmm.github.io/"/>
-  <updated>2021-08-15T04:04:27.187Z</updated>
+  <updated>2021-08-16T14:45:50.156Z</updated>
   <id>https://fyxemmmm.github.io/</id>
   
   <author>
@@ -17,61 +17,56 @@
   <generator uri="https://hexo.io/">Hexo</generator>
   
   <entry>
-    <title>Hello World</title>
-    <link href="https://fyxemmmm.github.io/2021/08/14/hello-world/"/>
-    <id>https://fyxemmmm.github.io/2021/08/14/hello-world/</id>
-    <published>2021-08-14T06:58:38.747Z</published>
-    <updated>2021-08-15T04:04:27.187Z</updated>
+    <title>Kubernetes高可用集群搭建</title>
+    <link href="https://fyxemmmm.github.io/2021/08/16/k8s-install/"/>
+    <id>https://fyxemmmm.github.io/2021/08/16/k8s-install/</id>
+    <published>2021-08-16T14:23:44.000Z</published>
+    <updated>2021-08-16T14:45:50.156Z</updated>
     
     
       
       
         
         
-    <summary type="html">&lt;p&gt;Welcome to &lt;a href=&quot;https://hexo.io/&quot;&gt;Hexo&lt;/a&gt;! This is your very first post. Check &lt;a href=&quot;https://hexo.io/docs/&quot;&gt;documentation&lt;/a&gt;</summary>
+    <summary type="html">&lt;h1 id=&quot;k8s-高可用集群搭建&quot;&gt;&lt;a href=&quot;#k8s-高可用集群搭建&quot; class=&quot;headerlink&quot; title=&quot;k8s 高可用集群搭建&quot;&gt;&lt;/a&gt;k8s 高可用集群搭建&lt;/h1&gt;&lt;p&gt;&lt;code&gt;docker的安装自行搞定即可,</summary>
         
       
     
     
     
+    <category term="golang" scheme="https://fyxemmmm.github.io/categories/golang/"/>
+    
+    
+    <category term="golang" scheme="https://fyxemmmm.github.io/tags/golang/"/>
+    
+    <category term="kubernetes" scheme="https://fyxemmmm.github.io/tags/kubernetes/"/>
     
   </entry>
   
   <entry>
-    <title>post title with whitespace</title>
+    <title>golang context实现原理</title>
     <link href="https://fyxemmmm.github.io/2021/08/14/post-title-with-whitespace-copy/"/>
     <id>https://fyxemmmm.github.io/2021/08/14/post-title-with-whitespace-copy/</id>
     <published>2021-08-14T04:25:24.000Z</published>
-    <updated>2021-08-15T04:27:48.117Z</updated>
+    <updated>2021-08-16T14:21:38.108Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h2 id=&quot;0-引言&quot;&gt;&lt;a href=&quot;#0-引言&quot; class=&quot;headerlink&quot; title=&quot;0 引言&quot;&gt;&lt;/a&gt;0</summary>
+        
+      
     
     
     
-    
-    <category term="Markdown" scheme="https://fyxemmmm.github.io/categories/Markdown/"/>
-    
-    
-    <category term="Typora" scheme="https://fyxemmmm.github.io/tags/Typora/"/>
-    
-    <category term="Markdown" scheme="https://fyxemmmm.github.io/tags/Markdown/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>post title</title>
-    <link href="https://fyxemmmm.github.io/2021/08/13/post-title-with-whitespace/"/>
-    <id>https://fyxemmmm.github.io/2021/08/13/post-title-with-whitespace/</id>
-    <published>2021-08-13T04:25:24.000Z</published>
-    <updated>2021-08-15T04:04:08.553Z</updated>
+    <category term="golang" scheme="https://fyxemmmm.github.io/categories/golang/"/>
     
     
+    <category term="golang" scheme="https://fyxemmmm.github.io/tags/golang/"/>
     
-    
-    <category term="Markdown" scheme="https://fyxemmmm.github.io/categories/Markdown/"/>
-    
-    
-    <category term="Typora" scheme="https://fyxemmmm.github.io/tags/Typora/"/>
-    
-    <category term="Markdown" scheme="https://fyxemmmm.github.io/tags/Markdown/"/>
+    <category term="context" scheme="https://fyxemmmm.github.io/tags/context/"/>
     
   </entry>
   
