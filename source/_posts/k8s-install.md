@@ -3,7 +3,7 @@ title: Kubernetes高可用集群搭建
 date: 2021-08-16 22:23:44
 author: yuxuan
 img: https://image.fyxemmmm.cn/blog/images/img6.jpeg
-top: true
+top: false
 hide: false
 cover: false
 coverImg: 
