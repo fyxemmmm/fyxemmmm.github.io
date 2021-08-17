@@ -4,12 +4,12 @@ date: 2021-08-17 21:26:15
 author: yuxuan
 img: 
 top: true
-hide: false
+hide: true
 cover: false
 coverImg: 
 toc: false
 mathjax: false
-summary: 深入理解tcp timewait
+summary: 深入理解 tcp timewait
 categories: 操作系统
 tags:
   - 操作系统

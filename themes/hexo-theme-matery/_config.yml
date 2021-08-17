@@ -67,7 +67,7 @@ dream:
   enable: true
   showTitle: true
   title: 我的梦想
-  text: 可以不懂，但是绝对不可以无知。  -- 戒己
+  text: 可以不懂，但是绝对不能无知。  -- 戒己
 
 # Whether to display the musics.
 # 是否在首页显示音乐
