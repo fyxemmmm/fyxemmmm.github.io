@@ -6,7 +6,7 @@
   <link href="https://fyxemmmm.github.io/atom.xml" rel="self"/>
   
   <link href="https://fyxemmmm.github.io/"/>
-  <updated>2021-08-17T15:24:21.619Z</updated>
+  <updated>2021-08-18T13:58:47.205Z</updated>
   <id>https://fyxemmmm.github.io/</id>
   
   <author>
@@ -17,11 +17,36 @@
   <generator uri="https://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>硬核! golang [select case] 原理解析</title>
+    <link href="https://fyxemmmm.github.io/2021/08/18/golang-select-yuan-li/"/>
+    <id>https://fyxemmmm.github.io/2021/08/18/golang-select-yuan-li/</id>
+    <published>2021-08-18T13:30:03.000Z</published>
+    <updated>2021-08-18T13:58:47.205Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;Go 的select语句是一种仅能用于channl发送和接收消息的专用语句，此语句运行期间是阻塞的；当select中没有case语句的时候，会阻塞当前的groutine。所以，有人也会说select是用来阻塞监听goroutine的。&lt;br&gt;</summary>
+        
+      
+    
+    
+    
+    <category term="golang" scheme="https://fyxemmmm.github.io/categories/golang/"/>
+    
+    
+    <category term="golang" scheme="https://fyxemmmm.github.io/tags/golang/"/>
+    
+  </entry>
+  
+  <entry>
     <title>kafka 关键原理剖析</title>
     <link href="https://fyxemmmm.github.io/2021/08/17/kafka/"/>
     <id>https://fyxemmmm.github.io/2021/08/17/kafka/</id>
     <published>2021-08-17T13:57:35.000Z</published>
-    <updated>2021-08-17T15:24:21.619Z</updated>
+    <updated>2021-08-18T13:56:32.738Z</updated>
     
     
       
