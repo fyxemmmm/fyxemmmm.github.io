@@ -3,8 +3,8 @@ title: kafka 关键原理剖析
 date: 2021-08-17 21:57:35
 author: yuxuan
 img: 
-top: true
-hide: true
+top: false
+hide: false
 cover: false
 coverImg: 
 toc: false
