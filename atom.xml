@@ -6,7 +6,7 @@
   <link href="https://fyxemmmm.github.io/atom.xml" rel="self"/>
   
   <link href="https://fyxemmmm.github.io/"/>
-  <updated>2021-08-18T13:58:47.205Z</updated>
+  <updated>2021-08-19T13:40:15.202Z</updated>
   <id>https://fyxemmmm.github.io/</id>
   
   <author>
@@ -17,11 +17,36 @@
   <generator uri="https://hexo.io/">Hexo</generator>
   
   <entry>
-    <title>硬核! golang [select case] 原理解析</title>
+    <title>一张图带你理解http协议</title>
+    <link href="https://fyxemmmm.github.io/2021/08/19/yi-zhang-tu-dai-ni-li-jie-http/"/>
+    <id>https://fyxemmmm.github.io/2021/08/19/yi-zhang-tu-dai-ni-li-jie-http/</id>
+    <published>2021-08-19T13:33:03.000Z</published>
+    <updated>2021-08-19T13:40:15.202Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h2 id=&quot;一张图弄懂http&quot;&gt;&lt;a href=&quot;#一张图弄懂http&quot; class=&quot;headerlink&quot; title=&quot;一张图弄懂http&quot;&gt;&lt;/a&gt;一张图弄懂http&lt;/h2&gt;&lt;h3 id=&quot;你可以点击文稿放大查看哦&quot;&gt;&lt;a</summary>
+        
+      
+    
+    
+    
+    <category term="计算机网络" scheme="https://fyxemmmm.github.io/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/"/>
+    
+    
+    <category term="协议" scheme="https://fyxemmmm.github.io/tags/%E5%8D%8F%E8%AE%AE/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>硬核! 图解 golang [select case] 原理</title>
     <link href="https://fyxemmmm.github.io/2021/08/18/golang-select-yuan-li/"/>
     <id>https://fyxemmmm.github.io/2021/08/18/golang-select-yuan-li/</id>
     <published>2021-08-18T13:30:03.000Z</published>
-    <updated>2021-08-18T13:58:47.205Z</updated>
+    <updated>2021-08-19T13:20:04.698Z</updated>
     
     
       
@@ -42,11 +67,11 @@
   </entry>
   
   <entry>
-    <title>kafka 关键原理剖析</title>
+    <title>kafka原理分析</title>
     <link href="https://fyxemmmm.github.io/2021/08/17/kafka/"/>
     <id>https://fyxemmmm.github.io/2021/08/17/kafka/</id>
     <published>2021-08-17T13:57:35.000Z</published>
-    <updated>2021-08-18T13:56:32.738Z</updated>
+    <updated>2021-08-19T13:36:15.671Z</updated>
     
     
       
@@ -72,7 +97,7 @@
     <link href="https://fyxemmmm.github.io/2021/08/17/tcp-timewait/"/>
     <id>https://fyxemmmm.github.io/2021/08/17/tcp-timewait/</id>
     <published>2021-08-17T13:26:15.000Z</published>
-    <updated>2021-08-17T15:24:10.631Z</updated>
+    <updated>2021-08-19T13:39:53.646Z</updated>
     
     
       
@@ -127,7 +152,7 @@
     <link href="https://fyxemmmm.github.io/2021/08/14/context-shi-xian-yuan-li/"/>
     <id>https://fyxemmmm.github.io/2021/08/14/context-shi-xian-yuan-li/</id>
     <published>2021-08-14T04:25:24.000Z</published>
-    <updated>2021-08-17T15:23:51.844Z</updated>
+    <updated>2021-08-19T13:32:42.514Z</updated>
     
     
       

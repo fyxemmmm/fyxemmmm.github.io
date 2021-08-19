@@ -4,7 +4,32 @@
   
     
     <entry>
-      <title>硬核! golang [select case] 原理解析</title>
+      <title>一张图带你理解http协议</title>
+      <link href="/2021/08/19/yi-zhang-tu-dai-ni-li-jie-http/"/>
+      <url>/2021/08/19/yi-zhang-tu-dai-ni-li-jie-http/</url>
+      
+        <content type="html"><![CDATA[<h2 id="一张图弄懂http"><a href="#一张图弄懂http" class="headerlink" title="一张图弄懂http"></a>一张图弄懂http</h2><h3 id="你可以点击文稿放大查看哦"><a href="#你可以点击文稿放大查看哦" class="headerlink" title="你可以点击文稿放大查看哦~"></a>你可以点击文稿放大查看哦~</h3><p><img src="https://image.fyxemmmm.cn/blog/images/http.jpg"></p>]]></content>
+      
+      
+      <categories>
+          
+          <category> 计算机网络 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 协议 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>硬核! 图解 golang [select case] 原理</title>
       <link href="/2021/08/18/golang-select-yuan-li/"/>
       <url>/2021/08/18/golang-select-yuan-li/</url>
       
@@ -29,7 +54,7 @@
     
     
     <entry>
-      <title>kafka 关键原理剖析</title>
+      <title>kafka原理分析</title>
       <link href="/2021/08/17/kafka/"/>
       <url>/2021/08/17/kafka/</url>
       
