@@ -1,5 +1,5 @@
 ---
-title: 硬核! golang [select case] 原理解析
+title: 硬核! 图解 golang [select case] 原理
 date: 2021-08-18 21:30:03
 author: yuxuan
 img: 
