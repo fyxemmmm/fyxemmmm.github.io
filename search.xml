@@ -4,7 +4,36 @@
   
     
     <entry>
-      <title>一张图带你理解http协议</title>
+      <title>实操理解 [自签ca证书]</title>
+      <link href="/2021/08/20/zi-qian-ca-zheng-shu/"/>
+      <url>/2021/08/20/zi-qian-ca-zheng-shu/</url>
+      
+        <content type="html"><![CDATA[<h1 id="自签ca证书，及颁发证书"><a href="#自签ca证书，及颁发证书" class="headerlink" title="自签ca证书，及颁发证书"></a>自签ca证书，及颁发证书</h1><p>cd /etc/pki/CA</p><h2 id="服务端生成ca证书"><a href="#服务端生成ca证书" class="headerlink" title="服务端生成ca证书"></a>服务端生成ca证书</h2><p>自签名证书，依赖自己的私钥</p><ol><li><p>生成私钥文件</p><p><strong>(umask 077;openssl genrsa -out private/cakey.pem 4096)</strong></p></li><li><p>直接生成自签名的证书</p><p><strong>openssl req -new -x509 -key private/cakey.pem -out cacert.pem -days 3650</strong></p><blockquote><p><code>x509代表生成的是自签名的证书，不带x509代表是向ca生成的证书，不是自签名的</code> </p><p><strong>要借助私钥文件生成自签名的证书</strong></p></blockquote><p><img src="https://image.fyxemmmm.cn/blog/images/crt1.png" alt="ca证书生成"></p></li><li><p>查看证书信息</p><p><strong>openssl x509 -in cacert.pem -noout -text</strong></p><p><img src="https://image.fyxemmmm.cn/blog/images/crt2.png" alt="ca证书"></p></li></ol><h2 id="服务端生成证书数据库"><a href="#服务端生成证书数据库" class="headerlink" title="服务端生成证书数据库"></a>服务端生成证书数据库</h2><blockquote><p>这里由于我们是自己的宿主机作为ca的管理、吊销及维护，所以需要一个数据库</p></blockquote><ol><li><p><strong>touch /etc/pki/CA/index.txt</strong> 添加数据库文件</p></li><li><p><strong>touch /etc/pki/CA/serial</strong> 新证书要从几开始编号，这个是记录用的，16进制数</p></li><li><p><strong>echo 0F &gt; /etc/pki/CA/serial</strong> 下次颁发证书的时候 就是15这个编号了</p><p><img src="https://image.fyxemmmm.cn/blog/images/crt3.png" alt="颁发证书的编号"></p></li></ol><h2 id="客户端侧用户申请证书"><a href="#客户端侧用户申请证书" class="headerlink" title="客户端侧用户申请证书"></a>客户端侧用户申请证书</h2><blockquote><p>证书可能是给某个服务用，比如给https服务用，https可能有自己配置数据的文件夹</p></blockquote><ol><li><p>生成应用私钥</p><p><strong>(umask 066; openssl genrsa -out app.key 1024)</strong></p><blockquote><p>注: 你申请证书的时间不是由你说了算，是颁发机构说了算</p></blockquote></li><li><p>生成csr文件</p><p><strong>openssl req -new -key app.key -out app.csr</strong>  <code>之前ca通过x509参数生成的是自签名的证书 而且可以有有效期，这里是生成证书请求文件</code></p><p><img src="https://image.fyxemmmm.cn/blog/images/crt4.png" alt="三项必须一致，且commonName填写服务的名称"></p></li></ol><h2 id="服务端颁发证书"><a href="#服务端颁发证书" class="headerlink" title="服务端颁发证书"></a>服务端颁发证书</h2><p><strong>openssl ca -in /root/app.csr -out certs/app.crt -days 365 app.crt</strong>是别人用私钥生成的证书请求文件，会读取服务端宿主机的配置文件，所以没指定ca的私钥，也不需要的 <code>这就是用服务端的ca自签名</code></p><p><img src="https://image.fyxemmmm.cn/blog/images/crt5.png"></p><p>如果提交的东西都对，就可以y 进行签名了</p><p><img src="https://image.fyxemmmm.cn/blog/images/crt6.png"></p><p>证书申请完毕， 然后发给客户端使用 即可</p><hr><h2 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h2><p>查看证书有效性</p><p><strong>openssl ca -status 0F</strong></p><p>查看证书的有效期</p><p><strong>openssl x509 -in app.crt -noout -dates</strong></p>]]></content>
+      
+      
+      <categories>
+          
+          <category> 加密与安全 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 证书 </tag>
+            
+            <tag> ca </tag>
+            
+            <tag> 自签 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>一张图带你搞懂http协议</title>
       <link href="/2021/08/19/yi-zhang-tu-dai-ni-li-jie-http/"/>
       <url>/2021/08/19/yi-zhang-tu-dai-ni-li-jie-http/</url>
       
@@ -79,7 +108,7 @@
     
     
     <entry>
-      <title>tcp timewait 详解</title>
+      <title>tcp timewait 踩坑实战</title>
       <link href="/2021/08/17/tcp-timewait/"/>
       <url>/2021/08/17/tcp-timewait/</url>
       
@@ -133,7 +162,7 @@
     
     
     <entry>
-      <title>golang context实现原理</title>
+      <title>golang context 实现原理</title>
       <link href="/2021/08/14/context-shi-xian-yuan-li/"/>
       <url>/2021/08/14/context-shi-xian-yuan-li/</url>
       

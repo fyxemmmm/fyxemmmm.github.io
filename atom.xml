@@ -6,7 +6,7 @@
   <link href="https://fyxemmmm.github.io/atom.xml" rel="self"/>
   
   <link href="https://fyxemmmm.github.io/"/>
-  <updated>2021-08-19T13:40:15.202Z</updated>
+  <updated>2021-08-20T16:16:02.392Z</updated>
   <id>https://fyxemmmm.github.io/</id>
   
   <author>
@@ -17,11 +17,41 @@
   <generator uri="https://hexo.io/">Hexo</generator>
   
   <entry>
-    <title>一张图带你理解http协议</title>
+    <title>实操理解 [自签ca证书]</title>
+    <link href="https://fyxemmmm.github.io/2021/08/20/zi-qian-ca-zheng-shu/"/>
+    <id>https://fyxemmmm.github.io/2021/08/20/zi-qian-ca-zheng-shu/</id>
+    <published>2021-08-20T15:49:20.000Z</published>
+    <updated>2021-08-20T16:16:02.392Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h1 id=&quot;自签ca证书，及颁发证书&quot;&gt;&lt;a href=&quot;#自签ca证书，及颁发证书&quot; class=&quot;headerlink&quot; title=&quot;自签ca证书，及颁发证书&quot;&gt;&lt;/a&gt;自签ca证书，及颁发证书&lt;/h1&gt;&lt;p&gt;cd /etc/pki/CA&lt;/p&gt;
+&lt;h2</summary>
+        
+      
+    
+    
+    
+    <category term="加密与安全" scheme="https://fyxemmmm.github.io/categories/%E5%8A%A0%E5%AF%86%E4%B8%8E%E5%AE%89%E5%85%A8/"/>
+    
+    
+    <category term="证书" scheme="https://fyxemmmm.github.io/tags/%E8%AF%81%E4%B9%A6/"/>
+    
+    <category term="ca" scheme="https://fyxemmmm.github.io/tags/ca/"/>
+    
+    <category term="自签" scheme="https://fyxemmmm.github.io/tags/%E8%87%AA%E7%AD%BE/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>一张图带你搞懂http协议</title>
     <link href="https://fyxemmmm.github.io/2021/08/19/yi-zhang-tu-dai-ni-li-jie-http/"/>
     <id>https://fyxemmmm.github.io/2021/08/19/yi-zhang-tu-dai-ni-li-jie-http/</id>
     <published>2021-08-19T13:33:03.000Z</published>
-    <updated>2021-08-19T13:40:15.202Z</updated>
+    <updated>2021-08-20T15:58:46.587Z</updated>
     
     
       
@@ -93,11 +123,11 @@
   </entry>
   
   <entry>
-    <title>tcp timewait 详解</title>
+    <title>tcp timewait 踩坑实战</title>
     <link href="https://fyxemmmm.github.io/2021/08/17/tcp-timewait/"/>
     <id>https://fyxemmmm.github.io/2021/08/17/tcp-timewait/</id>
     <published>2021-08-17T13:26:15.000Z</published>
-    <updated>2021-08-19T13:39:53.646Z</updated>
+    <updated>2021-08-20T15:58:20.539Z</updated>
     
     
       
@@ -125,7 +155,7 @@
     <link href="https://fyxemmmm.github.io/2021/08/16/k8s-install/"/>
     <id>https://fyxemmmm.github.io/2021/08/16/k8s-install/</id>
     <published>2021-08-16T14:23:44.000Z</published>
-    <updated>2021-08-17T13:56:45.552Z</updated>
+    <updated>2021-08-20T16:02:44.366Z</updated>
     
     
       
@@ -148,11 +178,11 @@
   </entry>
   
   <entry>
-    <title>golang context实现原理</title>
+    <title>golang context 实现原理</title>
     <link href="https://fyxemmmm.github.io/2021/08/14/context-shi-xian-yuan-li/"/>
     <id>https://fyxemmmm.github.io/2021/08/14/context-shi-xian-yuan-li/</id>
     <published>2021-08-14T04:25:24.000Z</published>
-    <updated>2021-08-19T13:32:42.514Z</updated>
+    <updated>2021-08-20T16:04:54.398Z</updated>
     
     
       

@@ -4,7 +4,7 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="keywords" content="Kubernetes高可用集群搭建, yuxuanの博客">
+    <meta name="keywords" content="实操理解 [自签ca证书], yuxuanの博客">
     <meta name="description" content="">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
@@ -16,7 +16,7 @@
     <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-    <title>Kubernetes高可用集群搭建 | yuxuanの博客</title>
+    <title>实操理解 [自签ca证书] | yuxuanの博客</title>
     <link rel="icon" type="image/png" href="/favicon.png">
 
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/fyxemmmm/fyxemmmm.github.io/libs/awesome/css/all.css">
@@ -269,12 +269,12 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('https://image.fyxemmmm.cn/blog/images/img6.jpeg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('https://cdn.jsdelivr.net/gh/fyxemmmm/fyxemmmm.github.io/medias/featureimages/17.jpg')">
     <div class="container" style="right: 0px;left: 0px;">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title">Kubernetes高可用集群搭建</h1>
+                    <h1 class="description center-align post-title">实操理解 [自签ca证书]</h1>
                 </div>
             </div>
         </div>
@@ -284,10 +284,104 @@
 
 
 
-<main class="container content">
+<main class="post-container content">
 
     
-    <!-- 文章内容详情 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fyxemmmm/fyxemmmm.github.io/libs/tocbot/tocbot.css">
+<style>
+    #articleContent h1::before,
+    #articleContent h2::before,
+    #articleContent h3::before,
+    #articleContent h4::before,
+    #articleContent h5::before,
+    #articleContent h6::before {
+        display: block;
+        content: " ";
+        height: 100px;
+        margin-top: -100px;
+        visibility: hidden;
+    }
+
+    #articleContent :focus {
+        outline: none;
+    }
+
+    .toc-fixed {
+        position: fixed;
+        top: 64px;
+    }
+
+    .toc-widget {
+        width: 345px;
+        padding-left: 20px;
+    }
+
+    .toc-widget .toc-title {
+        padding: 35px 0 15px 17px;
+        font-size: 1.5rem;
+        font-weight: bold;
+        line-height: 1.5rem;
+    }
+
+    .toc-widget ol {
+        padding: 0;
+        list-style: none;
+    }
+
+    #toc-content {
+        padding-bottom: 30px;
+        overflow: auto;
+    }
+
+    #toc-content ol {
+        padding-left: 10px;
+    }
+
+    #toc-content ol li {
+        padding-left: 10px;
+    }
+
+    #toc-content .toc-link:hover {
+        color: #42b983;
+        font-weight: 700;
+        text-decoration: underline;
+    }
+
+    #toc-content .toc-link::before {
+        background-color: transparent;
+        max-height: 25px;
+
+        position: absolute;
+        right: 23.5vw;
+        display: block;
+    }
+
+    #toc-content .is-active-link {
+        color: #42b983;
+    }
+
+    #floating-toc-btn {
+        position: fixed;
+        right: 15px;
+        bottom: 76px;
+        padding-top: 15px;
+        margin-bottom: 0;
+        z-index: 998;
+    }
+
+    #floating-toc-btn .btn-floating {
+        width: 48px;
+        height: 48px;
+    }
+
+    #floating-toc-btn .btn-floating i {
+        line-height: 48px;
+        font-size: 1.4rem;
+    }
+</style>
+<div class="row">
+    <div id="main-content" class="col s12 m12 l9">
+        <!-- 文章内容详情 -->
 <div id="artDetail">
     <div class="card">
         <div class="card-content article-info">
@@ -296,12 +390,16 @@
                     
                     <div class="article-tag">
                         
-                            <a href="/tags/golang/">
-                                <span class="chip bg-color">golang</span>
+                            <a href="/tags/%E8%AF%81%E4%B9%A6/">
+                                <span class="chip bg-color">证书</span>
                             </a>
                         
-                            <a href="/tags/kubernetes/">
-                                <span class="chip bg-color">kubernetes</span>
+                            <a href="/tags/ca/">
+                                <span class="chip bg-color">ca</span>
+                            </a>
+                        
+                            <a href="/tags/%E8%87%AA%E7%AD%BE/">
+                                <span class="chip bg-color">自签</span>
                             </a>
                         
                     </div>
@@ -312,8 +410,8 @@
                     <div class="post-cate">
                         <i class="fas fa-bookmark fa-fw icon-category"></i>
                         
-                            <a href="/categories/golang/" class="post-category">
-                                golang
+                            <a href="/categories/%E5%8A%A0%E5%AF%86%E4%B8%8E%E5%AE%89%E5%85%A8/" class="post-category">
+                                加密与安全
                             </a>
                         
                     </div>
@@ -325,7 +423,7 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
-                    2021-08-16
+                    2021-08-20
                 </div>
                 
 
@@ -336,7 +434,7 @@
                 
                 <div class="info-break-policy">
                     <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
-                    2 分
+                    1 分
                 </div>
                 
 
@@ -354,76 +452,63 @@
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h1 id="k8s-高可用集群搭建"><a href="#k8s-高可用集群搭建" class="headerlink" title="k8s 高可用集群搭建"></a>k8s 高可用集群搭建</h1><p><code>docker的安装自行搞定即可, 尽量不要用太高版本到version.19即可</code></p>
-<p><strong>本文基于centos的操作系统，kubeadm来作为搭建方式</strong></p>
+                <h1 id="自签ca证书，及颁发证书"><a href="#自签ca证书，及颁发证书" class="headerlink" title="自签ca证书，及颁发证书"></a>自签ca证书，及颁发证书</h1><p>cd /etc/pki/CA</p>
+<h2 id="服务端生成ca证书"><a href="#服务端生成ca证书" class="headerlink" title="服务端生成ca证书"></a>服务端生成ca证书</h2><p>自签名证书，依赖自己的私钥</p>
 <ol>
-<li><p>新建yum源</p>
-<pre class="line-numbers language-shell" data-language="shell"><code class="language-shell">sudo cat &lt;&lt;EOF &gt; /etc/yum.repos.d/kubernetes.repo
-[kubernetes]
-name=Kubernetes
-baseurl=https://mirrors.aliyun.com/kubernetes/yum/repos/kubernetes-el7-x86_64/
-enabled=1
-gpgcheck=1
-repo_gpgcheck=1
-gpgkey=https://mirrors.aliyun.com/kubernetes/yum/doc/yum-key.gpg
-https://mirrors.aliyun.com/kubernetes/yum/doc/rpm-package-key.gpg
-EOF
-
-sudo yum makecache
-sudo yum -y install kubelet-1.20.2  kubeadm-1.20.2  kubectl-1.20.2
-sudo systemctl enable kubelet<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></li>
-<li><p>使用systemd作为docker的cgroup driver</p>
-<pre class="line-numbers language-shell" data-language="shell"><code class="language-shell">sudo vi  /etc/docker/daemon.json   （没有则创建）
-加入
-{
-  "exec-opts": ["native.cgroupdriver=systemd"]
-}
-
-systemctl daemon-reload  &amp;&amp; systemctl restart docker<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></li>
-<li><p>切换到root用户执行 <strong>关键步骤</strong></p>
-<pre class="line-numbers language-shell" data-language="shell"><code class="language-shell"># （如果是重置机器，需要执行）
-kubeadm reset
-rm /etc/cni/net.d -fr
-iptables -F 
-yum -y remove kubelet-1.18.6  kubeadm-1.18.6  kubectl-1.18.6
-# （重置end）
-
-yum -y install kubelet-1.20.2  kubeadm-1.20.2  kubectl-1.20.2
-
-echo 1 &gt; /proc/sys/net/ipv4/ip_forward
-modprobe br_netfilter
-echo 1 &gt; /proc/sys/net/bridge/bridge-nf-call-iptables
-
-systemctl daemon-reload  # 可能会报错 可以不执行这个
-systemctl enable kubelet<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></li>
-<li><p>master节点执行以下命令</p>
-<pre class="line-numbers language-shell" data-language="shell"><code class="language-shell">#主机执行：
-kubeadm init --image-repository registry.cn-hangzhou.aliyuncs.com/google_containers  --kubernetes-version=1.20.2 --pod-network-cidr=10.244.0.0/16 --service-cidr=10.96.0.0/12  
-<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre></li>
-<li><p>得到token之后给worker依次执行， 加入到集群当中去， <code>初步就完成了集群的搭建</code> <strong>还差一个网络插件</strong></p>
-<pre class="line-numbers language-shell" data-language="shell"><code class="language-shell">#得到token后，给另外worker去执行
-kubeadm join 192.168.0.191:6443 --token zx5rj1.19yqkv7q2uehatit \
---discovery-token-ca-cert-hash sha256:b5a066c56e73896dc14530d5464eadd45732de6bd3806e878c80ed589e4ea502<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre></li>
-<li><p>给节点做一些完善工作</p>
-<pre class="line-numbers language-shell" data-language="shell"><code class="language-shell">#然后退出到普通用户, 用kubectl命令执行
-#去除主节点污点
-kubectl taint nodes --all node-role.kubernetes.io/master-   # (后面一个 – 是需要的)
-
-给工作节点打标签
-kubectl label node huawei-worker  node-role.kubernetes.io/node=node<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></li>
-<li><p>我们需要让外网也可以访问， <strong>也就是通过kubectl客户端工具能连接主机的外部ip地址，需要做此工作</strong></p>
-<pre class="line-numbers language-shell" data-language="shell"><code class="language-shell">#让外网可以访问
-#先删除 apiserver的证书和key
-#主节点上
-cd /etc/kubernetes/pki &amp;&amp; rm -f apiserver.key &amp;&amp; rm -f  apiserver.crt
-sudo kubeadm init phase certs apiserver   --apiserver-cert-extra-sans 121.36.226.197
-kubeadm alpha certs renew apiserver<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></li>
-<li><p>安装网络插件， <strong>这里我们选择flannel</strong></p>
-<pre class="line-numbers language-shell" data-language="shell"><code class="language-shell">https://github.com/flannel-io/flannel
-For Kubernetes v1.17+ kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
-# apply里面的镜像要替换下，可以用katacoda<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre></li>
+<li><p>生成私钥文件</p>
+<p><strong>(umask 077;openssl genrsa -out private/cakey.pem 4096)</strong></p>
+</li>
+<li><p>直接生成自签名的证书</p>
+<p><strong>openssl req -new -x509 -key private/cakey.pem -out cacert.pem -days 3650</strong></p>
+<blockquote>
+<p><code>x509代表生成的是自签名的证书，不带x509代表是向ca生成的证书，不是自签名的</code> </p>
+<p><strong>要借助私钥文件生成自签名的证书</strong></p>
+</blockquote>
+<p><img src="https://image.fyxemmmm.cn/blog/images/crt1.png" alt="ca证书生成"></p>
+</li>
+<li><p>查看证书信息</p>
+<p><strong>openssl x509 -in cacert.pem -noout -text</strong></p>
+<p><img src="https://image.fyxemmmm.cn/blog/images/crt2.png" alt="ca证书"></p>
+</li>
 </ol>
-<h3 id="大功告成啦-可以愉快的玩耍了！"><a href="#大功告成啦-可以愉快的玩耍了！" class="headerlink" title="大功告成啦~   可以愉快的玩耍了！"></a>大功告成啦~   可以愉快的玩耍了！</h3>
+<h2 id="服务端生成证书数据库"><a href="#服务端生成证书数据库" class="headerlink" title="服务端生成证书数据库"></a>服务端生成证书数据库</h2><blockquote>
+<p>这里由于我们是自己的宿主机作为ca的管理、吊销及维护，所以需要一个数据库</p>
+</blockquote>
+<ol>
+<li><p><strong>touch /etc/pki/CA/index.txt</strong> 添加数据库文件</p>
+</li>
+<li><p><strong>touch /etc/pki/CA/serial</strong> 新证书要从几开始编号，这个是记录用的，16进制数</p>
+</li>
+<li><p><strong>echo 0F &gt; /etc/pki/CA/serial</strong> 下次颁发证书的时候 就是15这个编号了</p>
+<p><img src="https://image.fyxemmmm.cn/blog/images/crt3.png" alt="颁发证书的编号"></p>
+</li>
+</ol>
+<h2 id="客户端侧用户申请证书"><a href="#客户端侧用户申请证书" class="headerlink" title="客户端侧用户申请证书"></a>客户端侧用户申请证书</h2><blockquote>
+<p>证书可能是给某个服务用，比如给https服务用，https可能有自己配置数据的文件夹</p>
+</blockquote>
+<ol>
+<li><p>生成应用私钥</p>
+<p><strong>(umask 066; openssl genrsa -out app.key 1024)</strong></p>
+<blockquote>
+<p>注: 你申请证书的时间不是由你说了算，是颁发机构说了算</p>
+</blockquote>
+</li>
+<li><p>生成csr文件</p>
+<p><strong>openssl req -new -key app.key -out app.csr</strong>  <code>之前ca通过x509参数生成的是自签名的证书 而且可以有有效期，这里是生成证书请求文件</code></p>
+<p><img src="https://image.fyxemmmm.cn/blog/images/crt4.png" alt="三项必须一致，且commonName填写服务的名称"></p>
+</li>
+</ol>
+<h2 id="服务端颁发证书"><a href="#服务端颁发证书" class="headerlink" title="服务端颁发证书"></a>服务端颁发证书</h2><p><strong>openssl ca -in /root/app.csr -out certs/app.crt -days 365 app.crt</strong>是别人用私钥生成的证书请求文件，会读取服务端宿主机的配置文件，所以没指定ca的私钥，也不需要的 <code>这就是用服务端的ca自签名</code></p>
+<p><img src="https://image.fyxemmmm.cn/blog/images/crt5.png"></p>
+<p>如果提交的东西都对，就可以y 进行签名了</p>
+<p><img src="https://image.fyxemmmm.cn/blog/images/crt6.png"></p>
+<p>证书申请完毕， 然后发给客户端使用 即可</p>
+<hr>
+<h2 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h2><p>查看证书有效性</p>
+<p><strong>openssl ca -status 0F</strong></p>
+<p>查看证书的有效期</p>
+<p><strong>openssl x509 -in app.crt -noout -dates</strong></p>
+
                 
             </div>
             <hr/>
@@ -437,12 +522,16 @@ For Kubernetes v1.17+ kubectl apply -f https://raw.githubusercontent.com/coreos/
                     
                         <div class="article-tag">
                             
-                                <a href="/tags/golang/">
-                                    <span class="chip bg-color">golang</span>
+                                <a href="/tags/%E8%AF%81%E4%B9%A6/">
+                                    <span class="chip bg-color">证书</span>
                                 </a>
                             
-                                <a href="/tags/kubernetes/">
-                                    <span class="chip bg-color">kubernetes</span>
+                                <a href="/tags/ca/">
+                                    <span class="chip bg-color">ca</span>
+                                </a>
+                            
+                                <a href="/tags/%E8%87%AA%E7%AD%BE/">
+                                    <span class="chip bg-color">自签</span>
                                 </a>
                             
                         </div>
@@ -488,50 +577,56 @@ For Kubernetes v1.17+ kubectl apply -f https://raw.githubusercontent.com/coreos/
 <article id="prenext-posts" class="prev-next articles">
     <div class="row article-row">
         
-        <div class="article col s12 m6" data-aos="fade-up">
+        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
             <div class="article-badge left-badge text-color">
-                <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
+                <i class="far fa-dot-circle"></i>&nbsp;本篇
+            </div>
             <div class="card">
-                <a href="/2021/08/17/tcp-timewait/">
+                <a href="/2021/08/20/zi-qian-ca-zheng-shu/">
                     <div class="card-image">
                         
                         
-                        <img src="https://cdn.jsdelivr.net/gh/fyxemmmm/fyxemmmm.github.io/medias/featureimages/1.jpg" class="responsive-img" alt="tcp timewait 踩坑实战">
+                        <img src="https://cdn.jsdelivr.net/gh/fyxemmmm/fyxemmmm.github.io/medias/featureimages/17.jpg" class="responsive-img" alt="实操理解 [自签ca证书]">
                         
-                        <span class="card-title">tcp timewait 踩坑实战</span>
+                        <span class="card-title">实操理解 [自签ca证书]</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            深入理解 tcp timewait
+                            理解自签ca以及如何签发证书
                         
                     </div>
                     <div class="publish-info">
-                        <span class="publish-date">
-                            <i class="far fa-clock fa-fw icon-date"></i>2021-08-17
-                        </span>
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2021-08-20
+                            </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-bookmark fa-fw icon-category"></i>
                             
-                            <a href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/" class="post-category">
-                                    操作系统
+                            <a href="/categories/%E5%8A%A0%E5%AF%86%E4%B8%8E%E5%AE%89%E5%85%A8/" class="post-category">
+                                    加密与安全
                                 </a>
                             
                             
                         </span>
                     </div>
                 </div>
+
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/">
-                        <span class="chip bg-color">操作系统</span>
+                    <a href="/tags/%E8%AF%81%E4%B9%A6/">
+                        <span class="chip bg-color">证书</span>
                     </a>
                     
-                    <a href="/tags/tcp/">
-                        <span class="chip bg-color">tcp</span>
+                    <a href="/tags/ca/">
+                        <span class="chip bg-color">ca</span>
+                    </a>
+                    
+                    <a href="/tags/%E8%87%AA%E7%AD%BE/">
+                        <span class="chip bg-color">自签</span>
                     </a>
                     
                 </div>
@@ -545,30 +640,31 @@ For Kubernetes v1.17+ kubectl apply -f https://raw.githubusercontent.com/coreos/
                 下一篇&nbsp;<i class="fas fa-chevron-right"></i>
             </div>
             <div class="card">
-                <a href="/2021/08/14/context-shi-xian-yuan-li/">
+                <a href="/2021/08/19/yi-zhang-tu-dai-ni-li-jie-http/">
                     <div class="card-image">
                         
-                        <img src="https://image.fyxemmmm.cn/blog/images/img1.jpg" class="responsive-img" alt="golang context 实现原理">
                         
-                        <span class="card-title">golang context 实现原理</span>
+                        <img src="https://cdn.jsdelivr.net/gh/fyxemmmm/fyxemmmm.github.io/medias/featureimages/11.jpg" class="responsive-img" alt="一张图带你搞懂http协议">
+                        
+                        <span class="card-title">一张图带你搞懂http协议</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            golang的context是如何实现的呢?
+                            加强对http协议的理解
                         
                     </div>
                     <div class="publish-info">
                             <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2021-08-14
+                                <i class="far fa-clock fa-fw icon-date"></i>2021-08-19
                             </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-bookmark fa-fw icon-category"></i>
                             
-                            <a href="/categories/golang/" class="post-category">
-                                    golang
+                            <a href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/" class="post-category">
+                                    计算机网络
                                 </a>
                             
                             
@@ -578,12 +674,8 @@ For Kubernetes v1.17+ kubectl apply -f https://raw.githubusercontent.com/coreos/
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/golang/">
-                        <span class="chip bg-color">golang</span>
-                    </a>
-                    
-                    <a href="/tags/context/">
-                        <span class="chip bg-color">context</span>
+                    <a href="/tags/%E5%8D%8F%E8%AE%AE/">
+                        <span class="chip bg-color">协议</span>
                     </a>
                     
                 </div>
@@ -615,6 +707,100 @@ For Kubernetes v1.17+ kubectl apply -f https://raw.githubusercontent.com/coreos/
 
 <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/fyxemmmm/fyxemmmm.github.io/libs/codeBlock/codeShrink.js"></script>
 
+
+    </div>
+    <div id="toc-aside" class="expanded col l3 hide-on-med-and-down">
+        <div class="toc-widget card" style="background-color: white;">
+            <div class="toc-title"><i class="far fa-list-alt"></i>&nbsp;&nbsp;目录</div>
+            <div id="toc-content"></div>
+        </div>
+    </div>
+</div>
+
+<!-- TOC 悬浮按钮. -->
+
+<div id="floating-toc-btn" class="hide-on-med-and-down">
+    <a class="btn-floating btn-large bg-color">
+        <i class="fas fa-list-ul"></i>
+    </a>
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/gh/fyxemmmm/fyxemmmm.github.io/libs/tocbot/tocbot.min.js"></script>
+<script>
+    $(function () {
+        tocbot.init({
+            tocSelector: '#toc-content',
+            contentSelector: '#articleContent',
+            headingsOffset: -($(window).height() * 0.4 - 45),
+            collapseDepth: Number('0'),
+            headingSelector: 'h2, h3, h4'
+        });
+
+        // modify the toc link href to support Chinese.
+        let i = 0;
+        let tocHeading = 'toc-heading-';
+        $('#toc-content a').each(function () {
+            $(this).attr('href', '#' + tocHeading + (++i));
+        });
+
+        // modify the heading title id to support Chinese.
+        i = 0;
+        $('#articleContent').children('h2, h3, h4').each(function () {
+            $(this).attr('id', tocHeading + (++i));
+        });
+
+        // Set scroll toc fixed.
+        let tocHeight = parseInt($(window).height() * 0.4 - 64);
+        let $tocWidget = $('.toc-widget');
+        $(window).scroll(function () {
+            let scroll = $(window).scrollTop();
+            /* add post toc fixed. */
+            if (scroll > tocHeight) {
+                $tocWidget.addClass('toc-fixed');
+            } else {
+                $tocWidget.removeClass('toc-fixed');
+            }
+        });
+
+        
+        /* 修复文章卡片 div 的宽度. */
+        let fixPostCardWidth = function (srcId, targetId) {
+            let srcDiv = $('#' + srcId);
+            if (srcDiv.length === 0) {
+                return;
+            }
+
+            let w = srcDiv.width();
+            if (w >= 450) {
+                w = w + 21;
+            } else if (w >= 350 && w < 450) {
+                w = w + 18;
+            } else if (w >= 300 && w < 350) {
+                w = w + 16;
+            } else {
+                w = w + 14;
+            }
+            $('#' + targetId).width(w);
+        };
+
+        // 切换TOC目录展开收缩的相关操作.
+        const expandedClass = 'expanded';
+        let $tocAside = $('#toc-aside');
+        let $mainContent = $('#main-content');
+        $('#floating-toc-btn .btn-floating').click(function () {
+            if ($tocAside.hasClass(expandedClass)) {
+                $tocAside.removeClass(expandedClass).hide();
+                $mainContent.removeClass('l9');
+            } else {
+                $tocAside.addClass(expandedClass).show();
+                $mainContent.addClass('l9');
+            }
+            fixPostCardWidth('artDetail', 'prenext-posts');
+        });
+        
+    });
+</script>
 
     
 
