@@ -354,9 +354,9 @@
 <p>以上说法都正确。</p>
 <h2 id="I-O多路复用"><a href="#I-O多路复用" class="headerlink" title="I/O多路复用"></a>I/O多路复用</h2><p>我们来回顾一下是什么是<code>I/O多路复用</code>。</p>
 <h3 id="普通多线程（或进程）I-O"><a href="#普通多线程（或进程）I-O" class="headerlink" title="普通多线程（或进程）I/O"></a>普通多线程（或进程）I/O</h3><p>每来一个进程，都会建立连接，然后阻塞，直到接收到数据返回响应。<br> 普通这种方式的缺点其实很明显：系统需要创建和维护额外的线程或进程。因为大多数时候，大部分阻塞的线程或进程是处于等待状态，只有少部分会接收并处理响应，而其余的都在等待。系统为此还需要多做很多额外的线程或者进程的管理工作。</p>
-<p><img src="https://image.fyxemmmm.cn/blog/images/%E8%B5%84%E6%BA%90/select1.webp" alt="img"></p>
+<p><img src="https://image.fyxemmmm.cn/blog/images/%E8%B5%84%E6%BA%90/select1.webp"></p>
 <p>为了解决图中这些多余的线程或者进程，于是有了”I/O多路复用”</p>
-<h3 id="I-O多路复用-1"><a href="#I-O多路复用-1" class="headerlink" title="I/O多路复用"></a>I/O多路复用</h3><p><img src="https://image.fyxemmmm.cn/blog/images/%E8%B5%84%E6%BA%90/select2.webp" alt="img"></p>
+<h3 id="I-O多路复用-1"><a href="#I-O多路复用-1" class="headerlink" title="I/O多路复用"></a>I/O多路复用</h3><p><img src="https://image.fyxemmmm.cn/blog/images/%E8%B5%84%E6%BA%90/select2.webp"></p>
 <p>每个线程或者进程都先到图中”装置“中注册，然后阻塞，然后只有一个线程在”运输“，当注册的线程或者进程准备好数据后，”装置“会根据注册的信息得到相应的数据。从始至终kernel只会使用图中这个黄黄的线程，无需再对额外的线程或者进程进行管理，提升了效率。</p>
 <h2 id="select组成结构"><a href="#select组成结构" class="headerlink" title="select组成结构"></a>select组成结构</h2><p>select的实现经历了多个版本的修改，当前版本为：1.11<br> select这个语句底层实现实际上主要由两部分组成：<code>case语句</code>和<code>执行函数</code>。<br> 源码地址为：/go/src/runtime/select.go</p>
 <p>每个case语句，单独抽象出以下结构体：</p>
@@ -369,11 +369,11 @@
 <span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
 <p>结构体可以用下图表示：</p>
-<p><img src="https://image.fyxemmmm.cn/blog/images/%E8%B5%84%E6%BA%90/select3.webp" alt="img"></p>
+<p><img src="https://image.fyxemmmm.cn/blog/images/%E8%B5%84%E6%BA%90/select3.webp"></p>
 <p> 其中比较关键的是：<code>hchan</code>，它是channel的指针。<br> 在一个select中，所有的case语句会构成一个<code>scase</code>结构体的数组。</p>
-<p><img src="https://image.fyxemmmm.cn/blog/images/%E8%B5%84%E6%BA%90/select4.webp" alt="img"></p>
+<p><img src="https://image.fyxemmmm.cn/blog/images/%E8%B5%84%E6%BA%90/select4.webp"></p>
 <p>然后执行select语句实际上就是调用<code>func selectgo(cas0 *scase, order0 *uint16, ncases int) (int, bool)</code>函数。</p>
-<p><img src="https://image.fyxemmmm.cn/blog/images/%E8%B5%84%E6%BA%90/select5.webp" alt="img"></p>
+<p><img src="https://image.fyxemmmm.cn/blog/images/%E8%B5%84%E6%BA%90/select5.webp"></p>
 <p><code>func selectgo(cas0 *scase, order0 *uint16, ncases int) (int, bool)</code>函数参数：</p>
 <ul>
 <li>cas0 为上文提到的case语句抽象出的结构体<code>scase</code>数组的第一个元素地址</li>
@@ -416,32 +416,32 @@
 <li><code>func selectgo(cas0 *scase, order0 *uint16, ncases int) (int, bool)</code></li>
 </ul>
 <p>这仨函数中无论是返回值还是参数都大同小异，可以简单粗暴的认为：函数参数传入的是case语句，返回值返回被选中的case语句。<br> 那谁调用了<code>func Select(cases []SelectCase) (chosen int, recv Value, recvOK bool)</code>呢？<br> 可以简单的认为是系统了。<br> 来个简单的图：</p>
-<p><img src="https://image.fyxemmmm.cn/blog/images/%E8%B5%84%E6%BA%90/select6.webp" alt="img"></p>
+<p><img src="https://image.fyxemmmm.cn/blog/images/%E8%B5%84%E6%BA%90/select6.webp"></p>
 <p>前两个函数<code>Select</code>和<code>rselect</code>都是做了简单的初始化参数，调用下一个函数的操作。select真正的核心功能，是在最后一个函数<code>func selectgo(cas0 *scase, order0 *uint16, ncases int) (int, bool)</code>中实现的。</p>
 <h3 id="selectgo函数做了什么"><a href="#selectgo函数做了什么" class="headerlink" title="selectgo函数做了什么"></a>selectgo函数做了什么</h3><p>打乱传入的case结构体顺序</p>
-<p><img src="https://image.fyxemmmm.cn/blog/images/%E8%B5%84%E6%BA%90/select7.webp" alt="img"></p>
+<p><img src="https://image.fyxemmmm.cn/blog/images/%E8%B5%84%E6%BA%90/select7.webp"></p>
 <p>锁住其中的所有的channel</p>
-<p><img src="https://image.fyxemmmm.cn/blog/images/%E8%B5%84%E6%BA%90/select8.webp" alt="img"></p>
+<p><img src="https://image.fyxemmmm.cn/blog/images/%E8%B5%84%E6%BA%90/select8.webp"></p>
 <p>遍历所有的channel，查看其是否可读或者可写</p>
-<p><img src="https://image.fyxemmmm.cn/blog/images/%E8%B5%84%E6%BA%90/select9.webp" alt="img"></p>
+<p><img src="https://image.fyxemmmm.cn/blog/images/%E8%B5%84%E6%BA%90/select9.webp"></p>
 <p>如果其中的channel可读或者可写，则解锁所有channel，并返回对应的channel数据</p>
-<p><img src="https://image.fyxemmmm.cn/blog/images/%E8%B5%84%E6%BA%90/select10.webp" alt="img"></p>
-<p><img src="https://image.fyxemmmm.cn/blog/images/%E8%B5%84%E6%BA%90/select11.webp" alt="img"></p>
+<p><img src="https://image.fyxemmmm.cn/blog/images/%E8%B5%84%E6%BA%90/select10.webp"></p>
+<p><img src="https://image.fyxemmmm.cn/blog/images/%E8%B5%84%E6%BA%90/select11.webp"></p>
 <p>假如没有channel可读或者可写，但是有default语句，则同上:返回default语句对应的scase并解锁所有的channel。</p>
-<p><img src="https://image.fyxemmmm.cn/blog/images/%E8%B5%84%E6%BA%90/select11.webp" alt="img"></p>
+<p><img src="https://image.fyxemmmm.cn/blog/images/%E8%B5%84%E6%BA%90/select11.webp"></p>
 <p>假如既没有channel可读或者可写，也没有default语句，则将当前运行的groutine阻塞，并加入到当前所有channel的等待队列中去。</p>
-<p><img src="https://image.fyxemmmm.cn/blog/images/%E8%B5%84%E6%BA%90/select12.webp" alt="img"></p>
+<p><img src="https://image.fyxemmmm.cn/blog/images/%E8%B5%84%E6%BA%90/select12.webp"></p>
 <p>然后解锁所有channel，等待被唤醒。</p>
-<p><img src="https://image.fyxemmmm.cn/blog/images/%E8%B5%84%E6%BA%90/select13.webp" alt="img"></p>
+<p><img src="https://image.fyxemmmm.cn/blog/images/%E8%B5%84%E6%BA%90/select13.webp"></p>
 <p>此时如果有个channel可读或者可写ready了，则唤醒，并再次加锁所有channel，</p>
-<p><img src="https://image.fyxemmmm.cn/blog/images/%E8%B5%84%E6%BA%90/select14.webp" alt="img"></p>
+<p><img src="https://image.fyxemmmm.cn/blog/images/%E8%B5%84%E6%BA%90/select14.webp"></p>
 <p>遍历所有channel找到那个对应的channel和G，唤醒G，并将没有成功的G从所有channel的等待队列中移除。</p>
-<p><img src="https://image.fyxemmmm.cn/blog/images/%E8%B5%84%E6%BA%90/select15.webp" alt="img"></p>
+<p><img src="https://image.fyxemmmm.cn/blog/images/%E8%B5%84%E6%BA%90/select15.webp"></p>
 <p>如果对应的scase值不为空，则返回需要的值，并解锁所有channel</p>
-<p><img src="https://image.fyxemmmm.cn/blog/images/%E8%B5%84%E6%BA%90/select16.webp" alt="img"></p>
+<p><img src="https://image.fyxemmmm.cn/blog/images/%E8%B5%84%E6%BA%90/select16.webp"></p>
 <p>如果对应的scase为空，则循环此过程。</p>
 <h3 id="select和channel之间的关系"><a href="#select和channel之间的关系" class="headerlink" title="select和channel之间的关系"></a>select和channel之间的关系</h3><p>在想想select和channel做了什么事儿，我觉得和多路复用是一回事儿</p>
-<p><img src="https://image.fyxemmmm.cn/blog/images/%E8%B5%84%E6%BA%90/select17.webp" alt="img"></p>
+<p><img src="https://image.fyxemmmm.cn/blog/images/%E8%B5%84%E6%BA%90/select17.webp"></p>
 
                 
             </div>
