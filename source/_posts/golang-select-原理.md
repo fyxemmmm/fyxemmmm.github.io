@@ -31,13 +31,13 @@ Go 的select语句是一种仅能用于channl发送和接收消息的专用语�
 每来一个进程，都会建立连接，然后阻塞，直到接收到数据返回响应。
  普通这种方式的缺点其实很明显：系统需要创建和维护额外的线程或进程。因为大多数时候，大部分阻塞的线程或进程是处于等待状态，只有少部分会接收并处理响应，而其余的都在等待。系统为此还需要多做很多额外的线程或者进程的管理工作。
 
-![img](https://image.fyxemmmm.cn/blog/images/%E8%B5%84%E6%BA%90/select1.webp)
+![](https://image.fyxemmmm.cn/blog/images/%E8%B5%84%E6%BA%90/select1.webp)
 
 为了解决图中这些多余的线程或者进程，于是有了"I/O多路复用"
 
 ### I/O多路复用
 
-![img](https://image.fyxemmmm.cn/blog/images/%E8%B5%84%E6%BA%90/select2.webp)
+![](https://image.fyxemmmm.cn/blog/images/%E8%B5%84%E6%BA%90/select2.webp)
 
 每个线程或者进程都先到图中”装置“中注册，然后阻塞，然后只有一个线程在”运输“，当注册的线程或者进程准备好数据后，”装置“会根据注册的信息得到相应的数据。从始至终kernel只会使用图中这个黄黄的线程，无需再对额外的线程或者进程进行管理，提升了效率。
 
@@ -65,7 +65,7 @@ type scase struct {
 
 
 
-![img](https://image.fyxemmmm.cn/blog/images/%E8%B5%84%E6%BA%90/select3.webp)
+![](https://image.fyxemmmm.cn/blog/images/%E8%B5%84%E6%BA%90/select3.webp)
 
 
 
@@ -74,13 +74,13 @@ type scase struct {
 
 
 
-![img](https://image.fyxemmmm.cn/blog/images/%E8%B5%84%E6%BA%90/select4.webp)
+![](https://image.fyxemmmm.cn/blog/images/%E8%B5%84%E6%BA%90/select4.webp)
 
 
 
 然后执行select语句实际上就是调用`func selectgo(cas0 *scase, order0 *uint16, ncases int) (int, bool)`函数。
 
-![img](https://image.fyxemmmm.cn/blog/images/%E8%B5%84%E6%BA%90/select5.webp)
+![](https://image.fyxemmmm.cn/blog/images/%E8%B5%84%E6%BA%90/select5.webp)
 
 
 
@@ -139,7 +139,7 @@ func reflect_rselect(cases []runtimeSelect) (int, bool) {
  可以简单的认为是系统了。
  来个简单的图：
 
-![img](https://image.fyxemmmm.cn/blog/images/%E8%B5%84%E6%BA%90/select6.webp)
+![](https://image.fyxemmmm.cn/blog/images/%E8%B5%84%E6%BA%90/select6.webp)
 
 前两个函数`Select`和`rselect`都是做了简单的初始化参数，调用下一个函数的操作。select真正的核心功能，是在最后一个函数`func selectgo(cas0 *scase, order0 *uint16, ncases int) (int, bool)`中实现的。
 
@@ -147,7 +147,7 @@ func reflect_rselect(cases []runtimeSelect) (int, bool) {
 
 打乱传入的case结构体顺序
 
-![img](https://image.fyxemmmm.cn/blog/images/%E8%B5%84%E6%BA%90/select7.webp)
+![](https://image.fyxemmmm.cn/blog/images/%E8%B5%84%E6%BA%90/select7.webp)
 
 
 
@@ -155,35 +155,35 @@ func reflect_rselect(cases []runtimeSelect) (int, bool) {
 
 
 
-![img](https://image.fyxemmmm.cn/blog/images/%E8%B5%84%E6%BA%90/select8.webp)
+![](https://image.fyxemmmm.cn/blog/images/%E8%B5%84%E6%BA%90/select8.webp)
 
 
 
 遍历所有的channel，查看其是否可读或者可写
 
-![img](https://image.fyxemmmm.cn/blog/images/%E8%B5%84%E6%BA%90/select9.webp)
+![](https://image.fyxemmmm.cn/blog/images/%E8%B5%84%E6%BA%90/select9.webp)
 
 
 
 如果其中的channel可读或者可写，则解锁所有channel，并返回对应的channel数据
 
-![img](https://image.fyxemmmm.cn/blog/images/%E8%B5%84%E6%BA%90/select10.webp)
+![](https://image.fyxemmmm.cn/blog/images/%E8%B5%84%E6%BA%90/select10.webp)
 
 
 
-![img](https://image.fyxemmmm.cn/blog/images/%E8%B5%84%E6%BA%90/select11.webp)
+![](https://image.fyxemmmm.cn/blog/images/%E8%B5%84%E6%BA%90/select11.webp)
 
 
 
 假如没有channel可读或者可写，但是有default语句，则同上:返回default语句对应的scase并解锁所有的channel。
 
-![img](https://image.fyxemmmm.cn/blog/images/%E8%B5%84%E6%BA%90/select11.webp)
+![](https://image.fyxemmmm.cn/blog/images/%E8%B5%84%E6%BA%90/select11.webp)
 
 
 
 假如既没有channel可读或者可写，也没有default语句，则将当前运行的groutine阻塞，并加入到当前所有channel的等待队列中去。
 
-![img](https://image.fyxemmmm.cn/blog/images/%E8%B5%84%E6%BA%90/select12.webp)
+![](https://image.fyxemmmm.cn/blog/images/%E8%B5%84%E6%BA%90/select12.webp)
 
 
 
@@ -191,7 +191,7 @@ func reflect_rselect(cases []runtimeSelect) (int, bool) {
 
 
 
-![img](https://image.fyxemmmm.cn/blog/images/%E8%B5%84%E6%BA%90/select13.webp)
+![](https://image.fyxemmmm.cn/blog/images/%E8%B5%84%E6%BA%90/select13.webp)
 
 
 
@@ -199,19 +199,19 @@ func reflect_rselect(cases []runtimeSelect) (int, bool) {
 
 
 
-![img](https://image.fyxemmmm.cn/blog/images/%E8%B5%84%E6%BA%90/select14.webp)
+![](https://image.fyxemmmm.cn/blog/images/%E8%B5%84%E6%BA%90/select14.webp)
 
 
 
 遍历所有channel找到那个对应的channel和G，唤醒G，并将没有成功的G从所有channel的等待队列中移除。
 
-![img](https://image.fyxemmmm.cn/blog/images/%E8%B5%84%E6%BA%90/select15.webp)
+![](https://image.fyxemmmm.cn/blog/images/%E8%B5%84%E6%BA%90/select15.webp)
 
 
 
 如果对应的scase值不为空，则返回需要的值，并解锁所有channel
 
-![img](https://image.fyxemmmm.cn/blog/images/%E8%B5%84%E6%BA%90/select16.webp)
+![](https://image.fyxemmmm.cn/blog/images/%E8%B5%84%E6%BA%90/select16.webp)
 
 
 
@@ -221,7 +221,5 @@ func reflect_rselect(cases []runtimeSelect) (int, bool) {
 
 在想想select和channel做了什么事儿，我觉得和多路复用是一回事儿
 
-![img](https://image.fyxemmmm.cn/blog/images/%E8%B5%84%E6%BA%90/select17.webp)
-
-
+![](https://image.fyxemmmm.cn/blog/images/%E8%B5%84%E6%BA%90/select17.webp)
 
