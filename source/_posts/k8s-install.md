@@ -9,7 +9,7 @@ cover: false
 coverImg: 
 toc: false
 mathjax: false
-summary: 基于kubeadm, 快速搭建k8s集群
+summary: 基于kubeadm & 快速搭建k8s集群
 categories: golang
 tags:
   - golang

@@ -1,5 +1,5 @@
 ---
-title: 一张图带你理解http协议
+title: 一张图带你搞懂http协议
 date: 2021-08-19 21:33:03
 author: yuxuan
 img: 
@@ -9,7 +9,7 @@ cover: false
 coverImg: 
 toc: true
 mathjax: false
-summary: 进一步加强对http协议的理解
+summary: 加强对http协议的理解
 categories: 计算机网络
 tags:
   - 协议

@@ -1,5 +1,5 @@
 ---
-title: golang context实现原理
+title: golang context 实现原理
 date: 2021-08-14 12:25:24
 author: yuxuan
 img: https://image.fyxemmmm.cn/blog/images/img1.jpg
@@ -9,7 +9,7 @@ cover: false
 coverImg: https://cdn.jsdelivr.net/gh/fyxemmmm/fyxemmmm.github.io/images/1.jpg
 toc: false
 mathjax: false
-summary: 我们来瞧一瞧golang的context是如何实现的~
+summary: golang的context是如何实现的呢?
 categories: golang
 tags:
   - golang
