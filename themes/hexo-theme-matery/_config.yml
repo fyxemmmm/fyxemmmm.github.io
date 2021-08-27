@@ -67,7 +67,7 @@ dream:
   enable: true
   showTitle: true
   title: 我的梦想
-  text: 可以不懂，但是绝对不能无知。  -- 戒己
+  text: 可以不懂，但绝不能无知。  -- 戒己
 
 # Whether to display the musics.
 # 是否在首页显示音乐
@@ -148,7 +148,7 @@ socialLink:
 # 可以在某篇文章的 Front-matter 中再加上`toc: false`，使该篇文章关闭TOC目录功能
 toc:
   enable: true
-  heading: h2, h3, h4
+  heading: h1, h2, h3, h4
   collapseDepth: 0 # 目录默认展开层级
   showToggleBtn: true # 是否显示切换TOC目录展开收缩的按钮
 
@@ -206,7 +206,7 @@ clicklove:
 profile:
   avatar: https://image.fyxemmmm.cn/blog/images/ava3.jpeg
   career: Software Engineer
-  introduction: 后端研发攻城狮，三年开发经验，励志成为一名杰出的架构师，研究软件架构及分布式系统。 坐标上海，继续前行。
+  introduction: 后端研发工程师，三年开发经验，励志成为一名杰出的架构师，研究软件架构及分布式系统。 坐标上海，继续前行。
 
 # config my projects informations in about page.
 # If you don't want to display this `My Projects` content, you can deactivate or delete this configuration.

@@ -12,7 +12,7 @@ mathjax: false
 summary: 加强对http协议的理解
 categories: 计算机网络
 tags:
-  - 协议
+  - http
 ---
 
 ## 一张图弄懂http
