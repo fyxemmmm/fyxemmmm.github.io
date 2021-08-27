@@ -9,7 +9,7 @@ cover: false
 coverImg: 
 toc: false
 mathjax: false
-summary: 一探究竟golang的内存管理
+summary: 一探究竟 [ golangの内存管理 ]
 categories: golang
 tags:
   - golang
