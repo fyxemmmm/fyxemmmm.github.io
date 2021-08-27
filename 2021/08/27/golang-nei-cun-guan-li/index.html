@@ -1,0 +1,956 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+
+
+<head>
+    <meta charset="utf-8">
+    <meta name="keywords" content="golang 内存管理, yuxuanの博客">
+    <meta name="description" content="">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="renderer" content="webkit|ie-stand|ie-comp">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+
+
+    <title>golang 内存管理 | yuxuanの博客</title>
+    <link rel="icon" type="image/png" href="/favicon.png">
+
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/fyxemmmm/fyxemmmm.github.io/libs/awesome/css/all.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/fyxemmmm/fyxemmmm.github.io/libs/materialize/materialize.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/fyxemmmm/fyxemmmm.github.io/libs/aos/aos.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/fyxemmmm/fyxemmmm.github.io/libs/animate/animate.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/fyxemmmm/fyxemmmm.github.io/libs/lightGallery/css/lightgallery.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/fyxemmmm/fyxemmmm.github.io/css/matery.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/fyxemmmm/fyxemmmm.github.io/css/my.css">
+
+    <script src="https://cdn.jsdelivr.net/gh/fyxemmmm/fyxemmmm.github.io/libs/jquery/jquery.min.js"></script>
+
+<meta name="generator" content="Hexo 5.4.0">
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
+<link rel="alternate" href="/atom.xml" title="yuxuanの博客" type="application/atom+xml">
+</head>
+
+
+
+
+<body>
+    <header class="navbar-fixed">
+    <nav id="headNav" class="bg-color nav-transparent">
+        <div id="navContainer" class="nav-wrapper container">
+            <div class="brand-logo">
+                <a href="/" class="waves-effect waves-light">
+                    
+                    <img src="/medias/logo.png" class="logo-img" alt="LOGO">
+                    
+                    <span class="logo-span">yuxuanの博客</span>
+                </a>
+            </div>
+            
+
+<a href="#" data-target="mobile-nav" class="sidenav-trigger button-collapse"><i class="fas fa-bars"></i></a>
+<ul class="right nav-menu">
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/" class="waves-effect waves-light">
+      
+      <i class="fas fa-home" style="zoom: 0.6;"></i>
+      
+      <span>首页</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/tags" class="waves-effect waves-light">
+      
+      <i class="fas fa-tags" style="zoom: 0.6;"></i>
+      
+      <span>标签</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/categories/" class="waves-effect waves-light">
+      
+      <i class="fas fa-bookmark" style="zoom: 0.6;"></i>
+      
+      <span>分类</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/archives/" class="waves-effect waves-light">
+      
+      <i class="fas fa-archive" style="zoom: 0.6;"></i>
+      
+      <span>归档</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/about/" class="waves-effect waves-light">
+      
+      <i class="fas fa-user-circle" style="zoom: 0.6;"></i>
+      
+      <span>关于</span>
+    </a>
+    
+  </li>
+  
+  <li>
+    <a href="#searchModal" class="modal-trigger waves-effect waves-light">
+      <i id="searchIcon" class="fas fa-search" title="搜索" style="zoom: 0.85;"></i>
+    </a>
+  </li>
+</ul>
+
+
+<div id="mobile-nav" class="side-nav sidenav">
+
+    <div class="mobile-head bg-color">
+        
+        <img src="/medias/logo.png" class="logo-img circle responsive-img">
+        
+        <div class="logo-name">yuxuanの博客</div>
+        <div class="logo-desc">
+            
+            Never really desperate, only the lost of the soul.
+            
+        </div>
+    </div>
+
+    
+
+    <ul class="menu-list mobile-menu-list">
+        
+        <li class="m-nav-item">
+	  
+		<a href="/" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-home"></i>
+			
+			首页
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/tags" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-tags"></i>
+			
+			标签
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/categories/" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-bookmark"></i>
+			
+			分类
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/archives/" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-archive"></i>
+			
+			归档
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/about/" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-user-circle"></i>
+			
+			关于
+		</a>
+          
+        </li>
+        
+        
+        <li><div class="divider"></div></li>
+        <li>
+            <a href="https://github.com/fyxemmmm/fyxemmmm.github.io" class="waves-effect waves-light" target="_blank">
+                <i class="fab fa-github-square fa-fw"></i>Fork Me
+            </a>
+        </li>
+        
+    </ul>
+</div>
+
+
+        </div>
+
+        
+            <style>
+    .nav-transparent .github-corner {
+        display: none !important;
+    }
+
+    .github-corner {
+        position: absolute;
+        z-index: 10;
+        top: 0;
+        right: 0;
+        border: 0;
+        transform: scale(1.1);
+    }
+
+    .github-corner svg {
+        color: #0f9d58;
+        fill: #fff;
+        height: 64px;
+        width: 64px;
+    }
+
+    .github-corner:hover .octo-arm {
+        animation: a 0.56s ease-in-out;
+    }
+
+    .github-corner .octo-arm {
+        animation: none;
+    }
+
+    @keyframes a {
+        0%,
+        to {
+            transform: rotate(0);
+        }
+        20%,
+        60% {
+            transform: rotate(-25deg);
+        }
+        40%,
+        80% {
+            transform: rotate(10deg);
+        }
+    }
+</style>
+
+<a href="https://github.com/fyxemmmm/fyxemmmm.github.io" class="github-corner tooltipped hide-on-med-and-down" target="_blank"
+   data-tooltip="Fork Me" data-position="left" data-delay="50">
+    <svg viewBox="0 0 250 250" aria-hidden="true">
+        <path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path>
+        <path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2"
+              fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path>
+        <path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z"
+              fill="currentColor" class="octo-body"></path>
+    </svg>
+</a>
+        
+    </nav>
+
+</header>
+
+    
+
+
+
+<div class="bg-cover pd-header post-cover" style="background-image: url('https://image.fyxemmmm.cn/blog/images/djsy.jpg')">
+    <div class="container" style="right: 0px;left: 0px;">
+        <div class="row">
+            <div class="col s12 m12 l12">
+                <div class="brand">
+                    <h1 class="description center-align post-title">golang 内存管理</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<main class="container content">
+
+    
+    <!-- 文章内容详情 -->
+<div id="artDetail">
+    <div class="card">
+        <div class="card-content article-info">
+            <div class="row tag-cate">
+                <div class="col s7">
+                    
+                    <div class="article-tag">
+                        
+                            <a href="/tags/golang/">
+                                <span class="chip bg-color">golang</span>
+                            </a>
+                        
+                            <a href="/tags/%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/">
+                                <span class="chip bg-color">内存管理</span>
+                            </a>
+                        
+                    </div>
+                    
+                </div>
+                <div class="col s5 right-align">
+                    
+                    <div class="post-cate">
+                        <i class="fas fa-bookmark fa-fw icon-category"></i>
+                        
+                            <a href="/categories/golang/" class="post-category">
+                                golang
+                            </a>
+                        
+                    </div>
+                    
+                </div>
+            </div>
+
+            <div class="post-info">
+                
+                <div class="post-date info-break-policy">
+                    <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
+                    2021-08-27
+                </div>
+                
+
+                
+
+                
+
+                
+                <div class="info-break-policy">
+                    <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
+                    17 分
+                </div>
+                
+
+                
+            </div>
+        </div>
+        <hr class="clearfix">
+
+        
+        <!-- 是否加载使用自带的 prismjs. -->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fyxemmmm/fyxemmmm.github.io/libs/prism/prism.css">
+        
+
+        
+
+        <div class="card-content article-card-content">
+            <div id="articleContent">
+                <h2 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h2><p>要搞明白 Go 语言的内存管理，就必须先理解操作系统以及机器硬件是如何管理内存的。因为 Go 语言的内部机制是建立在这个基础之上的，它的设计，本质上就是尽可能的会发挥操作系统层面的优势，而避开导致低效情况。</p>
+<h2 id="操作系统内存管理"><a href="#操作系统内存管理" class="headerlink" title="操作系统内存管理"></a>操作系统内存管理</h2><p>其实现在计算机内存管理的方式都是一步步演变来的，最开始是非常简单的，后来为了满足各种需求而增加了各种各样的机制，越来越复杂。这里我们只介绍和开发者息息相关的几个机制。</p>
+<h3 id="最原始的方式"><a href="#最原始的方式" class="headerlink" title="最原始的方式"></a>最原始的方式</h3><p>我们可以把内存看成一个数组，每个数组元素的大小是 <code>1B</code>，也就是 8 位(bit)。CPU 通过内存地址来获取内存中的数据，内存地址可以看做成数组的游标（index）。</p>
+<p><img src="https://image.fyxemmmm.cn/blog/images/nc1.webp"></p>
+<p>CPU 在执行指令的时候，就是通过内存地址，将物理内存上的数据载入到寄存器，然后执行机器指令。但随着发展，出现了多任务的需求，也就是希望多个任务能同时在系统上运行。这就出现了一些问题：</p>
+<ol>
+<li><strong>内存访问冲突：</strong>程序很容易出现 bug，就是 2 或更多的程序使用了同一块内存空间，导致数据读写错乱，程序崩溃。更有一些黑客利用这个缺陷来制作病毒。</li>
+<li><strong>内存不够用：</strong>因为每个程序都需要自己单独使用的一块内存，内存的大小就成了任务数量的瓶颈。</li>
+<li><strong>程序开发成本高：</strong>你的程序要使用多少内存，内存地址是多少，这些都不能搞错，对于人来说，开发正确的程序很费脑子。</li>
+</ol>
+<p>举个例子，假设有一个程序，当代码运行到某处时，需要使用 <code>100M</code> 内存，其他时候 <code>1M</code> 内存就够；为了避免和其他程序冲突，程序初始化时，就必须申请独立 <code>100M</code> 内存以保证正常运行，这就是一种很大的浪费，因为这 <code>100M</code> 它大多数时候用不上，其他程序还不能用。</p>
+<h3 id="虚拟内存"><a href="#虚拟内存" class="headerlink" title="虚拟内存"></a>虚拟内存</h3><p>虚拟内存的出现，很好的为了解决上述的一些列问题。用户程序只能使用虚拟的内存地址来获取数据，系统会将这个虚拟地址翻译成实际的物理地址。</p>
+<p>所有程序统一使用一套连续虚拟地址，比如 <code>0x0000 ~ 0xffff</code>。从程序的角度来看，它觉得自己独享了一整块内存。不用考虑访问冲突的问题。系统会将虚拟地址翻译成物理地址，从内存上加载数据。</p>
+<p>对于内存不够用的问题，虚拟内存本质上是将磁盘当成最终存储，而主存作为了一个 cache。程序可以从虚拟内存上申请很大的空间使用，比如 <code>1G</code>；但操作系统不会真的在物理内存上开辟 <code>1G</code> 的空间，它只是开辟了很小一块，比如 <code>1M</code> 给程序使用。<br> 这样程序在访问内存时，操作系统看访问的地址是否能转换成物理内存地址。能则正常访问，不能则再开辟。这使得内存得到了更高效的利用。</p>
+<p>如下图所示，每个进程所使用的虚拟地址空间都是一样的，但他们的虚拟地址会被映射到主存上的不同区域，甚至映射到磁盘上（当内存不够用时）。</p>
+<p><img src="https://image.fyxemmmm.cn/blog/images/nc2.webp" alt="img"></p>
+<p>虚拟地址</p>
+<p>其实本质上很简单，就是操作系统将程序常用的数据放到内存里加速访问，不常用的数据放在磁盘上。这一切对用户程序来说完全是透明的，用户程序可以假装所有数据都在内存里，然后通过虚拟内存地址去访问数据。在这背后，操作系统会自动将数据在主存和磁盘之间进行交换。</p>
+<h4 id="虚拟地址翻译"><a href="#虚拟地址翻译" class="headerlink" title="虚拟地址翻译"></a>虚拟地址翻译</h4><p>虚拟内存的实现方式，大多数都是通过<strong>页表</strong>来实现的。操作系统虚拟内存空间分成一页一页的来管理，每页的大小为 <code>4K</code>（当然这是可以配置的，不同操作系统不一样）。磁盘和主内存之间的置换也是以<strong>页</strong>为单位来操作的。<code>4K</code> 算是通过实践折中出来的通用值，太小了会出现频繁的置换，太大了又浪费内存。</p>
+<p><code>虚拟地址 -&gt; 物理地址</code> 的映射关系由<strong>页表（Page Table）</strong>记录，它其实就是一个数组，数组中每个元素叫做<strong>页表条目（Page Table Entry，简称 PTE）</strong>，PTE 由一个有效位和 n 位地址字段构成，有效位标识这个虚拟地址是否分配了物理内存。</p>
+<p>页表被操作系统放在物理内存的指定位置，CPU  上有个 Memory Management Unit（MMU） 单元，CPU 把虚拟地址给 MMU，MMU 去物理内存中查询页表，得到实际的物理地址。当然 MMU 不会每次都去查的，它自己也有一份缓存叫Translation Lookaside Buffer (TLB)，是为了加速地址翻译。</p>
+<p><img src="https://image.fyxemmmm.cn/blog/images/nc3.webp"></p>
+<p>虚拟地址翻译</p>
+<blockquote>
+<p>你慢慢会发现整个计算机体系里面，缓存是无处不在的，整个计算机体系就是建立在一级级的缓存之上的，无论软硬件。</p>
+</blockquote>
+<p>让我们来看一下 CPU 内存访问的完整过程：</p>
+<ol>
+<li>CPU 使用虚拟地址访问数据，比如执行了 MOV 指令加载数据到寄存器，把地址传递给 MMU。</li>
+<li>MMU 生成 PTE 地址，并从主存（或自己的 Cache）中得到它。</li>
+<li>如果 MMU 根据 PTE 得到真实的物理地址，正常读取数据。流程到此结束。</li>
+<li>如果 PTE 信息表示没有关联的物理地址，MMU 则触发一个缺页异常。</li>
+<li>操作系统捕获到这个异常，开始执行异常处理程序。在物理内存上创建一页内存，并更新页表。</li>
+<li>缺页处理程序在物理内存中确定一个<strong>牺牲页</strong>，如果这个牺牲页上有数据，则把数据保存到磁盘上。</li>
+<li>缺页处理程序更新 PTE。</li>
+<li>缺页处理程序结束，再回去执行上一条指令（导致缺页异常的那个指令，也就是 MOV 指令）。这次肯定命中了。</li>
+</ol>
+<h4 id="内存命中率"><a href="#内存命中率" class="headerlink" title="内存命中率"></a>内存命中率</h4><p>你可能已经发现，上述的访问步骤中，从第 4 步开始都是些很繁琐的操作，频繁的执行对性能影响很大。毕竟访问磁盘是非常慢的，它会引发程序性能的急剧下降。如果内存访问到第 3 步成功结束了，我们就说<strong>页命中</strong>了；反之就是<strong>未命中</strong>，或者说<strong>缺页</strong>，表示它开始执行第 4 步了。</p>
+<p>假设在 n 次内存访问中，出现命中的次数是 m，那么 <code>m / n * 100%</code> 就表示命中率，这是衡量内存管理程序好坏的一个很重要的指标。</p>
+<p>如果物理内存不足了，数据会在主存和磁盘之间频繁交换，命中率很低，性能出现急剧下降，我们称这种现象叫<strong>内存颠簸</strong>。这时你会发现系统的 swap 空间利用率开始增高， CPU 利用率中 <code>iowait</code> 占比开始增高。</p>
+<p>大多数情况下，只要物理内存够用，页命中率不会非常低，不会出现内存颠簸的情况。因为大多数程序都有一个特点，就是<strong>局部性</strong>。</p>
+<p><strong>局部性就是说被引用过一次的存储器位置，很可能在后续再被引用多次；而且在该位置附近的其他位置，也很可能会在后续一段时间内被引用。</strong></p>
+<p>前面说过计算机到处使用一级级的缓存来提升性能，归根结底就是利用了<strong>局部性</strong>的特征，如果没有这个特性，一级级的缓存不会有那么大的作用。所以一个局部性很好的程序运行速度会更快。</p>
+<hr>
+<h2 id="golang内存管理"><a href="#golang内存管理" class="headerlink" title="golang内存管理"></a>golang内存管理</h2><p>了解操作系统对内存的管理机制后，现在可以去看下 Go 语言是如何利用底层的这些特性来优化内存的。Go 的内存管理基本上参考 <code>tcmalloc</code> 来实现的，只是细节上根据自身的需要做了一些小的优化调整。</p>
+<p>Go 的内存是自动管理的，我们可以随意定义变量直接使用，不需要考虑变量背后的内存申请和释放的问题。本文意在搞清楚 Go 在方面帮我们做了什么，使我们不用关心那些复杂内存的问题，还依旧能写出较为高效的程序。</p>
+<h2 id="池"><a href="#池" class="headerlink" title="池"></a>池</h2><p>程序动态申请内存空间，是要使用系统调用的，比如 Linux 系统上是调用 <code>mmap</code> 方法实现的。但对于大型系统服务来说，直接调用 <code>mmap</code> 申请内存，会有一定的代价。比如：</p>
+<ol>
+<li>系统调用会导致程序进入内核态，内核分配完内存后（也就是上篇所讲的，对虚拟地址和物理地址进行映射等操作），再返回到用户态。</li>
+<li>频繁申请很小的内存空间，容易出现大量内存碎片，增大操作系统整理碎片的压力。</li>
+<li>为了保证内存访问具有良好的局部性，开发者需要投入大量的精力去做优化，这是一个很重的负担。</li>
+</ol>
+<p>如何解决上面的问题呢？有经验的人，可能很快就想到解决方案，那就是我们常说的<strong>对象池</strong>（也可以说是缓存）。</p>
+<p>假设系统需要频繁动态申请内存来存放一个数据结构，比如 <code>[10]int</code>。那么我们完全可以在程序启动之初，一次性申请几百甚至上千个 <code>[10]int</code>。这样完美的解决了上面遇到的问题：</p>
+<ol>
+<li>不需要频繁申请内存了，而是从对象池里拿，程序不会频繁进入内核态</li>
+<li>因为一次性申请一个连续的大空间，对象池会被重复利用，不会出现碎片。</li>
+<li>程序频繁访问的就是对象池背后的同一块内存空间，局部性良好。</li>
+</ol>
+<p>这样做会造成一定的内存浪费，我们可以定时检测对象池的大小，保证可用对象的数量在一个合理的范围，少了就提前申请，多了就自动释放。</p>
+<p>如果某种资源的申请和回收是昂贵的，我们都可以通过建立<strong>资源池</strong>的方式来解决，其他比如<strong>连接池</strong>，<strong>内存池</strong>等等，都是一个思路。</p>
+<h2 id="Golang-内存管理"><a href="#Golang-内存管理" class="headerlink" title="Golang 内存管理"></a>Golang 内存管理</h2><p>Golang 的内存管理本质上就是一个内存池，只不过内部做了很多的优化。比如自动伸缩内存池大小，合理的切割内存块等等。</p>
+<h3 id="内存池-mheap"><a href="#内存池-mheap" class="headerlink" title="内存池 mheap"></a>内存池 mheap</h3><p>Golang 的程序在启动之初，会一次性从操作系统那里申请一大块内存作为内存池。这块内存空间会放在一个叫 <code>mheap</code> 的 <code>struct</code> 中管理，mheap 负责将这一整块内存切割成不同的区域，并将其中一部分的内存切割成合适的大小，分配给用户使用。</p>
+<p>我们需要先知道几个重要的概念：</p>
+<ul>
+<li><strong><code>page</code></strong>: 内存页，一块 <code>8K</code> 大小的内存空间。Go 与操作系统之间的内存申请和释放，都是以 <code>page</code> 为单位的。</li>
+<li><strong><code>span</code></strong>: 内存块，<strong>一个或多个连续的</strong> <code>page</code> 组成一个 <code>span</code>。如果把 <code>page</code> 比喻成工人，<code>span</code> 可看成是小队，工人被分成若干个队伍，不同的队伍干不同的活。</li>
+<li><strong><code>sizeclass</code></strong>: 空间规格，每个 <code>span</code> 都带有一个 <code>sizeclass</code>，标记着该 <code>span</code> 中的 <code>page</code> 应该如何使用。使用上面的比喻，就是 <code>sizeclass</code> 标志着 <code>span</code> 是一个什么样的队伍。</li>
+<li><strong><code>object</code></strong>: 对象，用来存储一个变量数据内存空间，一个 <code>span</code> 在初始化时，会被切割成一堆<strong>等大</strong>的 <code>object</code>。假设 <code>object</code> 的大小是 <code>16B</code>，<code>span</code> 大小是 <code>8K</code>，那么就会把 <code>span</code> 中的 <code>page</code> 就会被初始化 <code>8K / 16B = 512</code> 个 <code>object</code>。所谓内存分配，就是分配一个 <code>object</code> 出去。</li>
+</ul>
+<p>示意图：</p>
+<p><img src="https://image.fyxemmmm.cn/blog/images/nc4.webp"></p>
+<p>上图中，不同颜色代表不同的 <code>span</code>，不同 <code>span</code> 的 <code>sizeclass</code> 不同，表示里面的 <code>page</code> 将会按照不同的规格切割成一个个等大的 <code>object</code> 用作分配。</p>
+<p>使用 Go1.11.5 版本测试了下初始堆内存应该是 <code>64M</code> 左右，低版本会少点。</p>
+<p>测试代码：</p>
+<pre class="line-numbers language-go" data-language="go"><code class="language-go"><span class="token keyword">package</span> main
+<span class="token keyword">import</span> <span class="token string">"runtime"</span>
+<span class="token keyword">var</span> stat runtime<span class="token punctuation">.</span>MemStats
+<span class="token keyword">func</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    runtime<span class="token punctuation">.</span><span class="token function">ReadMemStats</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>stat<span class="token punctuation">)</span>
+    <span class="token function">println</span><span class="token punctuation">(</span>stat<span class="token punctuation">.</span>HeapSys<span class="token punctuation">)</span>
+<span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>内部的整体内存布局如下图所示：</p>
+<p><img src="https://image.fyxemmmm.cn/blog/images/nc5.webp"></p>
+<ul>
+<li><code>mheap.spans</code>：用来存储 <code>page</code> 和 <code>span</code> 信息，比如一个 span 的起始地址是多少，有几个 page，已使用了多大等等。</li>
+<li><code>mheap.bitmap</code> 存储着各个 <code>span</code> 中对象的标记信息，比如对象是否可回收等等。</li>
+<li><code>mheap.arena_start</code>: 将要分配给应用程序使用的空间。</li>
+</ul>
+<p>再说明下，图中的空间大小，是 Go 向操作系统申请的虚拟内存地址空间，操作系统会将该段地址空间预留出来不做它用；而不是真的创建出这么大的虚拟内存，在页表中创建出这么大的映射关系。</p>
+<h3 id="mcentral"><a href="#mcentral" class="headerlink" title="mcentral"></a>mcentral</h3><p><strong>用途相同</strong>的 <code>span</code> 会以链表的形式组织在一起。 这里的用途用 <code>sizeclass</code> 来表示，就是指该 <code>span</code> 用来存储哪种大小的对象。比如当分配一块大小为 <code>n</code> 的内存时，系统计算 <code>n</code> 应该使用哪种 <code>sizeclass</code>，然后根据 <code>sizeclass</code> 的值去找到一个可用的 <code>span</code> 来用作分配。其中 <code>sizeclass</code> 一共有 67 种（Go1.5 版本，后续版本可能会不会改变不好说），如图所示：</p>
+<p><img src="https://image.fyxemmmm.cn/blog/images/nc6.webp"></p>
+<p>找到合适的 <code>span</code> 后，会从中取一个 <code>object</code> 返回给上层使用。这些 <code>span</code> 被放在一个叫做 mcentral 的结构中管理。</p>
+<p>mheap 将从 OS 那里申请过来的内存初始化成一个大 <code>span</code>(sizeclass=0)。然后根据需要从这个大 <code>span</code> 中切出小 <code>span</code>，放在 mcentral 中来管理。大 <code>span</code> 由 <code>mheap.freelarge</code> 和 <code>mheap.busylarge</code> 等管理。如果 mcentral 中的 <code>span</code> 不够用了，会从 <code>mheap.freelarge</code> 上再切一块，如果 <code>mheap.freelarge</code> 空间不够，会再次从 OS 那里申请内存重复上述步骤。下面是 mheap 和 mcentral 的数据结构：</p>
+<pre class="line-numbers language-go" data-language="go"><code class="language-go"><span class="token keyword">type</span> mheap <span class="token keyword">struct</span> <span class="token punctuation">{</span>
+    <span class="token comment">// other fields</span>
+    lock      mutex
+    free      <span class="token punctuation">[</span>_MaxMHeapList<span class="token punctuation">]</span>mspan <span class="token comment">// free lists of given length， 1M 以下</span>
+    freelarge mspan                <span class="token comment">// free lists length &gt;= _MaxMHeapList, &gt;= 1M</span>
+    busy      <span class="token punctuation">[</span>_MaxMHeapList<span class="token punctuation">]</span>mspan <span class="token comment">// busy lists of large objects of given length</span>
+    busylarge mspan                <span class="token comment">// busy lists of large objects length &gt;= _MaxMHeapList</span>
+
+    central <span class="token punctuation">[</span>_NumSizeClasses<span class="token punctuation">]</span><span class="token keyword">struct</span> <span class="token punctuation">{</span> <span class="token comment">// _NumSizeClasses = 67</span>
+        mcentral mcentral
+        <span class="token comment">// other fields</span>
+    <span class="token punctuation">}</span>
+    <span class="token comment">// other fields</span>
+<span class="token punctuation">}</span>
+
+<span class="token comment">// Central list of free objects of a given size.</span>
+<span class="token keyword">type</span> mcentral <span class="token keyword">struct</span> <span class="token punctuation">{</span>
+    lock      mutex <span class="token comment">// 分配时需要加锁</span>
+    sizeclass <span class="token builtin">int32</span> <span class="token comment">// 哪种 sizeclass</span>
+    nonempty  mspan <span class="token comment">// 还有可用的空间的 span 链表</span>
+    empty     mspan <span class="token comment">// 没有可用的空间的 span 列表</span>
+<span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>这种方式可以避免出现外部碎片<em>（文章最后面有外部碎片的介绍）</em>，因为同一个 span 是按照固定大小分配和回收的，不会出现不可利用的一小块内存把内存分割掉。这个设计方式与现代操作系统中的伙伴系统有点类似。</p>
+<h3 id="mcache"><a href="#mcache" class="headerlink" title="mcache"></a>mcache</h3><p>如果你阅读的比较仔细，会发现上面的 mcentral 结构中有一个 lock 字段；因为并发情况下，很有可能多个线程同时从 mcentral 那里申请内存的，必须要用锁来避免冲突。</p>
+<p>但锁是低效的，在高并发的服务中，它会使内存申请成为整个系统的瓶颈；所以在 mcentral 的前面又增加了一层 mcache。</p>
+<p>每一个 mcache 和每一个处理器(P) 是一一对应的，也就是说每一个 P 都有一个 mcache 成员。 Goroutine 申请内存时，首先从其所在的 P 的 mcache 中分配，如果 mcache 没有可用 <code>span</code>，再从 mcentral 中获取，并填充到 mcache 中。</p>
+<p>从 mcache 上分配内存空间是不需要加锁的，因为在同一时间里，一个 P 只有一个线程在其上面运行，不可能出现竞争。没有了锁的限制，大大加速了内存分配。</p>
+<p>所以整体的内存分配模型大致如下图所示：</p>
+<p><img src="https://image.fyxemmmm.cn/blog/images/nc7.webp"></p>
+<h3 id="其他优化"><a href="#其他优化" class="headerlink" title="其他优化"></a>其他优化</h3><h4 id="zero-size"><a href="#zero-size" class="headerlink" title="zero size"></a>zero size</h4><p>有一些对象所需的内存大小是0，比如 <code>[0]int</code>, <code>struct{}</code>，这种类型的数据根本就不需要内存，所以没必要走上面那么复杂的逻辑。</p>
+<p>系统会直接返回一个固定的内存地址。源码如下：</p>
+<pre class="line-numbers language-go" data-language="go"><code class="language-go"><span class="token keyword">func</span> <span class="token function">mallocgc</span><span class="token punctuation">(</span>size <span class="token builtin">uintptr</span><span class="token punctuation">,</span> typ <span class="token operator">*</span>_type<span class="token punctuation">,</span> flags <span class="token builtin">uint32</span><span class="token punctuation">)</span> unsafe<span class="token punctuation">.</span>Pointer <span class="token punctuation">{</span>
+    <span class="token comment">// 申请的 0 大小空间的内存</span>
+    <span class="token keyword">if</span> size <span class="token operator">==</span> <span class="token number">0</span> <span class="token punctuation">{</span>
+        <span class="token keyword">return</span> unsafe<span class="token punctuation">.</span><span class="token function">Pointer</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>zerobase<span class="token punctuation">)</span>
+    <span class="token punctuation">}</span>
+    <span class="token comment">//.....</span>
+<span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>测试代码：</p>
+<pre class="line-numbers language-go" data-language="go"><code class="language-go"><span class="token keyword">package</span> main
+
+<span class="token keyword">import</span> <span class="token punctuation">(</span>
+    <span class="token string">"fmt"</span>
+<span class="token punctuation">)</span>
+
+<span class="token keyword">func</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">var</span> <span class="token punctuation">(</span>
+        a <span class="token keyword">struct</span><span class="token punctuation">{</span><span class="token punctuation">}</span>
+        b <span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token builtin">int</span>
+        c <span class="token punctuation">[</span><span class="token number">100</span><span class="token punctuation">]</span><span class="token keyword">struct</span><span class="token punctuation">{</span><span class="token punctuation">}</span>
+        d <span class="token operator">=</span> <span class="token function">make</span><span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token keyword">struct</span><span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token number">1024</span><span class="token punctuation">)</span>
+    <span class="token punctuation">)</span>
+    fmt<span class="token punctuation">.</span><span class="token function">Printf</span><span class="token punctuation">(</span><span class="token string">"%p\n"</span><span class="token punctuation">,</span> <span class="token operator">&amp;</span>a<span class="token punctuation">)</span>
+    fmt<span class="token punctuation">.</span><span class="token function">Printf</span><span class="token punctuation">(</span><span class="token string">"%p\n"</span><span class="token punctuation">,</span> <span class="token operator">&amp;</span>b<span class="token punctuation">)</span>
+    fmt<span class="token punctuation">.</span><span class="token function">Printf</span><span class="token punctuation">(</span><span class="token string">"%p\n"</span><span class="token punctuation">,</span> <span class="token operator">&amp;</span>c<span class="token punctuation">)</span>
+    fmt<span class="token punctuation">.</span><span class="token function">Printf</span><span class="token punctuation">(</span><span class="token string">"%p\n"</span><span class="token punctuation">,</span> <span class="token operator">&amp;</span><span class="token punctuation">(</span>d<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+    fmt<span class="token punctuation">.</span><span class="token function">Printf</span><span class="token punctuation">(</span><span class="token string">"%p\n"</span><span class="token punctuation">,</span> <span class="token operator">&amp;</span><span class="token punctuation">(</span>d<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+    fmt<span class="token punctuation">.</span><span class="token function">Printf</span><span class="token punctuation">(</span><span class="token string">"%p\n"</span><span class="token punctuation">,</span> <span class="token operator">&amp;</span><span class="token punctuation">(</span>d<span class="token punctuation">[</span><span class="token number">1000</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+<span class="token punctuation">}</span>
+<span class="token comment">// 运行结果，6 个变量的内存地址是相同的:</span>
+<span class="token number">0x1180f88</span>
+<span class="token number">0x1180f88</span>
+<span class="token number">0x1180f88</span>
+<span class="token number">0x1180f88</span>
+<span class="token number">0x1180f88</span>
+<span class="token number">0x1180f88</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h4 id=""><a href="#" class="headerlink" title=""></a></h4><h4 id="大对象"><a href="#大对象" class="headerlink" title="大对象"></a>大对象</h4><p>如上面所述，最大的 sizeclass 最大只能存放 <code>32K</code> 的对象。如果一次性申请超过 <code>32K</code> 的内存，系统会直接绕过 mcache 和 mcentral，直接从 mheap 上获取，mheap 中有一个 <code>freelarge</code> 字段管理着超大 span。</p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>内存的释放过程，没什么特别之处。就是分配的返过程，当 mcache 中存在较多空闲 span 时，会归还给 mcentral；而 mcentral 中存在较多空闲 span 时，会归还给 mheap；mheap 再归还给操作系统。这里就不详细介绍了。</p>
+<p>总结一下，这种设计之所以快，主要有以下几个优势：</p>
+<ol>
+<li>内存分配大多时候都是在用户态完成的，不需要频繁进入内核态。</li>
+<li>每个 P 都有独立的 span cache，多个 CPU 不会并发读写同一块内存，进而减少 CPU L1 cache 的 cacheline 出现 dirty 情况，增大 cpu cache 命中率。</li>
+<li>内存碎片的问题，Go 是自己在用户态管理的，在 OS 层面看是没有碎片的，使得操作系统层面对碎片的管理压力也会降低。</li>
+<li>mcache 的存在使得内存分配不需要加锁。</li>
+</ol>
+<hr>
+<h4 id="为什么内存碎片可能影响性能？"><a href="#为什么内存碎片可能影响性能？" class="headerlink" title="为什么内存碎片可能影响性能？"></a>为什么内存碎片可能影响性能？</h4><blockquote>
+<p>Linux 利用 Intel CPU的保护模式，采用页表的方式对内存进行管理。 虚拟线性地址对应着某个页。这之间的对应关系存在于页表之中。 由于几乎每次对虚拟内存中的页面访问都必须先解析页，从而得到物理内存中的对应地址，所以页表操作的性能非常关键。因此，Intel MMU 系统结构中实现了一个TLB（translate lookaside buffer）作为一个将虚拟地址映射到物理地址的硬件缓存，当请求访问一个虚拟地址时，处理器将首先检查TLB是否缓存了该虚拟地址到物理地址的映射，如果命中则直接返回，否则，就需要通过页表搜索需要的物理地址。</p>
+<p>TLB很小，只有64 entries 。当内存碎片化后，一个进程的虚拟线性地址空间对应于数量众多的小片的页，TLB不能容纳这么多的页面表项，这就意味在这个进程的运行期内，MMU在寻址时，TLB总是不能命中，而需要不断的更新。这就大大的降低了执行的效率。</p>
+</blockquote>
+
+                
+            </div>
+            <hr/>
+
+            
+
+
+
+            <div class="tag_share" style="display: block;">
+                <div class="post-meta__tag-list" style="display: inline-block;">
+                    
+                        <div class="article-tag">
+                            
+                                <a href="/tags/golang/">
+                                    <span class="chip bg-color">golang</span>
+                                </a>
+                            
+                                <a href="/tags/%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/">
+                                    <span class="chip bg-color">内存管理</span>
+                                </a>
+                            
+                        </div>
+                    
+                </div>
+                <div class="post_share" style="zoom: 80%; width: fit-content; display: inline-block; float: right; margin: -0.15rem 0;">
+                    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/fyxemmmm/fyxemmmm.github.io/libs/share/css/share.min.css">
+<div id="article-share">
+
+    
+    <div class="social-share" data-sites="qq,wechat,weibo" data-wechat-qrcode-helper="<p>微信扫一扫即可分享！</p>"></div>
+    <script src="https://cdn.jsdelivr.net/gh/fyxemmmm/fyxemmmm.github.io/libs/share/js/social-share.min.js"></script>
+    
+
+    
+
+</div>
+
+                </div>
+            </div>
+            
+        </div>
+    </div>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+<article id="prenext-posts" class="prev-next articles">
+    <div class="row article-row">
+        
+        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
+            <div class="article-badge left-badge text-color">
+                <i class="far fa-dot-circle"></i>&nbsp;本篇
+            </div>
+            <div class="card">
+                <a href="/2021/08/27/golang-nei-cun-guan-li/">
+                    <div class="card-image">
+                        
+                        <img src="https://image.fyxemmmm.cn/blog/images/djsy.jpg" class="responsive-img" alt="golang 内存管理">
+                        
+                        <span class="card-title">golang 内存管理</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            一探究竟 [ golangの内存管理 ]
+                        
+                    </div>
+                    <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2021-08-27
+                            </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/golang/" class="post-category">
+                                    golang
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/golang/">
+                        <span class="chip bg-color">golang</span>
+                    </a>
+                    
+                    <a href="/tags/%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/">
+                        <span class="chip bg-color">内存管理</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge right-badge text-color">
+                下一篇&nbsp;<i class="fas fa-chevron-right"></i>
+            </div>
+            <div class="card">
+                <a href="/2021/08/26/http2-xiang-jie-xia/">
+                    <div class="card-image">
+                        
+                        
+                        <img src="https://cdn.jsdelivr.net/gh/fyxemmmm/fyxemmmm.github.io/medias/featureimages/12.jpg" class="responsive-img" alt="http2详解 [下]">
+                        
+                        <span class="card-title">http2详解 [下]</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            http2协议详解 下篇
+                        
+                    </div>
+                    <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2021-08-26
+                            </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/%E5%8D%8F%E8%AE%AE/" class="post-category">
+                                    协议
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/http2/">
+                        <span class="chip bg-color">http2</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+    </div>
+</article>
+
+</div>
+
+
+
+<!-- 代码块功能依赖 -->
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/fyxemmmm/fyxemmmm.github.io/libs/codeBlock/codeBlockFuction.js"></script>
+
+<!-- 代码语言 -->
+
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/fyxemmmm/fyxemmmm.github.io/libs/codeBlock/codeLang.js"></script>
+
+
+<!-- 代码块复制 -->
+
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/fyxemmmm/fyxemmmm.github.io/libs/codeBlock/codeCopy.js"></script>
+
+
+<!-- 代码块收缩 -->
+
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/fyxemmmm/fyxemmmm.github.io/libs/codeBlock/codeShrink.js"></script>
+
+
+    
+
+</main>
+
+
+
+
+    <footer class="page-footer bg-color">
+    
+
+    <div class="container row center-align"
+         style="margin-bottom: 0px !important;">
+        <div class="col s12 m8 l8 copy-right">
+            Copyright&nbsp;&copy;
+            
+                <span id="year">2018-2021</span>
+            
+            <span id="year">2018</span>
+            <a href="/about" target="_blank"></a>
+            |&nbsp;Powered by&nbsp;<a href="https://github.com/fyxemmmm" target="_blank">yuxuan</a>
+            <!-- |&nbsp;Theme&nbsp;<a href="https://github.com/blinkfox/hexo-theme-matery" target="_blank">Matery</a> -->
+            <br>
+            愿你历尽千帆，归来任是少年。
+
+
+            <!-- 
+                &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
+                        class="white-color">27.2k</span>
+            
+            
+            
+            
+                <span id="busuanzi_container_site_pv">
+                &nbsp;|&nbsp;<i class="far fa-eye"></i>&nbsp;总访问量:&nbsp;
+                    <span id="busuanzi_value_site_pv" class="white-color"></span>
+            </span>
+            
+            
+                <span id="busuanzi_container_site_uv">
+                &nbsp;|&nbsp;<i class="fas fa-users"></i>&nbsp;总访问人数:&nbsp;
+                    <span id="busuanzi_value_site_uv" class="white-color"></span>
+            </span>
+             -->
+
+
+            <br>
+
+            <!-- 运行天数提醒. -->
+            
+            <br>
+            
+        </div>
+        <div class="col s12 m4 l4 social-link ">
+    <a href="https://github.com/fyxemmmm" class="tooltipped" target="_blank" data-tooltip="访问我的GitHub" data-position="top" data-delay="50">
+        <i class="fab fa-github"></i>
+    </a>
+
+
+
+    <a href="mailto:fyxemmmm@gmail.com" class="tooltipped" target="_blank" data-tooltip="邮件联系我" data-position="top" data-delay="50">
+        <i class="fas fa-envelope-open"></i>
+    </a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <a href="/atom.xml" class="tooltipped" target="_blank" data-tooltip="RSS 订阅" data-position="top" data-delay="50">
+        <i class="fas fa-rss"></i>
+    </a>
+
+</div>
+    </div>
+</footer>
+
+<div class="progress-bar"></div>
+
+
+    <!-- 搜索遮罩框 -->
+<div id="searchModal" class="modal">
+    <div class="modal-content">
+        <div class="search-header">
+            <span class="title"><i class="fas fa-search"></i>&nbsp;&nbsp;搜索</span>
+            <input type="search" id="searchInput" name="s" placeholder="请输入搜索的关键字"
+                   class="search-input">
+        </div>
+        <div id="searchResult"></div>
+    </div>
+</div>
+
+<script type="text/javascript">
+$(function () {
+    var searchFunc = function (path, search_id, content_id) {
+        'use strict';
+        $.ajax({
+            url: path,
+            dataType: "xml",
+            success: function (xmlResponse) {
+                // get the contents from search data
+                var datas = $("entry", xmlResponse).map(function () {
+                    return {
+                        title: $("title", this).text(),
+                        content: $("content", this).text(),
+                        url: $("url", this).text()
+                    };
+                }).get();
+                var $input = document.getElementById(search_id);
+                var $resultContent = document.getElementById(content_id);
+                $input.addEventListener('input', function () {
+                    var str = '<ul class=\"search-result-list\">';
+                    var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+                    $resultContent.innerHTML = "";
+                    if (this.value.trim().length <= 0) {
+                        return;
+                    }
+                    // perform local searching
+                    datas.forEach(function (data) {
+                        var isMatch = true;
+                        var data_title = data.title.trim().toLowerCase();
+                        var data_content = data.content.trim().replace(/<[^>]+>/g, "").toLowerCase();
+                        var data_url = data.url;
+                        data_url = data_url.indexOf('/') === 0 ? data.url : '/' + data_url;
+                        var index_title = -1;
+                        var index_content = -1;
+                        var first_occur = -1;
+                        // only match artiles with not empty titles and contents
+                        if (data_title !== '' && data_content !== '') {
+                            keywords.forEach(function (keyword, i) {
+                                index_title = data_title.indexOf(keyword);
+                                index_content = data_content.indexOf(keyword);
+                                if (index_title < 0 && index_content < 0) {
+                                    isMatch = false;
+                                } else {
+                                    if (index_content < 0) {
+                                        index_content = 0;
+                                    }
+                                    if (i === 0) {
+                                        first_occur = index_content;
+                                    }
+                                }
+                            });
+                        }
+                        // show search results
+                        if (isMatch) {
+                            str += "<li><a href='" + data_url + "' class='search-result-title'>" + data_title + "</a>";
+                            var content = data.content.trim().replace(/<[^>]+>/g, "");
+                            if (first_occur >= 0) {
+                                // cut out 100 characters
+                                var start = first_occur - 20;
+                                var end = first_occur + 80;
+                                if (start < 0) {
+                                    start = 0;
+                                }
+                                if (start === 0) {
+                                    end = 100;
+                                }
+                                if (end > content.length) {
+                                    end = content.length;
+                                }
+                                var match_content = content.substr(start, end);
+                                // highlight all keywords
+                                keywords.forEach(function (keyword) {
+                                    var regS = new RegExp(keyword, "gi");
+                                    match_content = match_content.replace(regS, "<em class=\"search-keyword\">" + keyword + "</em>");
+                                });
+
+                                str += "<p class=\"search-result\">" + match_content + "...</p>"
+                            }
+                            str += "</li>";
+                        }
+                    });
+                    str += "</ul>";
+                    $resultContent.innerHTML = str;
+                });
+            }
+        });
+    };
+
+    searchFunc('/search.xml', 'searchInput', 'searchResult');
+});
+</script>
+
+    <!-- 回到顶部按钮 -->
+<div id="backTop" class="top-scroll">
+    <a class="btn-floating btn-large waves-effect waves-light" href="#!">
+        <i class="fas fa-arrow-up"></i>
+    </a>
+</div>
+
+
+    <script src="https://cdn.jsdelivr.net/gh/fyxemmmm/fyxemmmm.github.io/libs/materialize/materialize.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/fyxemmmm/fyxemmmm.github.io/libs/masonry/masonry.pkgd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/fyxemmmm/fyxemmmm.github.io/libs/aos/aos.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/fyxemmmm/fyxemmmm.github.io/libs/scrollprogress/scrollProgress.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/fyxemmmm/fyxemmmm.github.io/libs/lightGallery/js/lightgallery-all.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/fyxemmmm/fyxemmmm.github.io/js/matery.js"></script>
+
+    <!-- Baidu Analytics -->
+
+    <!-- Baidu Push -->
+
+    
+    
+
+    
+
+    
+
+    <!--腾讯兔小巢-->
+    
+    
+
+    
+
+    
+
+    
+    <script src="https://cdn.jsdelivr.net/gh/fyxemmmm/fyxemmmm.github.io/libs/instantpage/instantpage.js" type="module"></script>
+    
+
+</body>
+
+</html>

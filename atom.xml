@@ -6,7 +6,7 @@
   <link href="https://fyxemmmm.github.io/atom.xml" rel="self"/>
   
   <link href="https://fyxemmmm.github.io/"/>
-  <updated>2021-08-27T13:31:22.293Z</updated>
+  <updated>2021-08-27T14:02:17.743Z</updated>
   <id>https://fyxemmmm.github.io/</id>
   
   <author>
@@ -15,6 +15,33 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>golang 内存管理</title>
+    <link href="https://fyxemmmm.github.io/2021/08/27/golang-nei-cun-guan-li/"/>
+    <id>https://fyxemmmm.github.io/2021/08/27/golang-nei-cun-guan-li/</id>
+    <published>2021-08-27T13:41:26.000Z</published>
+    <updated>2021-08-27T14:02:17.743Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h2 id=&quot;引言&quot;&gt;&lt;a href=&quot;#引言&quot; class=&quot;headerlink&quot; title=&quot;引言&quot;&gt;&lt;/a&gt;引言&lt;/h2&gt;&lt;p&gt;要搞明白 Go 语言的内存管理，就必须先理解操作系统以及机器硬件是如何管理内存的。因为 Go</summary>
+        
+      
+    
+    
+    
+    <category term="golang" scheme="https://fyxemmmm.github.io/categories/golang/"/>
+    
+    
+    <category term="golang" scheme="https://fyxemmmm.github.io/tags/golang/"/>
+    
+    <category term="内存管理" scheme="https://fyxemmmm.github.io/tags/%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/"/>
+    
+  </entry>
   
   <entry>
     <title>http2详解 [下]</title>
@@ -96,7 +123,7 @@
     <link href="https://fyxemmmm.github.io/2021/08/20/zi-qian-ca-zheng-shu/"/>
     <id>https://fyxemmmm.github.io/2021/08/20/zi-qian-ca-zheng-shu/</id>
     <published>2021-08-20T15:49:20.000Z</published>
-    <updated>2021-08-20T16:16:02.392Z</updated>
+    <updated>2021-08-27T13:40:31.903Z</updated>
     
     
       
@@ -126,7 +153,7 @@
     <link href="https://fyxemmmm.github.io/2021/08/19/yi-zhang-tu-dai-ni-li-jie-http/"/>
     <id>https://fyxemmmm.github.io/2021/08/19/yi-zhang-tu-dai-ni-li-jie-http/</id>
     <published>2021-08-19T13:33:03.000Z</published>
-    <updated>2021-08-27T13:16:19.809Z</updated>
+    <updated>2021-08-27T13:38:12.232Z</updated>
     
     
       
