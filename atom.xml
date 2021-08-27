@@ -6,7 +6,7 @@
   <link href="https://fyxemmmm.github.io/atom.xml" rel="self"/>
   
   <link href="https://fyxemmmm.github.io/"/>
-  <updated>2021-08-20T16:16:02.392Z</updated>
+  <updated>2021-08-27T13:31:22.293Z</updated>
   <id>https://fyxemmmm.github.io/</id>
   
   <author>
@@ -15,6 +15,81 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>http2详解 [下]</title>
+    <link href="https://fyxemmmm.github.io/2021/08/26/http2-xiang-jie-xia/"/>
+    <id>https://fyxemmmm.github.io/2021/08/26/http2-xiang-jie-xia/</id>
+    <published>2021-08-26T13:11:57.000Z</published>
+    <updated>2021-08-27T13:31:22.293Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h1 id=&quot;8-http2的世界&quot;&gt;&lt;a href=&quot;#8-http2的世界&quot; class=&quot;headerlink&quot; title=&quot;8. http2的世界&quot;&gt;&lt;/a&gt;8.</summary>
+        
+      
+    
+    
+    
+    <category term="协议" scheme="https://fyxemmmm.github.io/categories/%E5%8D%8F%E8%AE%AE/"/>
+    
+    
+    <category term="http2" scheme="https://fyxemmmm.github.io/tags/http2/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>http2详解 [中]</title>
+    <link href="https://fyxemmmm.github.io/2021/08/25/http2-xiang-jie-zhong/"/>
+    <id>https://fyxemmmm.github.io/2021/08/25/http2-xiang-jie-zhong/</id>
+    <published>2021-08-25T13:01:22.000Z</published>
+    <updated>2021-08-27T13:30:54.933Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h1 id=&quot;5-http2的基本概念&quot;&gt;&lt;a href=&quot;#5-http2的基本概念&quot; class=&quot;headerlink&quot; title=&quot;5. http2的基本概念&quot;&gt;&lt;/a&gt;5.</summary>
+        
+      
+    
+    
+    
+    <category term="协议" scheme="https://fyxemmmm.github.io/categories/%E5%8D%8F%E8%AE%AE/"/>
+    
+    
+    <category term="http2" scheme="https://fyxemmmm.github.io/tags/http2/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>http2详解 [上]</title>
+    <link href="https://fyxemmmm.github.io/2021/08/24/http2-xiang-jie-shang/"/>
+    <id>https://fyxemmmm.github.io/2021/08/24/http2-xiang-jie-shang/</id>
+    <published>2021-08-24T12:50:50.000Z</published>
+    <updated>2021-08-27T13:31:58.380Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h1 id=&quot;1-背景&quot;&gt;&lt;a href=&quot;#1-背景&quot; class=&quot;headerlink&quot; title=&quot;1. 背景&quot;&gt;&lt;/a&gt;1.</summary>
+        
+      
+    
+    
+    
+    <category term="协议" scheme="https://fyxemmmm.github.io/categories/%E5%8D%8F%E8%AE%AE/"/>
+    
+    
+    <category term="http2" scheme="https://fyxemmmm.github.io/tags/http2/"/>
+    
+  </entry>
   
   <entry>
     <title>实操理解 [自签ca证书]</title>
@@ -51,7 +126,7 @@
     <link href="https://fyxemmmm.github.io/2021/08/19/yi-zhang-tu-dai-ni-li-jie-http/"/>
     <id>https://fyxemmmm.github.io/2021/08/19/yi-zhang-tu-dai-ni-li-jie-http/</id>
     <published>2021-08-19T13:33:03.000Z</published>
-    <updated>2021-08-20T15:58:46.587Z</updated>
+    <updated>2021-08-27T13:16:19.809Z</updated>
     
     
       
@@ -67,7 +142,7 @@
     <category term="计算机网络" scheme="https://fyxemmmm.github.io/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/"/>
     
     
-    <category term="协议" scheme="https://fyxemmmm.github.io/tags/%E5%8D%8F%E8%AE%AE/"/>
+    <category term="http" scheme="https://fyxemmmm.github.io/tags/http/"/>
     
   </entry>
   

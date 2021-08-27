@@ -4,7 +4,7 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="keywords" content="tcp timewait 踩坑实战, yuxuanの博客">
+    <meta name="keywords" content="http2详解 [上], yuxuanの博客">
     <meta name="description" content="">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
@@ -16,7 +16,7 @@
     <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-    <title>tcp timewait 踩坑实战 | yuxuanの博客</title>
+    <title>http2详解 [上] | yuxuanの博客</title>
     <link rel="icon" type="image/png" href="/favicon.png">
 
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/fyxemmmm/fyxemmmm.github.io/libs/awesome/css/all.css">
@@ -269,12 +269,12 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('https://cdn.jsdelivr.net/gh/fyxemmmm/fyxemmmm.github.io/medias/featureimages/1.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('https://cdn.jsdelivr.net/gh/fyxemmmm/fyxemmmm.github.io/medias/featureimages/5.jpg')">
     <div class="container" style="right: 0px;left: 0px;">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title">tcp timewait 踩坑实战</h1>
+                    <h1 class="description center-align post-title">http2详解 [上]</h1>
                 </div>
             </div>
         </div>
@@ -296,12 +296,8 @@
                     
                     <div class="article-tag">
                         
-                            <a href="/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/">
-                                <span class="chip bg-color">操作系统</span>
-                            </a>
-                        
-                            <a href="/tags/tcp/">
-                                <span class="chip bg-color">tcp</span>
+                            <a href="/tags/http2/">
+                                <span class="chip bg-color">http2</span>
                             </a>
                         
                     </div>
@@ -312,8 +308,8 @@
                     <div class="post-cate">
                         <i class="fas fa-bookmark fa-fw icon-category"></i>
                         
-                            <a href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/" class="post-category">
-                                操作系统
+                            <a href="/categories/%E5%8D%8F%E8%AE%AE/" class="post-category">
+                                协议
                             </a>
                         
                     </div>
@@ -325,7 +321,7 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
-                    2021-08-17
+                    2021-08-24
                 </div>
                 
 
@@ -336,7 +332,7 @@
                 
                 <div class="info-break-policy">
                     <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
-                    17 分
+                    11 分
                 </div>
                 
 
@@ -354,163 +350,71 @@
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <p><strong>你遇到过TIME_WAIT的问题吗？</strong></p>
-<p>我相信很多都遇到过这个问题。一旦有用户在喊：网络变慢了。第一件事情就是，netstat -a | grep TIME_WAIT | wc -l 一下，哎呀妈呀，几千个TIME_WAIT。</p>
-<p>然后，做的第一件事情就是：打开Google或者Bing，输入关键词：too many time wait。一定能找到解决方案，而排在最前面或者被很多人到处转载的解决方案一定是：</p>
-<blockquote>
-<p>打开 sysctl.conf 文件，修改以下几个参数：</p>
-<p>net.ipv4.tcp_tw_recycle = 1</p>
-<p>net.ipv4.tcp_tw_reuse = 1</p>
-<p>net.ipv4.tcp_timestamps = 1</p>
-</blockquote>
-<p>你也会被告知，开启tw_recylce和tw_reuse一定需要timestamps的支持，而且这些配置一般不建议开启，但是对解决TIME_WAIT很多的问题，有很好的用处。</p>
-<p>接下来，你就直接修改了这几个参数，reload一下，发现，咦，没几分钟，TIME_WAIT的数量真的降低了，也没发现哪个用户说有问题，然后就没有然后了。</p>
-<p>做到这一步，相信50%或者更高比例的开发就已经止步了。问题好像解决了，但是，要彻底理解并解决这个问题，可能就没这么简单，或者说，还有很长的路要走！</p>
-<p><strong>什么是TIME-WAIT和CLOSE-WAIT?</strong></p>
-<p>所谓，要解决问题，就要先理解问题。随便改两行代码，发现bug“没有了”，也不是bug真的没有了，只是隐藏在更深的地方，你没有发现，或者以你的知识水平，你无法发现而已。</p>
-<p>大家知道，由于socket是全双工的工作模式，一个socket的关闭，是需要四次握手来完成的。</p>
-<ul>
-<li>主动关闭连接的一方，调用close()；<strong>协议层发送FIN包</strong></li>
-<li><strong>被动关闭的一方收到FIN包后，协议层回复ACK</strong>；然后<strong>被动关闭的一方，进入CLOSE_WAIT状态，</strong>主动关闭的一方等待对方关闭，则进入FIN_WAIT_2状态；此时，主动关闭的一方 等待 被动关闭一方的应用程序，调用close操作</li>
-<li>被动关闭的一方在完成所有数据发送后，调用close()操作；此时，<strong>协议层发送FIN包给主动关闭的一方，等待对方的ACK，被动关闭的一方进入LAST_ACK状态</strong>；</li>
-<li><strong>主动关闭的一方收到FIN包，协议层回复ACK</strong>；此时，<strong>主动关闭连接的一方，进入TIME_WAIT状态；而被动关闭的一方，进入CLOSED状态</strong></li>
-<li>等待2MSL时间，主动关闭的一方，结束TIME_WAIT，进入CLOSED状态</li>
-</ul>
-<p>通过上面的一次socket关闭操作，你可以得出以下几点：</p>
+                <h1 id="1-背景"><a href="#1-背景" class="headerlink" title="1. 背景"></a>1. 背景</h1><p>这篇文档会从技术和协议层面来介绍http2。</p>
+<p>如果你有在这篇文章中发现任何我的失误造成的错误或疏漏，请帮我指正。我会在后续版本中修改。</p>
+<p>为了让阅读体验更流畅，在这篇文章中我会使用“http2”来指代这一新协议，但请记住该协议的正式名字是HTTP/2。</p>
+<hr>
+<h1 id="2-HTTP的现状"><a href="#2-HTTP的现状" class="headerlink" title="2. HTTP的现状"></a>2. HTTP的现状</h1><p>几乎所有互联网上的内容都采用了HTTP 1.1作为通信协议。人们在该协议上投入了大量精力，所以基于它的基础架构也得以日臻完善。而得益于此，在现有的HTTP协议之上构建新的方案会比从底层建立新的协议要容易得多。</p>
+<h2 id="2-1-HTTP-1-1过于庞大"><a href="#2-1-HTTP-1-1过于庞大" class="headerlink" title="2.1 HTTP 1.1过于庞大"></a>2.1 HTTP 1.1过于庞大</h2><p>HTTP刚诞生的时候只被当作是一个相对简单直观的协议，但时间证明了早期的设计并不尽人意。于1996年发布的、描述HTTP 1.0规范的RFC 1945只有60页，但仅仅3年之后、描述HTTP 1.1规范的RFC 2616就一下增长到了176页。而当我们在IETF小组对该规范进行更新时，它更是被拆分成了总页数更多的六个文档（这就是RFC 7230及其文件族的由来与诞生）。总而言之，HTTP 1.1包含了太多细节和可选的部分，这让它变得过于庞大。</p>
+<h2 id="2-2-过多的可选项"><a href="#2-2-过多的可选项" class="headerlink" title="2.2 过多的可选项"></a>2.2 过多的可选项</h2><p>HTTP 1.1不仅包含了非常多的细枝末节，同时也为未来的扩展预留了很多选项。这种事无巨细的风格导致在现有的软件生态中，几乎没有任何实现真正实现了协议中提及的所有细节，甚至要弄清楚“所有细节”到底包括哪些细节都非常困难。而这也导致了很多最初不常用的功能在后来的实现中很少会被支持，而有些最初实现了的功能，却又很少被使用。</p>
+<p>随着时间推移，这些当初看似被边缘化的功能逐渐被用上，客户端和服务器的互用性（interoperability）问题就被暴露了出来。HTTP管线化（HTTP pipelining）就是一个非常好的例子。</p>
+<h2 id="2-3-未能被充分利用的TCP"><a href="#2-3-未能被充分利用的TCP" class="headerlink" title="2.3 未能被充分利用的TCP"></a>2.3 未能被充分利用的TCP</h2><p>HTTP 1.1很难榨干TCP协议所能提供的所有性能。HTTP客户端和浏览器必须要另辟蹊径的去找到新的解决方案来降低页面载入时间。</p>
+<p>与此同时，人们也尝试去用新的协议来替代TCP，但结果证明这也非常困难。无奈之下，我们只能尝试同时改进TCP协议本身和基于TCP的上层协议。</p>
+<p>简单来说，我们可以通过更好的利用TCP来减少传输过程中的暂停，并充分挖掘利用那些本可以用于发送/接受更多数据的时间。下面几段我们将会着重讨论这些问题。</p>
+<h2 id="2-4-传输大小和资源数量"><a href="#2-4-传输大小和资源数量" class="headerlink" title="2.4 传输大小和资源数量"></a>2.4 传输大小和资源数量</h2><p>如果仔细观察打开那些最流行的网站首页所需要下载的资源的话，会发现一个非常明显的趋势。  近年来加载网站首页需要的下载的数据量在逐渐增加，并已经超过了1.9MB。但在这里我们更应该关心的是：平均每个页面为了完成显示与渲染所需要下载的资源数已经超过了100个。</p>
+<p>正如下图所示，这种趋势已经持续了很长一段时间，并且没有减缓的迹象。该图表中绿色直线展示了传输数据大小的增长，红色直线展示了平均请求资源数量的增长。</p>
+<p><img src="https://image.fyxemmmm.cn/blog/images/h21.png" alt="transfer size growth"></p>
+<h2 id="2-5-恼人的延迟"><a href="#2-5-恼人的延迟" class="headerlink" title="2.5 恼人的延迟"></a>2.5 恼人的延迟</h2><img style="float: right;" src="https://image.fyxemmmm.cn/blog/images/h22.png">
+
+<p>HTTP 1.1对网络延迟非常敏感。部分原因是HTTP pipelining还存有很多问题，所以对大部分用户来说这项技术是被默认关闭的。</p>
+<p>虽然近几年来网络带宽增长非常快，然而我们却并没有看到网络延迟有对应程度的降低。在高延迟的网络上（比如移动设备），即使拥有高连接速率，也很难获得优质快速的网络体验。</p>
+<p>另外一个需要低延迟的场景是某些视频服务，如视频会议、游戏和一些类似无法预生成待发送数据流的服务。</p>
+<h2 id="2-6-线头阻塞（Head-of-line-blocking）"><a href="#2-6-线头阻塞（Head-of-line-blocking）" class="headerlink" title="2.6 线头阻塞（Head-of-line blocking）"></a>2.6 线头阻塞（Head-of-line blocking）</h2><p>HTTP pipelining是这样一种技术：在等待上一个请求响应的同时，发送下一个请求。(译者注：作者这个解释并不完全正确，HTTP pipelining其实是把多个HTTP请求放到一个TCP连接中一一发送，而在发送过程中不需要等待服务器对前一个请求的响应；只不过，客户端还是要按照发送请求的顺序来接收响应。)但就像在超市收银台或者银行柜台排队时一样，你并不知道前面的顾客是干脆利索的还是会跟收银员/柜员磨蹭到世界末日（译者注：不管怎么说，服务器（即收银员/柜员）是要按照顺序处理请求的，如果前一个请求非常耗时（顾客磨蹭），那么后续请求都会受到影响），这就是所谓的线头阻塞（head-of-line blocking）。</p>
+<img style="float: right;" src="https://image.fyxemmmm.cn/blog/images/h23.png">
+
+<p>当然，你可以在选择队伍时候就做好功课，去排一个你认为最快的队伍，或者甚至另起一个新的队伍（译者注：即新建一个TCP连接）。但不管怎么样，你总归得先选择一个队伍，而且一旦选定之后，就不能更换队伍。</p>
+<p>但是，另起新队伍会导致资源耗费和性能损失（译者注：新建 TCP 连接的开销非常大）。这种另起新队伍的方式只在新队伍数量很少的情况下有作用，因此它并不具备可扩展性。（译者注：这段话意思是说，靠大量新建连接是不能有效解决延迟问题的，即HTTP pipelining并不能彻底解决head-of-line blocking问题。）所以针对此问题并没有完美的解决方案。</p>
+<p>这就是为什么即使到了今天，大部分桌面浏览器仍然会选择默认关闭HTTP pipelining这一功能的原因。</p>
+<p>而关于这个问题的更多细节，可以参阅Firefox的 <a target="_blank" rel="noopener" href="https://bugzilla.mozilla.org/show_bug.cgi?id=264354">bugzilla #264354</a>。</p>
+<h1 id="3-那些年，克服延迟之道"><a href="#3-那些年，克服延迟之道" class="headerlink" title="3. 那些年，克服延迟之道"></a>3. 那些年，克服延迟之道</h1><p>再困难的问题也有解决的方案，但这些方案却良莠不齐。</p>
+<h2 id="3-1-Spriting"><a href="#3-1-Spriting" class="headerlink" title="3.1 Spriting"></a>3.1 Spriting</h2><img style="float: right;" src="https://image.fyxemmmm.cn/blog/images/h24.jpg">
+
+<p>Spriting是一种将很多较小的图片合并成一张大图，再用JavaScript或者CSS将小图重新“切割”出来的技术。</p>
+<p>网站可以利用这一技巧来达到提速的目的——在HTTP 1.1里，下载一张大图比下载100张小图快得多。</p>
+<p>但是当某些页面只需要显示其中一两张小图时，这种缓存整张大图的方案就显得过于臃肿。同时，当缓存被清楚的时候的时候，Spriting会导致所有小图片被同时删除，而不能选择保留其中最常用的几个。</p>
+<h2 id="3-2-内联（Inlining）"><a href="#3-2-内联（Inlining）" class="headerlink" title="3.2 内联（Inlining）"></a>3.2 内联（Inlining）</h2><p>Inlining是另外一种防止发送很多小图请求的技巧，它将图片的原始数据嵌入在CSS文件里面的URL里。而这种方案的优缺点跟Spriting很类似。</p>
+<pre><code>.icon1 {
+    background: url(data:image/png;base64,&lt;data&gt;) no-repeat;
+  }
+.icon2 {
+    background: url(data:image/png;base64,&lt;data&gt;) no-repeat;
+  }
+</code></pre>
+<h2 id="3-3-拼接（Concatenation）"><a href="#3-3-拼接（Concatenation）" class="headerlink" title="3.3 拼接（Concatenation）"></a>3.3 拼接（Concatenation）</h2><p>大型网站往往会包含大量的JavaScript文件。开发人员可以利用一些前端工具将这些文件合并为一个大的文件，从而让浏览器能只花费一个请求就将其下载完，而不是发无数请求去分别下载那些琐碎的JavaScript文件。但凡事往往有利有弊，如果某页面只需要其中一小部分代码，它也必须下载完整的那份；而文件中一个小小的改动也会造成大量数据的被重新下载。</p>
+<p>这种方案也给开发者造成了很大的不便。</p>
+<h2 id="3-4-分片（Sharding）"><a href="#3-4-分片（Sharding）" class="headerlink" title="3.4 分片（Sharding）"></a>3.4 分片（Sharding）</h2><p>最后一个我要说的性能优化技术叫做“Sharding”。顾名思义，Sharding就是把你的服务分散在尽可能多的主机上。这种方案乍一听比较奇怪，但是实际上在这背后却蕴藏了它独辟蹊径的道理！</p>
+<p>最初的HTTP 1.1规范提到一个客户端最多只能对同一主机建立两个TCP连接。因此，为了不和规范冲突，一些聪明的网站使用了新的主机名，这样的话，用户就能和网站建立更多的连接，从而降低载入时间。</p>
+<p>后来，两个连接的限制被取消了，现在的客户端可以轻松地和每个主机建立6-8个连接。但由于连接的上限依然存在，所以网站还是会用这种技术来提升连接的数量。而随着资源个数的提升（上面章节的图例），网站会需要更多的连接来保证HTTP协议的效率，从而提升载入速度。在现今的网站上，使用50甚至100个连接来打开一个页面已经并不罕见。根据<a target="_blank" rel="noopener" href="https://httparchive.org/">httparchive.org</a>的最新记录显示，在Top 30万个URL中平均使用40（！）个TCP连接来显示页面，而且这个数字仍然在缓慢的增长中。</p>
+<p>另外一个将图片或者其他资源分发到不同主机的理由是可以不使用cookies，毕竟现今cookies的大小已经非常可观了。无cookies的图片服务器往往意味着更小的HTTP请求以及更好的性能！</p>
+<p>下面的图片展示了访问一个瑞典著名网站的时产生的数据包，请注意这些请求是如何被分发到不同主机的。</p>
+<p><img src="https://image.fyxemmmm.cn/blog/images/h25.jpg" alt="image sharding at expressen.se"></p>
+<h1 id="4-升级HTTP"><a href="#4-升级HTTP" class="headerlink" title="4. 升级HTTP"></a>4. 升级HTTP</h1><p>花点功夫去改善HTTP协议显然是极好的事情。我们可以着手于以下几个方面：</p>
 <ol>
-<li>主动关闭连接的一方 - 也就是主动调用socket的close操作的一方，最终会进入TIME_WAIT状态</li>
-<li>被动关闭连接的一方，有一个中间状态，即CLOSE_WAIT，因为协议层在等待上层的应用程序，主动调用close操作后才主动关闭这条连接</li>
-<li>TIME_WAIT会默认等待2MSL时间后，才最终进入CLOSED状态；</li>
-<li>在一个连接没有进入CLOSED状态之前，这个连接是不能被重用的！</li>
+<li>降低协议对延迟的敏感</li>
+<li>修复pipelining和head of line blocking的问题</li>
+<li>防止主机需求更高的连接数量</li>
+<li>保留所有现有的接口，内容，URI格式和结构</li>
+<li>由IETF的HTTPbis工作组来制定  <!-- 这一段有点莫名其妙 --></li>
 </ol>
-<p>所以，这里凭你的直觉，TIME_WAIT并不可怕（not really，后面讲），CLOSE_WAIT才可怕，因为CLOSE_WAIT很多，表示说要么是你的应用程序写的有问题，没有合适的关闭socket；要么是说，你的服务器CPU处理不过来（CPU太忙）或者你的应用程序一直睡眠到其它地方(锁，或者文件I/O等等)，你的应用程序获得不到合适的调度时间，造成你的程序没法真正的执行close操作。</p>
-<p>这里又出现两个问题：</p>
-<ol>
-<li>上文提到的连接重用，那连接到底是个什么概念？</li>
-<li>协议层为什么要设计一个TIME_WAIT状态？这个状态为什么默认等待2MSL时间才会进入CLOSED</li>
-</ol>
-<p>先解释清楚这两个问题，我们再来看，开头提到的几个网络配置究竟有什么用，以及TIME_WAIT的后遗症问题。</p>
-<p><strong>Socket连接到底是个什么概念？</strong></p>
-<p>大家经常提socket，那么，到底什么是一个socket？其实，socket就是一个 五元组，包括：</p>
-<ol>
-<li>源IP</li>
-<li>源端口</li>
-<li>目的IP</li>
-<li>目的端口</li>
-<li>类型：TCP or UDP</li>
-</ol>
-<p>这个五元组，即标识了一条可用的连接。注意，有很多人把一个socket定义成四元组，也就是 源IP:源端口 + 目的IP:目的端口，这个定义是不正确的。</p>
-<p>例如，如果你的本地出口IP是180.172.35.150，那么你的浏览器在连接某一个Web服务器，例如百度的时候，这条socket连接的四元组可能就是：</p>
-<blockquote>
-<p>[180.172.35.150:45678, tcp, 180.97.33.108:80]</p>
-</blockquote>
-<p>源IP为你的出口IP地址 180.172.35.150，源端口为随机端口 45678，目的IP为百度的某一个负载均衡服务器IP 180.97.33.108，端口为HTTP标准的80端口。</p>
-<p>如果这个时候，你再开一个浏览器，访问百度，将会产生一条新的连接：</p>
-<blockquote>
-<p>[180.172.35.150:43678, tcp, 180.97.33.108:80]</p>
-</blockquote>
-<p>这条新的连接的源端口为一个新的随机端口 43678。</p>
-<p>如此来看，如果你的本机需要压测百度，那么，你最多可以创建多少个连接呢？</p>
-<p><strong>第二个问题，TIME_WAIT有什么用？</strong></p>
-<p>如果我们来做个类比的话，TIME_WAIT的出现，对应的是你的程序里的异常处理，它的出现，就是为了解决网络的丢包和网络不稳定所带来的其他问题：</p>
-<p>第一，防止前一个连接【五元组，我们继续以 180.172.35.150:45678, tcp, 180.97.33.108:80 为例】上延迟的数据包或者丢失重传的数据包，被后面复用的连接【前一个连接关闭后，此时你再次访问百度，新的连接可能还是由180.172.35.150:45678, tcp, 180.97.33.108:80 这个五元组来表示，也就是源端口凑巧还是45678】错误的接收（异常：数据丢了，或者传输太慢了），参见下图：</p>
-<ul>
-<li>SEQ=3的数据包丢失，重传第一次，没有得到ACK确认</li>
-<li>如果没有TIME_WAIT，或者TIME_WAIT时间非常端，那么关闭的连接【180.172.35.150:45678, tcp, 180.97.33.108:80 的状态变为了CLOSED，源端口可被再次利用】，马上被重用【对180.97.33.108:80新建的连接，复用了之前的随机端口45678】，并连续发送SEQ=1,2 的数据包</li>
-<li>此时，前面的连接上的SEQ=3的数据包再次重传，同时，seq的序号刚好也是3（这个很重要，不然，SEQ的序号对不上，就会RST掉），此时，前面一个连接上的数据被后面的一个连接错误的接收</li>
-</ul>
-<p>第二，确保连接方能在时间范围内，关闭自己的连接。其实，也是因为丢包造成的，参见下图：</p>
-<p><img src="https://image.fyxemmmm.cn/blog/images/img1.webp"></p>
-<ul>
-<li>主动关闭方关闭了连接，发送了FIN；</li>
-<li>被动关闭方回复ACK同时也执行关闭动作，发送FIN包；此时，被动关闭的一方进入LAST_ACK状态</li>
-<li>主动关闭的一方回去了ACK，主动关闭一方进入TIME_WAIT状态；</li>
-<li>但是最后的ACK丢失，被动关闭的一方还继续停留在LAST_ACK状态</li>
-<li>此时，如果没有TIME_WAIT的存在，或者说，停留在TIME_WAIT上的时间很短，则主动关闭的一方很快就进入了CLOSED状态，也即是说，如果此时新建一个连接，源随机端口如果被复用，在connect发送SYN包后，由于被动方仍认为这条连接【五元组】还在等待ACK，但是却收到了SYN，则被动方会回复RST</li>
-<li>造成主动创建连接的一方，由于收到了RST，则连接无法成功</li>
-</ul>
-<p>所以，你看到了，TIME_WAIT的存在是很重要的，如果强制忽略TIME_WAIT，还是有很高的机率，造成数据粗乱，或者短暂性的连接失败。</p>
-<p>那么，为什么说，TIME_WAIT状态会是持续2MSL（2倍的max segment lifetime）呢？这个时间可以通过修改内核参数调整吗？第一，这个2MSL，是RFC 793里定义的，参见RFC的截图标红的部分：</p>
-<p><img src="https://image.fyxemmmm.cn/blog/images/img2.webp"></p>
-<p>这个定义，更多的是一种保障（IP数据包里的TTL，即数据最多存活的跳数，真正反应的才是数据在网络上的存活时间），确保最后丢失了ACK，被动关闭的一方再次重发FIN并等待回复的ACK，一来一去两个来回。内核里，写死了这个MSL的时间为：30秒（有读者提醒，RFC里建议的MSL其实是2分钟，但是很多实现都是30秒），所以TIME_WAIT的即为1分钟：</p>
-<p>所以，再次回想一下前面的问题，如果一条连接，即使在四次握手关闭了，由于TIME_WAIT的存在，这个连接，在1分钟之内，也无法再次被复用，那么，如果你用一台机器做压测的客户端，你一分钟能发送多少并发连接请求？如果这台是一个负载均衡服务器，一台负载均衡服务器，一分钟可以有多少个连接同时访问后端的服务器呢？</p>
-<p><strong>TIME_WAIT很多，可怕吗？</strong></p>
-<p>如果你通过 ss -tan state time-wait | wc -l 发现，系统中有很多TIME_WAIT，很多人都会紧张。多少算多呢？几百几千？如果是这个量级，其实真的没必要紧张。第一，这个量级，因为TIME_WAIT所占用的内存很少很少；因为记录和寻找可用的local port所消耗的CPU也基本可以忽略。</p>
-<p><strong>会占用内存吗？当然</strong>！任何你可以看到的数据，内核里都需要有相关的数据结构来保存这个数据啊。一条Socket处于TIME_WAIT状态，它也是一条“存在”的socket，内核里也需要有保持它的数据：</p>
-<ol>
-<li><p>内核里有保存所有连接的一个hash table，这个hash table里面既包含TIME_WAIT状态的连接，也包含其他状态的连接。主要用于有新的数据到来的时候，从这个hash table里快速找到这条连接。不同的内核对这个hash table的大小设置不同，你可以通过dmesg命令去找到你的内核设置的大小：</p>
-</li>
-<li><p>还有一个hash table用来保存所有的bound ports，主要用于可以快速的找到一个可用的端口或者随机端口：</p>
-</li>
-</ol>
-<p>由于内核需要保存这些数据，必然，会占用一定的内存。</p>
-<p><strong>会消耗CPU吗？</strong>当然！每次找到一个随机端口，还是需要遍历一遍bound ports的吧，这必然需要一些CPU时间。</p>
-<p>TIME_WAIT很多，既占内存又消耗CPU，这也是为什么很多人，看到TIME_WAIT很多，就蠢蠢欲动的想去干掉他们。其实，如果你再进一步去研究，1万条TIME_WAIT的连接，也就多消耗1M左右的内存，对现代的很多服务器，已经不算什么了。至于CPU，能减少它当然更好，但是不至于因为1万多个hash item就担忧。</p>
-<p>如果，你真的想去调优，还是需要搞清楚别人的调优建议，以及调优参数背后的意义！</p>
-<p><strong>TIME_WAIT调优，你必须理解的几个调优参数</strong></p>
-<p>在具体的图例之前，我们还是先解析一下相关的几个参数存在的意义。</p>
-<ol>
-<li><p><strong>net.ipv4.tcp_timestamps</strong></p>
-<p>RFC 1323 在 TCP Reliability一节里，引入了timestamp的TCP option，两个4字节的时间戳字段，其中第一个4字节字段用来保存发送该数据包的时间，第二个4字节字段用来保存最近一次接收对方发送到数据的时间。有了这两个时间字段，也就有了后续优化的余地。</p>
-<p>tcp_tw_reuse 和 tcp_tw_recycle就依赖这些时间字段。</p>
-</li>
-<li><p><strong>net.ipv4.tcp_tw_reuse</strong></p>
-<p>字面意思，reuse TIME_WAIT状态的连接。</p>
-<p>时刻记住一条socket连接，就是那个五元组，出现TIME_WAIT状态的连接，一定出现在主动关闭连接的一方。所以，当主动关闭连接的一方，再次向对方发起连接请求的时候（例如，客户端关闭连接，客户端再次连接服务端，此时可以复用了；负载均衡服务器，主动关闭后端的连接，当有新的HTTP请求，负载均衡服务器再次连接后端服务器，此时也可以复用），可以复用TIME_WAIT状态的连接。</p>
-<p>通过字面解释，以及例子说明，你看到了，tcp_tw_reuse应用的场景：某一方，需要不断的通过“短连接”连接其他服务器，总是自己先关闭连接(TIME_WAIT在自己这方)，关闭后又不断的重新连接对方。</p>
-<p>那么，当连接被复用了之后，延迟或者重发的数据包到达，新的连接怎么判断，到达的数据是属于复用后的连接，还是复用前的连接呢？那就需要依赖前面提到的两个时间字段了。复用连接后，这条连接的时间被更新为当前的时间，当延迟的数据达到，延迟数据的时间是小于新连接的时间，所以，内核可以通过时间判断出，延迟的数据可以安全的丢弃掉了。</p>
-<p>这个配置，依赖于连接双方，同时对timestamps的支持。同时，这个配置，仅仅影响outbound连接，即做为客户端的角色，连接服务端[connect(dest_ip, dest_port)]时复用TIME_WAIT的socket。</p>
-</li>
-<li><p><strong>net.ipv4.tcp_tw_recycle</strong></p>
-<p>字面意思，销毁掉 TIME_WAIT。</p>
-<p>当开启了这个配置后，内核会快速的回收处于TIME_WAIT状态的socket连接。多快？不再是2MSL，而是一个RTO（retransmission timeout，数据包重传的timeout时间）的时间，这个时间根据RTT动态计算出来，但是远小于2MSL。</p>
-<p>有了这个配置，还是需要保障 丢失重传或者延迟的数据包，不会被新的连接(注意，这里不再是复用了，而是之前处于TIME_WAIT状态的连接已经被destroy掉了，新的连接，刚好是和某一个被destroy掉的连接使用了相同的五元组而已)所错误的接收。在启用该配置，当一个socket连接进入TIME_WAIT状态后，内核里会记录包括该socket连接对应的五元组中的对方IP等在内的一些统计数据，当然也包括从该对方IP所接收到的最近的一次数据包时间。当有新的数据包到达，只要时间晚于内核记录的这个时间，数据包都会被统统的丢掉。</p>
-<p>这个配置，依赖于连接双方对timestamps的支持。同时，这个配置，主要影响到了inbound的连接（对outbound的连接也有影响，但是不是复用），即做为服务端角色，客户端连进来，服务端主动关闭了连接，TIME_WAIT状态的socket处于服务端，服务端快速的回收该状态的连接。</p>
-</li>
-</ol>
-<p>由此，如果客户端处于NAT的网络(多个客户端，同一个IP出口的网络环境)，如果配置了tw_recycle，就可能在一个RTO的时间内，只能有一个客户端和自己连接成功(不同的客户端发包的时间不一致，造成服务端直接把数据包丢弃掉)。</p>
-<p>我尽量尝试用文字解释清楚，但是，来点案例和图示，应该有助于我们彻底理解。</p>
-<p>我们来看这样一个网络情况：</p>
-<ol>
-<li>客户端IP地址为：180.172.35.150，我们可以认为是浏览器</li>
-<li>负载均衡有两个IP，外网IP地址为 115.29.253.156，内网地址为10.162.74.10；外网地址监听80端口</li>
-<li>负载均衡背后有两台Web服务器，一台IP地址为 10.162.74.43，监听80端口；另一台为 10.162.74.44，监听 80 端口</li>
-<li>Web服务器会连接数据服务器，IP地址为 10.162.74.45，监听 3306 端口</li>
-</ol>
-<p>这种简单的架构下，我们来看看，在不同的情况下，我们今天谈论的tw_reuse/tw_recycle对网络连接的影响。</p>
-<p>先做个假定：</p>
-<ol>
-<li>客户端通过HTTP/1.1连接负载均衡，也就是说，HTTP协议投Connection为keep-alive，所以我们假定，客户端 对 负载均衡服务器 的socket连接，客户端会断开连接，所以，TIME_WAIT出现在客户端</li>
-<li>Web服务器和MySQL服务器的连接，我们假定，Web服务器上的程序在连接结束的时候，调用close操作关闭socket资源连接，所以，TIME_WAIT出现在 Web 服务器端。</li>
-</ol>
-<p>那么，在这种假定下：</p>
-<ol>
-<li>Web服务器上，肯定可以配置开启的配置：tcp_tw_reuse；如果Web服务器有很多连向DB服务器的连接，可以保证socket连接的复用。</li>
-<li>那么，负载均衡服务器和Web服务器，谁先关闭连接，则决定了我们怎么配置tcp_tw_reuse/tcp_tw_recycle了</li>
-</ol>
-<p><strong>场景一：负载均衡服务器首先关闭连接</strong> </p>
-<p>在这种情况下，因为负载均衡服务器对Web服务器的连接，TIME_WAIT大都出现在负载均衡服务器上。</p>
-<p>在负载均衡服务器上的配置：</p>
-<ul>
-<li>net.ipv4.tcp_tw_reuse = 1 //尽量复用连接</li>
-<li>net.ipv4.tcp_tw_recycle = 0 //不能保证客户端不在NAT的网络啊</li>
-</ul>
-<p>在Web服务器上的配置为：</p>
-<ul>
-<li>net.ipv4.tcp_tw_reuse = 1 //这个配置主要影响的是Web服务器到DB服务器的连接复用</li>
-<li>net.ipv4.tcp_tw_recycle： 设置成1和0都没有任何意义。想一想，在负载均衡和它的连接中，它是服务端，但是TIME_WAIT出现在负载均衡服务器上；它和DB的连接，它是客户端，recycle对它并没有什么影响，关键是reuse</li>
-</ul>
-<p><strong>场景二：Web服务器首先关闭来自负载均衡服务器的连接</strong></p>
-<p>在这种情况下，Web服务器变成TIME_WAIT的重灾区。负载均衡对Web服务器的连接，由Web服务器首先关闭连接，TIME_WAIT出现在Web服务器上；Web服务器对DB服务器的连接，由Web服务器关闭连接，TIME_WAIT也出现在它身上，此时，负载均衡服务器上的配置：</p>
-<ul>
-<li>net.ipv4.tcp_tw_reuse：0 或者 1 都行，都没有实际意义</li>
-<li>net.ipv4.tcp_tw_recycle=0 //一定是关闭recycle</li>
-</ul>
-<p>在Web服务器上的配置：</p>
-<ul>
-<li>net.ipv4.tcp_tw_reuse = 1 //这个配置主要影响的是Web服务器到DB服务器的连接复用</li>
-<li>net.ipv4.tcp_tw_recycle=1 //由于在负载均衡和Web服务器之间并没有NAT的网络，可以考虑开启recycle，加速由于负载均衡和Web服务器之间的连接造成的大量TIME_WAIT</li>
-</ul>
+<h2 id="4-1-IETF和HTTPbis工作组"><a href="#4-1-IETF和HTTPbis工作组" class="headerlink" title="4.1. IETF和HTTPbis工作组"></a>4.1. IETF和HTTPbis工作组</h2><p>The Internet Engineering Task Force (IETF)是一个开发和推广互联网标准的组织。他们的重心是在协议层面。他们最出名的工作是制定了TCP、DNS、FTP和它们最佳实践的RFC规范，但HTTP和许多其他协议却进展缓慢。<!-- 最后一句话不太好 --></p>
+<p>IETF成立了独立的“工作小组”以便完成某些特定领域内的目标，他们建立了一个“章程”用以制定达到目标的指导方针和规范。在这里，任何人都可以参与讨论和开发，并且每个人有同等的话语权，没人关心你来自哪个公司或组织。</p>
+<p>HTTPbis工作组（我们待会儿再解释这个名字）在2007年夏天成立之后就着手于HTTP1.1标准的更新。在组内，关于下一版本HTTP协议的讨论实际上在2012年后期才开始。而HTTP1.1的更新工作在2014年初完成，并被整理成<a target="_blank" rel="noopener" href="https://tools.ietf.org/html/rfc7320">RFC 7320</a>系列。</p>
+<p>2014年6月初，HTTPbis工作组名义上的最终版文档会议在纽约召开。而剩下的讨论以及等IETF走完流程通过官方的RFC版本预计在来年完成。<!-- 这一段有点别扭 --> <!-- 而余下的讨论以及IETF流程会等到正式通过官方的RFC版本后继续，并预计来年完成。  不太确定这样翻好不好 --></p>
+<p>一些HTTP领域的权威缺席了工作组的讨论和会议。我并不想在此提及任何公司和产品。但藉此，现在互联网上也有一些参与者因此获得了更多信心——不需要这些公司参与IETF也能做得很好。。。  </p>
+<h3 id="4-1-1-名字中的“bis”"><a href="#4-1-1-名字中的“bis”" class="headerlink" title="4.1.1. 名字中的“bis”"></a>4.1.1. 名字中的“bis”</h3><p>工作组名字中的“bis”来自拉丁语中表示<a target="_blank" rel="noopener" href="https://en.wiktionary.org/wiki/bis#Latin">“二”</a>的副词，Bis通常被IETF用作名字的后缀来以表示标准的升级或者一些二次工作，比如这里是针对HTTP1.1。</p>
+<h2 id="4-2-起源于SPDY的http2"><a href="#4-2-起源于SPDY的http2" class="headerlink" title="4.2. 起源于SPDY的http2"></a>4.2. 起源于SPDY的http2</h2><p><a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/SPDY">SPDY</a>是由Google牵头开发的协议。他们将其开源，使得每个人都可以参与开发。但很明显，他们通过控制浏览器的实现和享用着优质服务的大量用户来获益。<!-- 这一句段翻译的怪怪的 --></p>
+<p>当HTTPbis小组决定开始制定http2的时候，SPDY已经充分证实了它是一个非常好用的方案。当时已经有人在互联网上成功部署SPDY，并且也有一些文章讨论他的性能。因此，http2便基于SPDY/3草案进行一些修改之后发布了http2的draft-00。</p>
+<!-- Review备注：有几段怪怪的，已标出 -->
 
                 
             </div>
@@ -525,12 +429,8 @@
                     
                         <div class="article-tag">
                             
-                                <a href="/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/">
-                                    <span class="chip bg-color">操作系统</span>
-                                </a>
-                            
-                                <a href="/tags/tcp/">
-                                    <span class="chip bg-color">tcp</span>
+                                <a href="/tags/http2/">
+                                    <span class="chip bg-color">http2</span>
                                 </a>
                             
                         </div>
@@ -580,31 +480,31 @@
             <div class="article-badge left-badge text-color">
                 <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
             <div class="card">
-                <a href="/2021/08/17/kafka/">
+                <a href="/2021/08/25/http2-xiang-jie-zhong/">
                     <div class="card-image">
                         
                         
-                        <img src="https://cdn.jsdelivr.net/gh/fyxemmmm/fyxemmmm.github.io/medias/featureimages/15.jpg" class="responsive-img" alt="kafka原理分析">
+                        <img src="https://cdn.jsdelivr.net/gh/fyxemmmm/fyxemmmm.github.io/medias/featureimages/10.jpg" class="responsive-img" alt="http2详解 [中]">
                         
-                        <span class="card-title">kafka原理分析</span>
+                        <span class="card-title">http2详解 [中]</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            kafka痛点分析 & page cache 原理
+                            http2协议详解 中篇
                         
                     </div>
                     <div class="publish-info">
                         <span class="publish-date">
-                            <i class="far fa-clock fa-fw icon-date"></i>2021-08-17
+                            <i class="far fa-clock fa-fw icon-date"></i>2021-08-25
                         </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-bookmark fa-fw icon-category"></i>
                             
-                            <a href="/categories/%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/" class="post-category">
-                                    消息队列
+                            <a href="/categories/%E5%8D%8F%E8%AE%AE/" class="post-category">
+                                    协议
                                 </a>
                             
                             
@@ -614,8 +514,8 @@
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/kafka/">
-                        <span class="chip bg-color">kafka</span>
+                    <a href="/tags/http2/">
+                        <span class="chip bg-color">http2</span>
                     </a>
                     
                 </div>
@@ -629,30 +529,31 @@
                 下一篇&nbsp;<i class="fas fa-chevron-right"></i>
             </div>
             <div class="card">
-                <a href="/2021/08/16/k8s-install/">
+                <a href="/2021/08/20/zi-qian-ca-zheng-shu/">
                     <div class="card-image">
                         
-                        <img src="https://image.fyxemmmm.cn/blog/images/img6.jpeg" class="responsive-img" alt="Kubernetes高可用集群搭建">
                         
-                        <span class="card-title">Kubernetes高可用集群搭建</span>
+                        <img src="https://cdn.jsdelivr.net/gh/fyxemmmm/fyxemmmm.github.io/medias/featureimages/17.jpg" class="responsive-img" alt="实操理解 [自签ca证书]">
+                        
+                        <span class="card-title">实操理解 [自签ca证书]</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            基于kubeadm & 快速搭建k8s集群
+                            理解自签ca以及如何签发证书
                         
                     </div>
                     <div class="publish-info">
                             <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2021-08-16
+                                <i class="far fa-clock fa-fw icon-date"></i>2021-08-20
                             </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-bookmark fa-fw icon-category"></i>
                             
-                            <a href="/categories/golang/" class="post-category">
-                                    golang
+                            <a href="/categories/%E5%8A%A0%E5%AF%86%E4%B8%8E%E5%AE%89%E5%85%A8/" class="post-category">
+                                    加密与安全
                                 </a>
                             
                             
@@ -662,12 +563,16 @@
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/golang/">
-                        <span class="chip bg-color">golang</span>
+                    <a href="/tags/%E8%AF%81%E4%B9%A6/">
+                        <span class="chip bg-color">证书</span>
                     </a>
                     
-                    <a href="/tags/kubernetes/">
-                        <span class="chip bg-color">kubernetes</span>
+                    <a href="/tags/ca/">
+                        <span class="chip bg-color">ca</span>
+                    </a>
+                    
+                    <a href="/tags/%E8%87%AA%E7%AD%BE/">
+                        <span class="chip bg-color">自签</span>
                     </a>
                     
                 </div>
