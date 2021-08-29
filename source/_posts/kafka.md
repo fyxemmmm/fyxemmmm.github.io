@@ -2,7 +2,7 @@
 title: kafka原理分析
 date: 2021-08-17 21:57:35
 author: yuxuan
-img: 
+img: https://image.fyxemmmm.cn/blog/fj/images/fj-76.jpg
 top: false
 hide: false
 cover: false

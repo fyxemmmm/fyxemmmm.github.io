@@ -2,7 +2,7 @@
 title: http2详解 [中]
 date: 2021-08-25 21:01:22
 author: yuxuan
-img: 
+img: https://image.fyxemmmm.cn/blog/fj/images/fj-25.jpg
 top: false
 hide: false
 cover: false

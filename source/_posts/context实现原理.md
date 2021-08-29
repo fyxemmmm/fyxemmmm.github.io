@@ -186,7 +186,7 @@ func WithDeadline(parent Context, deadline time.Time) (Context, CancelFunc) {
 
 
 
-![img](https://image.fyxemmmm.cn/blog/images/ctx1.jpg)
+![](https://image.fyxemmmm.cn/blog/images/ctx1.jpg)
 
 可以看出，**cancelCtx也是一棵树，当触发cancel时，会cancel本结点和其子树的所有cancelCtx**。
 

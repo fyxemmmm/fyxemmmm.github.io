@@ -10,7 +10,7 @@ coverImg:
 toc: false
 mathjax: false
 summary: 深入理解 tcp timewait
-categories: 操作系统
+categories: 协议
 tags:
   - 操作系统
   - tcp

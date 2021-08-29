@@ -2,7 +2,7 @@
 title: 实操理解 [自签ca证书]
 date: 2021-08-20 23:49:20
 author: yuxuan
-img: 
+img: https://image.fyxemmmm.cn/blog/fj/images/fj-17.jpg
 top: false
 hide: false
 cover: false

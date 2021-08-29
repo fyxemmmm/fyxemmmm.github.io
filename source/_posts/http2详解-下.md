@@ -2,7 +2,7 @@
 title: http2详解 [下]
 date: 2021-08-26 21:11:57
 author: yuxuan
-img: 
+img: https://image.fyxemmmm.cn/blog/fj/images/fj-16.jpg
 top: false
 hide: false
 cover: false
@@ -140,7 +140,7 @@ Google向世界展示了他们的SPDY，证明了像这样的新协议也能在�
 
 那些大型代理程序开发者，例如HAProxy、Squid和Varnish也表示出了他们对支持http2的兴趣。
 
-纵观2015年，http2的流量正在逐步上升。9月初，Firefox 40中http2流量占据了所有HTTP流量中的13%，HTTPS中的27%。与此同时，Google表示约有18%的流量来自HTTP/2。值得注意的是，Google同时也在实验其他协议（参见12.1中的QUIC），这也使得http2的使用量暂时比正常值低一些。
+纵观2015年，http2的流量正在逐步上升。9月初，Firefox 40中http2流量占据了所有HTTP流量中的13%，HTTPS中的27%。与此同时，Google表示约有18%的流量来自HTTP/2。值得注意的是，Google同时也在实验其他协议，这也使得http2的使用量暂时比正常值低一些。
 
 
 # 9. Firefox里的http2
@@ -191,7 +191,7 @@ Chrome 51移除了SPDY的支持来为http2铺路。在2016年2月的一篇[博�
 
 ## 10.4. QUIC
 
-Chrome正在试验QUIC（详情请看12.1），所以或多或少稀释了HTTP/2的份额。
+Chrome正在试验QUIC，所以或多或少稀释了HTTP/2的份额。
 
 
 # 11. curl中的http2
