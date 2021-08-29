@@ -49,7 +49,7 @@ CPU 在执行指令的时候，就是通过内存地址，将物理内存上的�
 
 如下图所示，每个进程所使用的虚拟地址空间都是一样的，但他们的虚拟地址会被映射到主存上的不同区域，甚至映射到磁盘上（当内存不够用时）。
 
-![img](https://image.fyxemmmm.cn/blog/images/nc2.webp)
+![](https://image.fyxemmmm.cn/blog/images/nc2.webp)
 
 虚拟地址
 
