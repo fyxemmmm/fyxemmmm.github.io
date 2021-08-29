@@ -1,5 +1,5 @@
 ---
-title: 实操理解 [自签ca证书]
+title: 自签ca & 证书申请
 date: 2021-08-20 23:49:20
 author: yuxuan
 img: https://image.fyxemmmm.cn/blog/fj/images/fj-17.jpg
@@ -9,7 +9,7 @@ cover: false
 coverImg: 
 toc: true
 mathjax: false
-summary: 理解自签ca以及如何签发证书
+summary: 详解自签ca以及如何签发证书
 categories: 加密与安全
 tags:
   - 证书
