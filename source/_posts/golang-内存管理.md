@@ -1,8 +1,8 @@
 ---
-title: golang 内存管理
+title: golang [ 内存管理 ]
 date: 2021-08-27 21:41:26
 author: yuxuan
-img: https://image.fyxemmmm.cn/blog/images/djsy.jpg
+img: https://image.fyxemmmm.cn/blog/fj/images/fj-50.jpg
 top: false
 hide: false
 cover: false

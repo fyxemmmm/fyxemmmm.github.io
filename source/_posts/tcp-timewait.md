@@ -2,14 +2,14 @@
 title: tcp timewait 踩坑实战
 date: 2021-08-17 21:26:15
 author: yuxuan
-img: 
+img: https://image.fyxemmmm.cn/blog/images/djsy.jpg
 top: true
 hide: true
 cover: false
 coverImg: 
 toc: false
 mathjax: false
-summary: 深入理解 tcp timewait
+summary: 深入理解 tcp timewait，加强对tcp协议的认识。
 categories: 协议
 tags:
   - 操作系统
