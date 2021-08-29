@@ -269,7 +269,7 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('https://cdn.jsdelivr.net/gh/fyxemmmm/fyxemmmm.github.io/medias/featureimages/12.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('https://image.fyxemmmm.cn/blog/fj/images/fj-16.jpg')">
     <div class="container" style="right: 0px;left: 0px;">
         <div class="row">
             <div class="col s12 m12 l12">
@@ -332,7 +332,7 @@
                 
                 <div class="info-break-policy">
                     <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
-                    16 分
+                    15 分
                 </div>
                 
 
@@ -395,7 +395,7 @@
 <p>在它首次发布的幕后有很多大型浏览器支持。来自Firefox，Chrome，Safari，Internet Explorer和Opera的代表宣布了他们会发布支持http2特性的浏览器，并且他们已经演示了一些能正常运作的实现。</p>
 <p>也有很多像Google，Twitter和Facebook这样的服务器运营者希望尽快支持http2，也同样希望可以快点在主流服务器实现中出现对http2的支持（例如Apache HTTP Server和nginx）。而<a target="_blank" rel="noopener" href="https://github.com/h2o/h2o">H2o</a>作为一个极具潜力的新生HTTP服务器，已经支持了http2。</p>
 <p>那些大型代理程序开发者，例如HAProxy、Squid和Varnish也表示出了他们对支持http2的兴趣。</p>
-<p>纵观2015年，http2的流量正在逐步上升。9月初，Firefox 40中http2流量占据了所有HTTP流量中的13%，HTTPS中的27%。与此同时，Google表示约有18%的流量来自HTTP/2。值得注意的是，Google同时也在实验其他协议（参见12.1中的QUIC），这也使得http2的使用量暂时比正常值低一些。</p>
+<p>纵观2015年，http2的流量正在逐步上升。9月初，Firefox 40中http2流量占据了所有HTTP流量中的13%，HTTPS中的27%。与此同时，Google表示约有18%的流量来自HTTP/2。值得注意的是，Google同时也在实验其他协议，这也使得http2的使用量暂时比正常值低一些。</p>
 <h1 id="9-Firefox里的http2"><a href="#9-Firefox里的http2" class="headerlink" title="9. Firefox里的http2"></a>9. Firefox里的http2</h1><p>Firefox紧跟着草案，并且很早之前就实现了http2的测试实现。在http2协议开发的时候，客户端和服务器需要采用同一的协议草案版本，进行测试也变得比较繁琐。所以请一定注意你的客户端和服务器支持的是一样的版本。</p>
 <h2 id="9-1-首先，确保它已被启用"><a href="#9-1-首先，确保它已被启用" class="headerlink" title="9.1. 首先，确保它已被启用"></a>9.1. 首先，确保它已被启用</h2><p>从发布于2015年1月13日的Firefox 35之后，http2支持是默认开启的。</p>
 <p>在地址栏里进入’about:config’，再搜索一个名为“network.http.spdy.enabled.http2draft”的选项，确保它被设置为<code>true</code>。Firefox 36添加了一个“network.http.spdy.enabled.http2”的配置项，并默认设置为<em>true</em>。后者控制的是“纯”http2版本，而前者控制了启用／禁用通过http2草案版本进行协商。从Firefox 36之后，这两者都默认为true。</p>
@@ -412,7 +412,7 @@
 <h2 id="10-1-首先，确保它已被启用"><a href="#10-1-首先，确保它已被启用" class="headerlink" title="10.1. 首先，确保它已被启用"></a>10.1. 首先，确保它已被启用</h2><p>在地址栏里进入<code>chrome://flags/#enable-spdy4</code>，如果没有被enable的话，点击”enable”启用它。</p>
 <h2 id="10-2-TLS-only"><a href="#10-2-TLS-only" class="headerlink" title="10.2. TLS-only"></a>10.2. TLS-only</h2><p>请记住Chrome只在TLS上实现了http2。你只会在以<code>https://</code>做前缀的网站里得到http2的支持。</p>
 <h2 id="10-3-图形化HTTP-2"><a href="#10-3-图形化HTTP-2" class="headerlink" title="10.3. 图形化HTTP/2"></a>10.3. 图形化HTTP/2</h2><p>有一些Chrome的插件可以图形化HTTP/2，比如<a target="_blank" rel="noopener" href="https://chrome.google.com/webstore/detail/spdy-indicator/mpbpobfflnpcgagjijhmgnchggcjblin">“HTTP/2 and SPDY Indicator”</a>。</p>
-<h2 id="10-4-QUIC"><a href="#10-4-QUIC" class="headerlink" title="10.4. QUIC"></a>10.4. QUIC</h2><p>Chrome正在试验QUIC（详情请看12.1），所以或多或少稀释了HTTP/2的份额。</p>
+<h2 id="10-4-QUIC"><a href="#10-4-QUIC" class="headerlink" title="10.4. QUIC"></a>10.4. QUIC</h2><p>Chrome正在试验QUIC，所以或多或少稀释了HTTP/2的份额。</p>
 <h1 id="11-curl中的http2"><a href="#11-curl中的http2" class="headerlink" title="11. curl中的http2"></a>11. curl中的http2</h1><p><a target="_blank" rel="noopener" href="https://curl.haxx.se/">curl项目</a>从2013年9月就开始对http2提供实验性的支持。</p>
 <p>为了遵从curl的要旨，我们尽可能全方位地支持http2。curl通常被用作一个网站连接测试工具，希望这项使命也能在http2上被得以延续。</p>
 <p>curl使用一个叫做<a target="_blank" rel="noopener" href="https://nghttp2.org/">nghttp2</a>的库来提供http2帧层的支持。curl依赖于nghttp2 1.0以上版本。</p>
@@ -546,8 +546,7 @@
                 <a href="/2021/08/25/http2-xiang-jie-zhong/">
                     <div class="card-image">
                         
-                        
-                        <img src="https://cdn.jsdelivr.net/gh/fyxemmmm/fyxemmmm.github.io/medias/featureimages/10.jpg" class="responsive-img" alt="http2详解 [中]">
+                        <img src="https://image.fyxemmmm.cn/blog/fj/images/fj-25.jpg" class="responsive-img" alt="http2详解 [中]">
                         
                         <span class="card-title">http2详解 [中]</span>
                     </div>
@@ -638,7 +637,7 @@
 
             <!-- 
                 &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                        class="white-color">27.2k</span>
+                        class="white-color">27.4k</span>
             
             
             

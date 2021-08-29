@@ -473,7 +473,7 @@
 <span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
 <p><code>timerCtx</code>结构体中<code>deadline</code>保存了超时的时间，当超过这个时间，会触发<code>cancel</code>。</p>
-<p><img src="https://image.fyxemmmm.cn/blog/images/ctx1.jpg" alt="img"></p>
+<p><img src="https://image.fyxemmmm.cn/blog/images/ctx1.jpg"></p>
 <p>可以看出，<strong>cancelCtx也是一棵树，当触发cancel时，会cancel本结点和其子树的所有cancelCtx</strong>。</p>
 <h2 id="3-最佳实践"><a href="#3-最佳实践" class="headerlink" title="3 最佳实践"></a>3 最佳实践</h2><p>由于go大量的官方库、第三方库使用了context，所以调用<code>接收context的函数</code>时要小心，要清楚context在什么时候cancel，什么行为会触发cancel。笔者在程序经常使用gRpc传出来的context，产生了一些非预期的结果，之后花时间总结了gRpc、内部基础库中context的生命期及行为，以避免出现同样的问题。</p>
 
@@ -548,7 +548,7 @@
                 <a href="/2021/08/16/k8s-install/">
                     <div class="card-image">
                         
-                        <img src="https://image.fyxemmmm.cn/blog/images/img6.jpeg" class="responsive-img" alt="Kubernetes高可用集群搭建">
+                        <img src="https://image.fyxemmmm.cn/blog/fj/images/fj-40.jpg" class="responsive-img" alt="Kubernetes高可用集群搭建">
                         
                         <span class="card-title">Kubernetes高可用集群搭建</span>
                     </div>
@@ -696,7 +696,7 @@
 
             <!-- 
                 &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                        class="white-color">27.2k</span>
+                        class="white-color">27.4k</span>
             
             
             
