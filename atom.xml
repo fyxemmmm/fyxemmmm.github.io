@@ -6,7 +6,7 @@
   <link href="https://fyxemmmm.github.io/atom.xml" rel="self"/>
   
   <link href="https://fyxemmmm.github.io/"/>
-  <updated>2021-08-29T14:14:22.914Z</updated>
+  <updated>2021-08-29T16:11:36.752Z</updated>
   <id>https://fyxemmmm.github.io/</id>
   
   <author>
@@ -17,11 +17,11 @@
   <generator uri="https://hexo.io/">Hexo</generator>
   
   <entry>
-    <title>golang 内存管理</title>
+    <title>golang [ 内存管理 ]</title>
     <link href="https://fyxemmmm.github.io/2021/08/27/golang-nei-cun-guan-li/"/>
     <id>https://fyxemmmm.github.io/2021/08/27/golang-nei-cun-guan-li/</id>
     <published>2021-08-27T13:41:26.000Z</published>
-    <updated>2021-08-29T14:14:22.914Z</updated>
+    <updated>2021-08-29T16:11:36.752Z</updated>
     
     
       
@@ -119,11 +119,11 @@
   </entry>
   
   <entry>
-    <title>自签CA &amp; 证书申请</title>
+    <title>自签CA &amp; 原理</title>
     <link href="https://fyxemmmm.github.io/2021/08/20/zi-qian-ca-zheng-shu/"/>
     <id>https://fyxemmmm.github.io/2021/08/20/zi-qian-ca-zheng-shu/</id>
     <published>2021-08-20T15:49:20.000Z</published>
-    <updated>2021-08-29T14:14:57.851Z</updated>
+    <updated>2021-08-29T16:17:47.942Z</updated>
     
     
       
@@ -175,10 +175,10 @@
   
   <entry>
     <title>硬核! 图解 golang [select case] 原理</title>
-    <link href="https://fyxemmmm.github.io/2021/08/18/golang-select-yuan-li/"/>
-    <id>https://fyxemmmm.github.io/2021/08/18/golang-select-yuan-li/</id>
+    <link href="https://fyxemmmm.github.io/2021/08/18/ying-he-golang-select-yuan-li/"/>
+    <id>https://fyxemmmm.github.io/2021/08/18/ying-he-golang-select-yuan-li/</id>
     <published>2021-08-18T13:30:03.000Z</published>
-    <updated>2021-08-20T16:34:51.321Z</updated>
+    <updated>2021-08-29T16:09:31.116Z</updated>
     
     
       
@@ -229,7 +229,7 @@
     <link href="https://fyxemmmm.github.io/2021/08/17/tcp-timewait/"/>
     <id>https://fyxemmmm.github.io/2021/08/17/tcp-timewait/</id>
     <published>2021-08-17T13:26:15.000Z</published>
-    <updated>2021-08-29T06:33:21.126Z</updated>
+    <updated>2021-08-29T16:12:50.753Z</updated>
     
     
       
@@ -284,7 +284,7 @@
     <link href="https://fyxemmmm.github.io/2021/08/14/context-shi-xian-yuan-li/"/>
     <id>https://fyxemmmm.github.io/2021/08/14/context-shi-xian-yuan-li/</id>
     <published>2021-08-14T04:25:24.000Z</published>
-    <updated>2021-08-29T06:35:16.948Z</updated>
+    <updated>2021-08-29T16:11:40.021Z</updated>
     
     
       
