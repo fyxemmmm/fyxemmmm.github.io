@@ -9,7 +9,7 @@ cover: false
 coverImg: 
 toc: true
 mathjax: false
-summary: 本文阐述了golang中的select case数据结构的实现，图解解析。
+summary: 图解golang中的select case数据结构的实现
 categories: golang
 tags:
   - golang
