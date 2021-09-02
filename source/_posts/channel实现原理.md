@@ -1,6 +1,6 @@
 ---
 title: 一文带你搞懂 golang channel 实现原理
-date: 2021-09-03 00:11:55
+date: 2021-09-01 00:11:55
 author: yuxuan
 img: https://image.fyxemmmm.cn/blog/fj/images/fj-2.jpg
 top: true
