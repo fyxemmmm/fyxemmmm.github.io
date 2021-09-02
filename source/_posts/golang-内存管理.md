@@ -7,7 +7,7 @@ top: false
 hide: false
 cover: false
 coverImg: 
-toc: false
+toc: true
 mathjax: false
 summary: 一探究竟 [ golangの内存管理 ]
 categories: golang

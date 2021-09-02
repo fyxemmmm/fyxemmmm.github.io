@@ -4,10 +4,10 @@ date: 2021-08-18 21:30:03
 author: yuxuan
 img: https://image.fyxemmmm.cn/blog/images/img1.jpg
 top: true
-hide: true
+hide: false
 cover: false
 coverImg: 
-toc: false
+toc: true
 mathjax: false
 summary: 本文阐述了golang中的select case数据结构的实现，图解解析。
 categories: golang

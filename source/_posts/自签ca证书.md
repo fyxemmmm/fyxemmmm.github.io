@@ -1,5 +1,5 @@
 ---
-title: 自签CA & 原理
+title: 自签证书 & 原理
 date: 2021-08-20 23:49:20
 author: yuxuan
 img: https://image.fyxemmmm.cn/blog/fj/images/fj-17.jpg
