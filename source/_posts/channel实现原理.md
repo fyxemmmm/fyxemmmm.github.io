@@ -9,7 +9,7 @@ cover: false
 coverImg: 
 toc: true
 mathjax: false
-summary: 图解channel实现！ 原来channel并没有那么难 ~ 
+summary: 「 原来 channel 并没有那么难 」
 categories: golang
 tags:
   - golang
