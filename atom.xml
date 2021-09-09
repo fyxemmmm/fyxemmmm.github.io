@@ -6,7 +6,7 @@
   <link href="https://fyxemmmm.github.io/atom.xml" rel="self"/>
   
   <link href="https://fyxemmmm.github.io/"/>
-  <updated>2021-09-04T05:55:35.386Z</updated>
+  <updated>2021-09-09T16:01:41.178Z</updated>
   <id>https://fyxemmmm.github.io/</id>
   
   <author>
@@ -15,6 +15,95 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Linux の 文件系统秘密</title>
+    <link href="https://fyxemmmm.github.io/2021/09/09/linux-wen-jian-xi-tong-mi-mi/"/>
+    <id>https://fyxemmmm.github.io/2021/09/09/linux-wen-jian-xi-tong-mi-mi/</id>
+    <published>2021-09-09T15:50:09.000Z</published>
+    <updated>2021-09-09T16:01:41.178Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h2 id=&quot;文件系统&quot;&gt;&lt;a href=&quot;#文件系统&quot; class=&quot;headerlink&quot;</summary>
+        
+      
+    
+    
+    
+    <category term="操作系统" scheme="https://fyxemmmm.github.io/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/"/>
+    
+    
+    <category term="操作系统" scheme="https://fyxemmmm.github.io/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/"/>
+    
+    <category term="文件系统" scheme="https://fyxemmmm.github.io/tags/%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F/"/>
+    
+    <category term="inode" scheme="https://fyxemmmm.github.io/tags/inode/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>图解「进程间通讯」</title>
+    <link href="https://fyxemmmm.github.io/2021/09/07/jie-du-jin-cheng-jian-tong-xun/"/>
+    <id>https://fyxemmmm.github.io/2021/09/07/jie-du-jin-cheng-jian-tong-xun/</id>
+    <published>2021-09-07T15:37:44.000Z</published>
+    <updated>2021-09-09T15:43:25.939Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h2 id=&quot;前言&quot;&gt;&lt;a href=&quot;#前言&quot; class=&quot;headerlink&quot; title=&quot;前言&quot;&gt;&lt;/a&gt;前言&lt;/h2&gt;&lt;blockquote&gt;
+&lt;p&gt;开场小故事&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;&lt;img</summary>
+        
+      
+    
+    
+    
+    <category term="操作系统" scheme="https://fyxemmmm.github.io/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/"/>
+    
+    
+    <category term="进程" scheme="https://fyxemmmm.github.io/tags/%E8%BF%9B%E7%A8%8B/"/>
+    
+    <category term="通讯" scheme="https://fyxemmmm.github.io/tags/%E9%80%9A%E8%AE%AF/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>读懂oauth协议</title>
+    <link href="https://fyxemmmm.github.io/2021/09/06/oauth/"/>
+    <id>https://fyxemmmm.github.io/2021/09/06/oauth/</id>
+    <published>2021-09-06T15:10:37.000Z</published>
+    <updated>2021-09-09T15:30:18.076Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;今天，我想登陆豆瓣，看看电影评论，陶冶陶冶情操。&lt;/p&gt;
+&lt;p&gt;但是，我从来没注册过豆瓣账号，而我又懒得再注册一个，怎么办呢？&lt;/p&gt;
+&lt;p&gt;我打开豆瓣的官网，笑了，原来豆瓣早就为我这种懒人想到了办法。&lt;/p&gt;
+&lt;h2 id=&quot;懒人三步&quot;&gt;&lt;a href=&quot;#懒人三步&quot;</summary>
+        
+      
+    
+    
+    
+    <category term="协议" scheme="https://fyxemmmm.github.io/categories/%E5%8D%8F%E8%AE%AE/"/>
+    
+    
+    <category term="oauth" scheme="https://fyxemmmm.github.io/tags/oauth/"/>
+    
+    <category term="单点登录" scheme="https://fyxemmmm.github.io/tags/%E5%8D%95%E7%82%B9%E7%99%BB%E5%BD%95/"/>
+    
+  </entry>
   
   <entry>
     <title>解读 「事务消息」</title>
@@ -308,7 +397,7 @@
     <link href="https://fyxemmmm.github.io/2021/08/17/tcp-timewait/"/>
     <id>https://fyxemmmm.github.io/2021/08/17/tcp-timewait/</id>
     <published>2021-08-17T13:26:15.000Z</published>
-    <updated>2021-09-07T17:43:16.485Z</updated>
+    <updated>2021-09-09T15:28:31.217Z</updated>
     
     
       

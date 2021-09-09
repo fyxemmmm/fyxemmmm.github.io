@@ -1,0 +1,1249 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+
+
+<head>
+    <meta charset="utf-8">
+    <meta name="keywords" content="Linux の 文件系统秘密, yuxuanの博客">
+    <meta name="description" content="">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="renderer" content="webkit|ie-stand|ie-comp">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+
+
+    <title>Linux の 文件系统秘密 | yuxuanの博客</title>
+    <link rel="icon" type="image/png" href="/favicon.png">
+
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/fyxemmmm/fyxemmmm.github.io/libs/awesome/css/all.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/fyxemmmm/fyxemmmm.github.io/libs/materialize/materialize.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/fyxemmmm/fyxemmmm.github.io/libs/aos/aos.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/fyxemmmm/fyxemmmm.github.io/libs/animate/animate.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/fyxemmmm/fyxemmmm.github.io/libs/lightGallery/css/lightgallery.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/fyxemmmm/fyxemmmm.github.io/css/matery.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/fyxemmmm/fyxemmmm.github.io/css/my.css">
+
+    <script src="https://cdn.jsdelivr.net/gh/fyxemmmm/fyxemmmm.github.io/libs/jquery/jquery.min.js"></script>
+
+<meta name="generator" content="Hexo 5.4.0">
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
+<link rel="alternate" href="/atom.xml" title="yuxuanの博客" type="application/atom+xml">
+</head>
+
+
+
+
+<body>
+    <header class="navbar-fixed">
+    <nav id="headNav" class="bg-color nav-transparent">
+        <div id="navContainer" class="nav-wrapper container">
+            <div class="brand-logo">
+                <a href="/" class="waves-effect waves-light">
+                    
+                    <img src="/medias/logo.png" class="logo-img" alt="LOGO">
+                    
+                    <span class="logo-span">yuxuanの博客</span>
+                </a>
+            </div>
+            
+
+<a href="#" data-target="mobile-nav" class="sidenav-trigger button-collapse"><i class="fas fa-bars"></i></a>
+<ul class="right nav-menu">
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/" class="waves-effect waves-light">
+      
+      <i class="fas fa-home" style="zoom: 0.6;"></i>
+      
+      <span>首页</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/tags" class="waves-effect waves-light">
+      
+      <i class="fas fa-tags" style="zoom: 0.6;"></i>
+      
+      <span>标签</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/categories/" class="waves-effect waves-light">
+      
+      <i class="fas fa-bookmark" style="zoom: 0.6;"></i>
+      
+      <span>分类</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/archives/" class="waves-effect waves-light">
+      
+      <i class="fas fa-archive" style="zoom: 0.6;"></i>
+      
+      <span>归档</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/about/" class="waves-effect waves-light">
+      
+      <i class="fas fa-user-circle" style="zoom: 0.6;"></i>
+      
+      <span>关于</span>
+    </a>
+    
+  </li>
+  
+  <li>
+    <a href="#searchModal" class="modal-trigger waves-effect waves-light">
+      <i id="searchIcon" class="fas fa-search" title="搜索" style="zoom: 0.85;"></i>
+    </a>
+  </li>
+</ul>
+
+
+<div id="mobile-nav" class="side-nav sidenav">
+
+    <div class="mobile-head bg-color">
+        
+        <img src="/medias/logo.png" class="logo-img circle responsive-img">
+        
+        <div class="logo-name">yuxuanの博客</div>
+        <div class="logo-desc">
+            
+            Never really desperate, only the lost of the soul.
+            
+        </div>
+    </div>
+
+    
+
+    <ul class="menu-list mobile-menu-list">
+        
+        <li class="m-nav-item">
+	  
+		<a href="/" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-home"></i>
+			
+			首页
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/tags" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-tags"></i>
+			
+			标签
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/categories/" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-bookmark"></i>
+			
+			分类
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/archives/" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-archive"></i>
+			
+			归档
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/about/" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-user-circle"></i>
+			
+			关于
+		</a>
+          
+        </li>
+        
+        
+        <li><div class="divider"></div></li>
+        <li>
+            <a href="https://github.com/fyxemmmm/fyxemmmm.github.io" class="waves-effect waves-light" target="_blank">
+                <i class="fab fa-github-square fa-fw"></i>Fork Me
+            </a>
+        </li>
+        
+    </ul>
+</div>
+
+
+        </div>
+
+        
+            <style>
+    .nav-transparent .github-corner {
+        display: none !important;
+    }
+
+    .github-corner {
+        position: absolute;
+        z-index: 10;
+        top: 0;
+        right: 0;
+        border: 0;
+        transform: scale(1.1);
+    }
+
+    .github-corner svg {
+        color: #0f9d58;
+        fill: #fff;
+        height: 64px;
+        width: 64px;
+    }
+
+    .github-corner:hover .octo-arm {
+        animation: a 0.56s ease-in-out;
+    }
+
+    .github-corner .octo-arm {
+        animation: none;
+    }
+
+    @keyframes a {
+        0%,
+        to {
+            transform: rotate(0);
+        }
+        20%,
+        60% {
+            transform: rotate(-25deg);
+        }
+        40%,
+        80% {
+            transform: rotate(10deg);
+        }
+    }
+</style>
+
+<a href="https://github.com/fyxemmmm/fyxemmmm.github.io" class="github-corner tooltipped hide-on-med-and-down" target="_blank"
+   data-tooltip="Fork Me" data-position="left" data-delay="50">
+    <svg viewBox="0 0 250 250" aria-hidden="true">
+        <path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path>
+        <path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2"
+              fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path>
+        <path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z"
+              fill="currentColor" class="octo-body"></path>
+    </svg>
+</a>
+        
+    </nav>
+
+</header>
+
+    
+
+
+
+<div class="bg-cover pd-header post-cover" style="background-image: url('https://image.fyxemmmm.cn/blog/images/ins-128.jpg')">
+    <div class="container" style="right: 0px;left: 0px;">
+        <div class="row">
+            <div class="col s12 m12 l12">
+                <div class="brand">
+                    <h1 class="description center-align post-title">Linux の 文件系统秘密</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<main class="post-container content">
+
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fyxemmmm/fyxemmmm.github.io/libs/tocbot/tocbot.css">
+<style>
+    #articleContent h1::before,
+    #articleContent h2::before,
+    #articleContent h3::before,
+    #articleContent h4::before,
+    #articleContent h5::before,
+    #articleContent h6::before {
+        display: block;
+        content: " ";
+        height: 100px;
+        margin-top: -100px;
+        visibility: hidden;
+    }
+
+    #articleContent :focus {
+        outline: none;
+    }
+
+    .toc-fixed {
+        position: fixed;
+        top: 64px;
+    }
+
+    .toc-widget {
+        width: 345px;
+        padding-left: 20px;
+    }
+
+    .toc-widget .toc-title {
+        padding: 35px 0 15px 17px;
+        font-size: 1.5rem;
+        font-weight: bold;
+        line-height: 1.5rem;
+    }
+
+    .toc-widget ol {
+        padding: 0;
+        list-style: none;
+    }
+
+    #toc-content {
+        padding-bottom: 30px;
+        overflow: auto;
+    }
+
+    #toc-content ol {
+        padding-left: 10px;
+    }
+
+    #toc-content ol li {
+        padding-left: 10px;
+    }
+
+    #toc-content .toc-link:hover {
+        color: #42b983;
+        font-weight: 700;
+        text-decoration: underline;
+    }
+
+    #toc-content .toc-link::before {
+        background-color: transparent;
+        max-height: 25px;
+
+        position: absolute;
+        right: 23.5vw;
+        display: block;
+    }
+
+    #toc-content .is-active-link {
+        color: #42b983;
+    }
+
+    #floating-toc-btn {
+        position: fixed;
+        right: 15px;
+        bottom: 76px;
+        padding-top: 15px;
+        margin-bottom: 0;
+        z-index: 998;
+    }
+
+    #floating-toc-btn .btn-floating {
+        width: 48px;
+        height: 48px;
+    }
+
+    #floating-toc-btn .btn-floating i {
+        line-height: 48px;
+        font-size: 1.4rem;
+    }
+</style>
+<div class="row">
+    <div id="main-content" class="col s12 m12 l9">
+        <!-- 文章内容详情 -->
+<div id="artDetail">
+    <div class="card">
+        <div class="card-content article-info">
+            <div class="row tag-cate">
+                <div class="col s7">
+                    
+                    <div class="article-tag">
+                        
+                            <a href="/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/">
+                                <span class="chip bg-color">操作系统</span>
+                            </a>
+                        
+                            <a href="/tags/%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F/">
+                                <span class="chip bg-color">文件系统</span>
+                            </a>
+                        
+                            <a href="/tags/inode/">
+                                <span class="chip bg-color">inode</span>
+                            </a>
+                        
+                    </div>
+                    
+                </div>
+                <div class="col s5 right-align">
+                    
+                    <div class="post-cate">
+                        <i class="fas fa-bookmark fa-fw icon-category"></i>
+                        
+                            <a href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/" class="post-category">
+                                操作系统
+                            </a>
+                        
+                    </div>
+                    
+                </div>
+            </div>
+
+            <div class="post-info">
+                
+                <div class="post-date info-break-policy">
+                    <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
+                    2021-09-09
+                </div>
+                
+
+                
+
+                
+
+                
+                <div class="info-break-policy">
+                    <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
+                    25 分
+                </div>
+                
+
+                
+            </div>
+        </div>
+        <hr class="clearfix">
+
+        
+        <!-- 是否加载使用自带的 prismjs. -->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fyxemmmm/fyxemmmm.github.io/libs/prism/prism.css">
+        
+
+        
+
+        <div class="card-content article-card-content">
+            <div id="articleContent">
+                <h2 id="文件系统"><a href="#文件系统" class="headerlink" title="文件系统"></a>文件系统</h2><p>文件系统听起来很高大上，通俗话就用来<strong>存数据的一个容器</strong>而已，本质和你的行李箱、仓库没有啥区别。只不过文件系统存储的是数字产品而已。我有一个视频文件，我把这个视频放到这个文件系统里，下次来拿，要能拿到我完整的视频文件数据，这就是文件系统，<strong>对外提供的就是存取服务</strong>。</p>
+<h3 id="现实的存取场景"><a href="#现实的存取场景" class="headerlink" title="现实的存取场景"></a>现实的存取场景</h3><p>就跟你在火车站使用的寄存服务一样，包裹我能存进去，稍后我能取出来，就可以了。问题来了，存进去？怎么取？仔细回忆下存储行李的场景。</p>
+<p><strong>存行李的时候</strong>，是不是要登记一些个人信息？对吧，至少自己名字要写上。可能还会给你一个牌子，让你挂手上，这个东西就是为了标示每一个唯一的行李。</p>
+<p><img src="https://image.fyxemmmm.cn/blog/images/cp-0.gif" alt="存行李演示"></p>
+<p><strong>取行李的时候</strong>，要报自己名字，有牌子的给他牌子，然后工作人员才能去特定的位置找到你的行李（不然机场那么多人，行李都长差不多，他肯定不知道你的行李是哪个）。</p>
+<p><img src="https://image.fyxemmmm.cn/blog/images/cp-1.gif" alt="取行李演示"></p>
+<p>**划重点：存的时候必须记录一些关键信息（记录ID、给身份牌），取的时候才能正确定位到。<br> **</p>
+<h3 id="文件系统-1"><a href="#文件系统-1" class="headerlink" title="文件系统"></a>文件系统</h3><p>回到我们的文件系统，对比上面的行李存取行为，可以做个简单的类比；</p>
+<ol>
+<li>登记名字就是在文件系统记录文件名；</li>
+<li>生成的牌子就是元数据索引；</li>
+<li>你的行李就是文件；</li>
+<li>寄存室就是磁盘（容纳东西的物理空间）；</li>
+<li>管理员整套运行机制就是文件系统；</li>
+</ol>
+<p>上面的对应并不是非常严谨，仅仅是帮助大家理解文件系统而已，让大家知道其实文件系统是非常朴实的一个东西，思想都来源于生活。</p>
+<p><strong>划重点：文件系统的存储介质是磁盘，文件系统是软件层面的，是管理员，管理怎么使用磁盘空间的软件系统而已。</strong></p>
+<h4 id="空间管理"><a href="#空间管理" class="headerlink" title="空间管理"></a>空间管理</h4><p>现在思考文件系统是怎么管理空间的？</p>
+<p>如果，一个连续的大磁盘空间给你使用，你会怎么使用这段空间呢？</p>
+<p>直观的一个想法，我把进来的数据就完整的放进去。</p>
+<p><img src="https://image.fyxemmmm.cn/blog/images/cp-2.gif" alt="不好的空间管理方式"></p>
+<p>这种方式非常容易实现，属于眼前最简单，以后最麻烦的方式。因为会造成很多空洞，明明还有很多空间位置，但是由于整个太大，形状不合适（数据大小），哪里都放不下。因为你要放一个完整的空间。</p>
+<p>这种不能利用的空间我们称之为碎片，准确的说是<strong>外部碎片</strong>，这种碎片在内存池分配内存的时候最常见，产生的原理是一样的。</p>
+<p>怎么改进？有人会想，既然整个放不进去，那就剁碎了呗。这里塞一点，那里塞一点，就塞进去了。</p>
+<p>对，思路完全正确。<strong>改进的方式就是切分，把空间按照一定粒度切分</strong>。每个小粒度的物理块命名为 Block，每个 Block 一般是 4K 大小，用户数据存到文件系统里来自然也是要切分，存储到每一个 Block 。Block 粒度越小则外部碎片则会越少（注意：元数据量会越大），可以尽可能的利用到空间，并且完整的用户数据文件存储到磁盘上则不再连续，而是切成一个个 Block 大小的数据块存到磁盘的各个角落上。</p>
+<p><img src="https://image.fyxemmmm.cn/blog/images/cp-3.gif" alt="切分后的管理方式"></p>
+<p>图示标号表示这个完整对象的 Block 的序号，用来复原对象用的。</p>
+<p>随之而来又有一个问题：你光会切成块还不行，取文件数据的时候，要给完整的用户数据出去，用户不管你内部怎么实现，他只想要的是最初的样子。<strong>所以，要有一个表记录该文件对应所有 Block 的位置</strong>，要把每一个 Block 的位置记录好，取文件的时候，对照这表恢复出一个完整的块给到用户。</p>
+<p>所以，写流程再完善一下就是这样子：</p>
+<ol>
+<li>先写数据：数据先按照 Block 粒度存储到磁盘的各个位置；</li>
+<li>再写元数据：然后把 Block 所在的各个位置保存起来，这也就是元数据，文件系统里叫做 inode（我用一本书来表示）；</li>
+</ol>
+<p><img src="https://image.fyxemmmm.cn/blog/images/cp-4.gif" alt="文件系统write"></p>
+<p>文件读流程则是：</p>
+<ol>
+<li>先读元数据，找到各个 Block 的位置；</li>
+<li>然后读数据，构造一个完整的文件，给到用户；</li>
+</ol>
+<p><img src="https://image.fyxemmmm.cn/blog/images/cp-5.gif" alt=" 文件系统read"></p>
+<h4 id="inode-block-概念"><a href="#inode-block-概念" class="headerlink" title="inode/block 概念"></a>inode/block 概念</h4><p>好，现在我们引出了两个概念：</p>
+<ol>
+<li>磁盘空间是按照 Block 粒度来划分空间的，存储数据的区域全都是 Block，我们叫做数据区域；</li>
+<li>文件存储不再连续存储在磁盘上，所以需要记录元数据，这个我们叫做 inode；</li>
+</ol>
+<p>文件系统中，一个 inode 唯一对应一个文件，inode 的个数则是在文件系统格式化的时候就确定好了的，换言之，<strong>一个 local 文件系统支持的文件数是天然就有上限的</strong>。</p>
+<p>block 固定大小，每个 4k（大部分文件系统都是，这里不做纠结），block 意图存储打散的用户数据。</p>
+<p>无论是 inode 区，还是 block 区，本质上都是在线性的磁盘空间上。文件系统的空间层次如下：</p>
+<p><img src="https://image.fyxemmmm.cn/blog/images/cp-6.jpg"></p>
+<p>一个文件的对应一个 inode，这个文件需要按照 Block 切分存储在磁盘上，存储的位置则由 inode 记录起来，通过 inode 则能找到 block，也就获取到用户数据。</p>
+<p>现在有一个新的小问题，inode 区和 block 区都是在初始化就构造好的。存储一个文件的时候，需要取一个空闲的 inode，然后把数据切分成 4k 大小存储到空闲的 block 上，对吧？</p>
+<p><strong>划重点：空闲的inode，空闲的 block。</strong> 这个很关键，已经存储了数据的地方不能再让写，不然会把别人的数据覆盖掉。</p>
+<p>那么，怎么区分空闲和已经在用的 inode ，block 呢？</p>
+<p><strong>答案是 ：inode 区和 block 区分别需要另一张表，用来表示 inode 是否在用，block 是否在用，这个表的名字我们叫做 bitmap 表</strong>。bitmap 是一个 bit 数组，用 0 表示空闲，1 表示在用，如下：</p>
+<p><img src="https://image.fyxemmmm.cn/blog/images/cp-7.jpg" alt="文件系统架构"></p>
+<p>bitmap 什么时候用呢？自然是写的时候，也就是分配 inode 或者 block 的时候，因为只有分配的时候，你才需要找空闲的空间。</p>
+<p>上图我为了突出本质思想，类似于超级块，块描述符都省略了，这个感兴趣可以自己扩展，这里只突出主干哈。</p>
+<p><strong>小结一下</strong>：</p>
+<ol>
+<li>bitmap 本质是个 bit 数组，占用空间极其少，用 0 来表示空闲，1 表示在用。使用时机是在创建文件，或者写数据的时候；</li>
+<li>inode 则对应一个文件，里面存储的是元数据，主要是数据 block 的位置信息；</li>
+<li>block 里面存储的是用户数据，用户数据按照 block 大小（4k）切分，离散的分布在磁盘上。读的时候只有依赖于 inode 里面记录的位置才能恢复出完整的文件；</li>
+<li>inode 和 block 的总个数在文件系统格式化的时候就确定了，所以文件数和文件大小都是有上限的；</li>
+</ol>
+<h4 id="一个文件真实的模样"><a href="#一个文件真实的模样" class="headerlink" title="一个文件真实的模样"></a>一个文件真实的模样</h4><p>上面是抽象的样子，现在我们看一个真实的 inode -&gt; block 的样子。一个文件除了数据需要存储之外，一些元信心也需要存储，例如文件类型，权限，文件大小，创建/修改/访问时间等，这些信息存在 inode 中，每个文件唯一对应一个inode 。</p>
+<p>看一下 inode 的数据结构（就以 linxu ext2 为例，该结构定义在 <code>linux/fs/ext2/ext2.h</code> 头文件中 ）：</p>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token keyword">struct</span> <span class="token class-name">ext2_inode</span> <span class="token punctuation">{</span>
+    __le16  i_mode<span class="token punctuation">;</span>     <span class="token comment">/* File mode */</span>
+    __le16  i_uid<span class="token punctuation">;</span>      <span class="token comment">/* Low 16 bits of Owner Uid */</span>
+    __le32  i_size<span class="token punctuation">;</span>     <span class="token comment">/* Size in bytes */</span>
+    __le32  i_atime<span class="token punctuation">;</span>    <span class="token comment">/* Access time */</span>
+    __le32  i_ctime<span class="token punctuation">;</span>    <span class="token comment">/* Creation time */</span>
+    __le32  i_mtime<span class="token punctuation">;</span>    <span class="token comment">/* Modification time */</span>
+    __le32  i_dtime<span class="token punctuation">;</span>    <span class="token comment">/* Deletion Time */</span>
+    __le16  i_gid<span class="token punctuation">;</span>      <span class="token comment">/* Low 16 bits of Group Id */</span>
+    __le16  i_links_count<span class="token punctuation">;</span>  <span class="token comment">/* Links count */</span>
+    __le32  i_blocks<span class="token punctuation">;</span>   <span class="token comment">/* Blocks count */</span>
+    __le32  i_flags<span class="token punctuation">;</span>    <span class="token comment">/* File flags */</span>
+
+    __le32  i_block<span class="token punctuation">[</span>EXT2_N_BLOCKS<span class="token punctuation">]</span><span class="token punctuation">;</span><span class="token comment">/* Pointers to blocks */</span>
+    __le32  i_file_acl<span class="token punctuation">;</span> <span class="token comment">/* File ACL */</span>
+    __le32  i_dir_acl<span class="token punctuation">;</span>  <span class="token comment">/* Directory ACL */</span>
+    __le32  i_faddr<span class="token punctuation">;</span>    <span class="token comment">/* Fragment address */</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p><strong>重点</strong>：</p>
+<ul>
+<li>上面的结构 mode，uid，size，time 等信息就是我们常说的文件类型，大小，创建修改等时间元数据；</li>
+<li>注意到 <code>i_block[EXT2_N_BLOCKS]</code>  这个字段，这个字段将会带你找到数据, 因为里面存储的就是 block 所在的位置，也就是 block 的编号；</li>
+</ul>
+<p>再来，理解下什么叫做 block 的位置（编号）。</p>
+<p><img src="https://image.fyxemmmm.cn/blog/images/cp-8.jpg" alt="磁盘划分 block"></p>
+<p><strong>位置就是编号，记录位置就是记录编号，编号就是索引。</strong></p>
+<p>我们看到有一个数组：<code>i_block[EXT2_N_BLOCKS]</code>，这个数组是存储 block 位置的数组。其中 <code>EXT2_N_BLOCKS</code> 是一个宏定义，值为 15 。也就是说，<code>i_block</code> 是一个 15 个元素的数组，每个元素是 4 字节（32 bit）大小。</p>
+<p>举个例子，假设我们现在有一个 6k 的文件，那么只需要 2 个 block 就可以存下了，假设现在数据就存储在编号为 3 和 101  这两个 block 上，那么如下图：</p>
+<p><img src="https://image.fyxemmmm.cn/blog/images/cp-9.jpg" alt="inode 文件索引"></p>
+<p><code>i_block[15]</code> 第一个元素存的是 3，第二个存储的是 101，其他槽位没用用到，<strong>由于 inode 的内存是置零分配的，所以里面的值为 0，表示没有在使用</strong> . 我们通过 [3, 101] 这两个 block 就能拼装出完整的用户数据了。用户的 6k 文件组成如下：</p>
+<ol>
+<li>第一个 4k 数据在 [3<em>4K, 4</em>4K] 范围；</li>
+<li>第二个 2k 数据在 [ 101<em>4K, 101</em>4K+2K] 范围；</li>
+</ol>
+<p>好，现在我们知道了<strong>每个定长 block 都有唯一编号</strong>，我们的 <strong><code>i_block[15]</code> 数组 通过有序存储这个编号找到文件数据所在的位置</strong>，并且拼装出完整文件。</p>
+<p><strong>思考问题：区分文件的切分成 4k 块的编号和 磁盘上物理 4k 块的编号的区别。</strong></p>
+<p>举个栗子，一个文件 12K 的大小，那么按照 4K 切分会存储到 2 个 物理 block 上。</p>
+<p>文件第 0 个 4k 存储到了 101 这个物理 block 上；<br> 文件第 1 个 4k 存储到了 30  这个物理 block 上；<br> 文件第 2 个 4k 存储到了 11  这个物理 block 上；</p>
+<p>文件逻辑空间上的编号是从 0 开始，到 2 结束，对应存储的物理块编号分别是 101，30，11 。</p>
+<p><strong>思考问题：这么一个 inode 结构能够表示多大的文件？</strong></p>
+<p>我们看到 <code>inode-&gt;i_block[15]</code> 是一个一维数组，里面能存 15 个元素。也就是能存 15 个 block 的编号，那么如果直接存储文件的 block 编号最大能表示 60K (15*4K) 的文件。换句话说，如果我拿着 15 个槽位全部用来存储文件的编号，这个文件系统支撑的最大文件却就是 60K。惊呆了？（注意：ext2 文件系统是可以创建 4T 以内的文件的！！）</p>
+<p>那我们自然会思考，怎么解决呢？怎么才能支撑更大的文件？</p>
+<p>最直接思考就是用更大的数组，把 <code>inode-&gt;i_block</code>  数组变得更大。比如，如果你想要支持 100G 的文件：</p>
+<p>那么，需要 i_block 数组大小为 26214400 （计算公式：<code>100\*1024\*1024/4</code>），也就是要分配一个 <code>i_block[26214400]</code>  的数组。</p>
+<p>每个编号占用 4 字节，这个数组就占用 100M 的空间（计算公式：(<code>26214400\*4)/1024/1024</code>）。</p>
+<p>100M ！这里就有点夸张了，注意到 <code>i_block</code> 只是一个 inode 内部的字段，是一个静态分配的数组，也就是说，<strong>这个文件系统为了支持最大 100G 的文件存入，每一个 inode 都要占用 100M 的内存，就算你是一个 1K 的文件，inode 也会占用这么大的内存空间</strong>。并且，这种方案扩展性差，支持的文件 size 越大，<code>i_block[N]</code> 消耗内存情况越严重。</p>
+<p>这是无法接受的。那么怎么才能解决这个问题呢？怎么才能让你既能表示更大的文件，又能不浪费占用空间？</p>
+<p>我们仔细分析这个问题，你会发现，这里有 2 个核心问题：</p>
+<ol>
+<li>第一点，核心在于浪费内存空间（关键点是要保证 inode 内存结构的稳定，无论文件怎么变，inode 结构本身不能变）；</li>
+<li>第二点，仔细思考你会发现，无论是什么神仙方案，如果你要存储一个按照 4k 切分的 100G 文件，都是需要 100M 的空间来存储索引（ block 编号），但是 99.99% 的文件可能都没有这么大；</li>
+</ol>
+<p>我们前面用一个大数组来一把存储 block 编号的方案固然简单，但是问题在于太过死板。核心问题在于存储 block 编号的数组是预分配的，为了还没有发生并且 99% 场景都不会发生的事情（文件大小达到 100G），却不管三七二十一，提前准备好了完整的 block 索引数组，<strong>预分配就是浪费的根源</strong>。</p>
+<p>那么知道了这两个问题，下一步分析下一个个解决：</p>
+<h4 id="索引存磁盘"><a href="#索引存磁盘" class="headerlink" title="索引存磁盘"></a>索引存磁盘</h4><p><strong>问题一的解决：索引存磁盘</strong>：</p>
+<p>既然问题在于浪费内存，inode 内存分配不灵活，那就可以看把 <code>inode-&gt;i_block</code> 下放到磁盘。</p>
+<p>为什么？</p>
+<p>因为磁盘的空间比内存大了不止一个量级。100M 对内存来说<strong>很大</strong>，对磁盘来说<strong>很小</strong>。换句话说，用把用户数据所在的 block 编号存到磁盘上去，这个也需要物理空间，使用的也是 block 来存储，只不过这种 block 存储的是 block 编号信息，而不是用户数据。</p>
+<p>那么我们怎么通过 inode 找到用户数据呢？</p>
+<p>因为这个 block 本身也有编号，我们则需要把这个存储用户 block 编号的 block 所在块的编号存储在 <code>inode-&gt;i_block[15]</code> 里，当读数据的时候，我们需要先找到这个存储编号的 block，然后再通过里面存储的用户数据所在的 block 编号找到用户所在的 block ，去读数据。</p>
+<p>这个<strong>存储用户 block 编号的 block 所在块的编号</strong>我们叫做<strong>间接索引</strong>，然后我们根据跳转的次数可以分类成一级索引，二级索引，三级索引。顾名思义，一级索引就是跳转 1 次就能定位到用户数据，二级索引就是跳转 2 次，三级索引就是跳转 3 次才能定位到用户数据。那么 <code>inode-&gt;i_block[15]</code>  里面存储的可以直接定位到用户数据的 block 就是<strong>直接索引</strong>。</p>
+<p>终于可以说回 ext2 的使用了，ext2 的 <code>inode-&gt;i_block[15]</code> 数组。知识点来了，按照约定，这 15 个槽位分作 4 个不同类别来用：</p>
+<ol>
+<li>前 12 个槽位（也就是 0 - 11 ）我们成为<strong>直接索引</strong>；</li>
+<li>第 13 个位置，我们称为 <strong>1 级索引</strong>；</li>
+<li>第 14 个位置，我们称为 <strong>2 级索引</strong>；</li>
+<li>第 15 个位置，我们称为 <strong>3 级索引</strong>；</li>
+</ol>
+<p><img src="https://image.fyxemmmm.cn/blog/images/cp-10.jpg" alt="inode"></p>
+<p>好，那我们在来看下直接索引，一级，二级，三级索引的表现力。</p>
+<p><strong>直接索引</strong>：能存 12 个 block 编号，每个 block 4K，就是 48K，也就是说，48K 以内的文件，只需要用到 <code>inode-&gt;i_block[15]</code>  前 12 个槽位存储编号就能完全 hold 住。</p>
+<p><strong>一级索引</strong>：</p>
+<p><code>inode-&gt;i_block[12]</code> 这个位置存储的是一个一级索引，也就是说这里存储的编号指向的 block 里面存储的也是 block 编号，里面的编号指向用户数据。一个 block 4K，每个元素 4 字节，也就是有 1024 个编号位置可以存储。</p>
+<p>所以，一级索引能寻址 4M（1024 * 4K）空间 。</p>
+<p><strong>二级索引</strong>：</p>
+<p>二级索引是在一级索引的基础上多了一级而已，换算下来，有了 4M 的空间用来存储用户数据的编号。所以二级索引能寻址 4G (4M/4 * 4K) 的空间。</p>
+<p><strong>三级索引</strong>：</p>
+<p>三级索引是在二级索引的基础上又多了一级，也就是说，有了 4G 的空间来存储用户数据的 block 编号。所以二级索引能寻址 4T （4G/4 * 4K） 的空间。</p>
+<p><strong>最后，看一眼完整的表示图：</strong></p>
+<p><img src="https://image.fyxemmmm.cn/blog/images/cp-11.jpg" alt="间接寻址"></p>
+<p>所以，在我们 ext2 的文件系统上，通过这种间接块索引的方式，最大能支撑的文件大小 = 48K + 4M + 4G + 4T ，约等于 4 T。文件系统最大支撑 16T 空间，因为 4 Byte 的整形最大数就是 <code>2^32=4294967296</code> ， 乘以 4K 就等于 16 T。</p>
+<p>ext2 文件系统支持的最大单文件大小和文件系统最大容量就是这么算出来的（温馨提示：ext4 文件系统不仅兼容间接块的实现，还使用的是 extent 模式来管理的空间，最大支持单文件 16 TB ，文件系统最大 1 EB）。</p>
+<p><strong>思考：这种多级索引寻址性能表现怎么样？</strong></p>
+<p>在不超过 12 个数据块的小文件的寻址是最快的，访问文件中的任意数据理论只需要两次读盘，一次读 inode，一次读数据块。访问大文件中的数据则需要最多五次读盘操作：inode、一级间接寻址块、二级间接寻址块、三级间接寻址块、数据块。</p>
+<h4 id="多级索引和后分配"><a href="#多级索引和后分配" class="headerlink" title="多级索引和后分配"></a>多级索引和后分配</h4><p><strong>问题二解决：多级索引和后分配</strong></p>
+<p><strong>一级索引不够，表现力太差，预留空间又太浪费，不预留空间又无法扩展，怎么解决？</strong></p>
+<p>既然问题在于预分配，我们使用后分配（瘦分配，或精简分配）解决。<strong>也就是说用户文件数据有多大，我才分配出多大的数组</strong>。举个例子，我们存储 100 G 的文件，那么就要用到三级索引块，最多分配 26214400 个槽位的数组（因为要 26214400 个 block）。如果是存储 6K 的文件，那么只需要 2 个槽位的数组。</p>
+<p><strong>索引数组的后分配</strong></p>
+<p>后分配这里说的是 block 索引编号数组的后分配，需要用到的时候才分配，而不是说，现在用户存储一个 1k 的文件，我上来就给他分配一个 100M 的索引数组，只是为了以后这个文件可能增长到 100 G。</p>
+<p><strong>数据的后分配</strong></p>
+<p>既然这里说到，关于后分配还有一个层面，就是数据所占的空间也是用到了才分配，这个也就是涉及到今天 cp的秘密的核心问题。</p>
+<p><strong>实际的栗子</strong></p>
+<p>先看下下正常的文件写入要做的事情（注意这里只描述主干，实际流程可能，有优化）：</p>
+<ol>
+<li>创建一个文件，这个时候分配一个 inode；</li>
+<li>在 [ 0，4K ] 的位置写入 4K 数据，这个时候只需要 一个 block 假设编号 102，把这个编号写到 <code>inode-&gt;i_block[0]</code> 这个位置保存起来；</li>
+<li>在 [ 1T，1T+4K ] 的位置写入 4K 数据，这个时候需要分配一个 block 假设编号 7，因为这个位置已经落到三级索引才能表现的空间了，所以需要还需要分配出 3 个索引块；</li>
+<li>写入完成，close 文件；</li>
+</ol>
+<p>这里解释下文件偏移位置 [1T, 1T+4K] 为什么落到三级索引。</p>
+<ol>
+<li>offset 为 1T，按照 4K 切分，也就是 block 268435456 块（注意这个是虚拟文件块，不是物理位置）；</li>
+<li>先算出范围：直接索引的范围是 [0, 11] 个，一级索引 [12, 1035]，二级索引 [1036, 1049611], 三级索引 [1049612, 1074791435]，（有人如果不知道怎么来的话，可以往前看看 inode 的结构，直接索引 12个，一级索引 1024 个，二级 1M 个，三级 1G 个，然后算出来的）；</li>
+<li>268435456 落在三级索引 [1049612, 1074791435] 这个范围；</li>
+</ol>
+<p><strong>实际存储如图</strong>：</p>
+<p>计算索引：</p>
+<p>12 + 1024 + 1024 * 1024 + 1024 * 1024 * 254 + 1024 * 1022 + 1012 =  268435456</p>
+<p>实际的物理分配如图：</p>
+<p><img src="https://image.fyxemmmm.cn/blog/images/cp-12.jpg" alt="1T文件的存储块"></p>
+<p>因为偏移已经用到了 3 级索引，所以除了用户数据的两个 block ，中间还需要 3 个间接索引 block 分配出来。</p>
+<p>如果要读 [1T, 1T+4K] 这个位置的数据怎么办？</p>
+<p><strong>流程如下</strong>：</p>
+<ol>
+<li>计算 offset 得出在第 268435456 的位置；</li>
+<li>读出三级索引 <code>inode-&gt;i_block[14]</code> 里存储的 block 编号，找到对应的物理 block，这个是第一级的 block；</li>
+<li>然后读该 block 的第 254+1 个槽位里的数据，里面存储的是第二级的 block 编号，把这个编号读出来，通过这个编号找到对应的物理 block；</li>
+<li>读该 block 的第 1022 +1 个操作的数据，里面存储的是第三级的 block 编号，通过这个编号可以找到物理 block 的数据，里面存储的是用户数据所在 block 的编号；</li>
+<li>读该 block 第 1012+1 个槽位里存储的编号，找到物理 block，这个 block 里存的就是用户数据了；</li>
+</ol>
+<p>这个时候，我们的文件看起来是超大文件，size 等于 1T+4K ，但里面实际的数据只有 8 K，位置分别是  [ 0，4K ] ，[ 1T，1T+4K ]。</p>
+<p>重点：文件 size 只是 inode 里面的一个属性，实际物理空间占用则是要看用户数据放了多少个 block 。</p>
+<p><strong>划重点：没写数据的地方不用分配物理 block 块</strong>。</p>
+<p>没写数据不分配物理块？那是什么？那就是我们下面要说的稀疏文件。</p>
+<h2 id="文件的稀疏语义"><a href="#文件的稀疏语义" class="headerlink" title="文件的稀疏语义"></a>文件的稀疏语义</h2><h3 id="什么是稀疏文件"><a href="#什么是稀疏文件" class="headerlink" title="什么是稀疏文件"></a>什么是稀疏文件</h3><p>终于到我们文件的稀疏语义了，稀疏语义什么意思？</p>
+<p>稀疏文件英文名 sparse file 。稀疏文件本质上就是计算机文件，用户不感知，文件系统支持稀疏文件只是为了更有效率的使用磁盘空间而已。稀疏文件就是后分配空间的一种实现形式，做到真正用时才分配，最大效率的利用磁盘空间。</p>
+<p>就以上面举的栗子，文件大小 1T，但是实际数据只有 8K，这种就是稀疏文件，<strong>逻辑大小和实际物理空间是可以不等的</strong>。文件大小只是一个属性，文件只是数据的容器，没有用户数据的位置可以不分配空间。</p>
+<h3 id="为什么要支持稀疏语义？"><a href="#为什么要支持稀疏语义？" class="headerlink" title="为什么要支持稀疏语义？"></a>为什么要支持稀疏语义？</h3><p>还是以上面 1T 的文件举例，如果这 1T 的文件只有首尾分别写了 4K 的数据，而文件系统却要分配 1T 的物理空间，<strong>这里将带来巨大的浪费</strong>。何不等存了用户数据的时候再分配了，实际数据有多少，才去分配多大的 block ，何必着急的预分配呢？</p>
+<p><strong>后分配本着用多少给多少的原则，尽量有效的利用空间。</strong></p>
+<p>后分配还有一个优点，这也减少了首次写入的时间，怎么理解？</p>
+<p>因为，如果文件大小 1T，就要分配 1T 的空间，那么初始分配需要写入全零到空间，否则上面的数据可能是随机数。</p>
+<p><strong>对于稀疏文件空洞的地方，不占用物理空间，但要保证读的时候返回全 0 数据的语义，即可。</strong></p>
+<p>又一个知识点：有时候稀疏文件的空洞和用户真正的全 0 数据是无法区分的，因为对外表现是一样的。</p>
+<p><strong>稀疏文件也要文件系统支持，并不是所有的文件系统都支持稀疏语义，比如 ext2 就没有，ext4 才有稀疏语义，支持的标志是实现文件系统的 fallocate 接口。</strong></p>
+<h3 id="怎么创建一个稀疏文件？"><a href="#怎么创建一个稀疏文件？" class="headerlink" title="怎么创建一个稀疏文件？"></a>怎么创建一个稀疏文件？</h3><p>可以使用 truncate 命令在一个 ext4 的文件系统创建一个文件。</p>
+<pre class="line-numbers language-css" data-language="css"><code class="language-css">truncate -s 100G  test.txt<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<ul>
+<li>你 <code>ls -lh ./test.txt</code> 命令看会发现是一个 100 G 的文件；</li>
+<li>但是 <code>du -sh ./test.txt</code>  会发现是一个 0 字节的文件；</li>
+<li><code>stat ./test.txt</code> 会发现是 <code>Size: 107374182400 Blocks: 0</code> 的文件；</li>
+</ul>
+<p>这就是一个典型的稀疏文件。size 只是文件的逻辑大小，实际的物理空间占用还是得看 Blocks 这个数值。</p>
+<p>下面这种 1T 的文件，因为只写了头尾 8K 数据，所以只需要分配 2 个 block 存储用户数据即可。</p>
+<p><img src="https://image.fyxemmmm.cn/blog/images/cp-13.jpg" alt="1T文件的存储块"></p>
+<p>好，我们再深入思考下，文件系统为什么能做到这个？</p>
+<p>这也是为什么理解稀疏语义要先了解文件系统的实现的原因。</p>
+<ol>
+<li>首先，最关键的是把磁盘空间切成离散的、定长的 block 来管理；</li>
+<li>然后，通过 inode 能查找到所有离散的数据（保存了所有的索引）；</li>
+<li>最后，实现索引块和数据块空间的后分配；</li>
+</ol>
+<p>这三点是层层递进的。</p>
+<h3 id="稀疏语义接口"><a href="#稀疏语义接口" class="headerlink" title="稀疏语义接口"></a>稀疏语义接口</h3><p>为了知识的完整性，简要介绍稀疏语义的几个接口：</p>
+<ol>
+<li>preallocate（预分配）：提供接口可以让用户预占用文件内指定范围的物理空间；</li>
+<li>punch hole（打洞）：提供接口可以让用户释放文件内指定范围的物理空间；</li>
+</ol>
+<p>这两个操作刚好相反。</p>
+<p>预分配的意思就是说，当你创建一个 1T的文件，如果你没写数据，这个时候其实没有分配物理空间的，支持稀疏语义的文件系统会提供一个 fallocate 接口给你，让你实现预分配，也就是说把这 1T 的物理空间现在就分配出来。</p>
+<p><strong>思考：这个有什么好处呢？</strong></p>
+<ul>
+<li>第一，如果你命中注定要 1T 的空间，预分配是有好处的，把空间分配的工作量集中在初始化的时候一把做了，避免了实时现场分配的开销；</li>
+<li>第二，如果不提前占坑，很有可能等你想要的时候已经没有空间可占用了。所以你把物理空间先占好，就可以安心使用了；</li>
+</ul>
+<p>linux 提供了一个 fallocate 命令，可以用来预分配空间。</p>
+<pre class="line-numbers language-sh" data-language="sh"><code class="language-sh">fallocate -o 0 -l 4096 ./test.txt<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p>这个命令的意思就是给 <code>text.txt</code> 这个文件 [0, 4K] 的位置分配好物理空间。</p>
+<p><strong>打洞（punch hole） 是干啥的呢？</strong></p>
+<p>这个调用允许你把已经占用的物理空间释放掉，从而达到快速释放的目的。这种操作在虚拟机镜像的场景用得多，通常用于快速释放空间，punch hole 能够让业务更有效的利用空间。</p>
+<p>linux 提供了一个 fallocate 命令也可以用来 punch hole 空间。</p>
+<pre class="line-numbers language-sh" data-language="sh"><code class="language-sh">fallocate -p -o 0 -l 4096 ./test.txt<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p>这个命令的意思是把 <code>test.txt</code>  [ 0,  4K ] 的物理空间释放掉。</p>
+<h3 id="稀疏文件的应用"><a href="#稀疏文件的应用" class="headerlink" title="稀疏文件的应用"></a>稀疏文件的应用</h3><h3 id="Go-语言实现"><a href="#Go-语言实现" class="headerlink" title="Go 语言实现"></a>Go 语言实现</h3><p>稀疏文件本身和编程语言无具体关系，我下面以 Go 为例，看下稀疏文件的预分配和打洞（punch hole）是怎么实现的。</p>
+<p>预分配实现：</p>
+<pre class="line-numbers language-go" data-language="go"><code class="language-go"><span class="token keyword">func</span> <span class="token function">PreAllocate</span><span class="token punctuation">(</span>f <span class="token operator">*</span>os<span class="token punctuation">.</span>File<span class="token punctuation">,</span> sizeInBytes <span class="token builtin">int</span><span class="token punctuation">)</span> <span class="token builtin">error</span> <span class="token punctuation">{</span>
+    <span class="token comment">// use mode = 1 to keep size</span>
+    <span class="token comment">// see FALLOC_FL_KEEP_SIZE</span>
+    <span class="token keyword">return</span> syscall<span class="token punctuation">.</span><span class="token function">Fallocate</span><span class="token punctuation">(</span><span class="token function">int</span><span class="token punctuation">(</span>f<span class="token punctuation">.</span><span class="token function">Fd</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token number">0x0</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token function">int64</span><span class="token punctuation">(</span>sizeInBytes<span class="token punctuation">)</span><span class="token punctuation">)</span>
+<span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>punch hole 实现：</p>
+<pre class="line-numbers language-go" data-language="go"><code class="language-go"><span class="token comment">//  mode 0 change to size                  0x0</span>
+<span class="token comment">//  FALLOC_FL_KEEP_SIZE                  = 0x1</span>
+<span class="token comment">//  FALLOC_FL_PUNCH_HOLE                 = 0x2</span>
+
+<span class="token keyword">func</span> <span class="token function">PunchHole</span><span class="token punctuation">(</span>file <span class="token operator">*</span>os<span class="token punctuation">.</span>File<span class="token punctuation">,</span> offset <span class="token builtin">int64</span><span class="token punctuation">,</span> size <span class="token builtin">int64</span><span class="token punctuation">)</span> <span class="token builtin">error</span> <span class="token punctuation">{</span>
+    err <span class="token operator">:=</span> syscall<span class="token punctuation">.</span><span class="token function">Fallocate</span><span class="token punctuation">(</span><span class="token function">int</span><span class="token punctuation">(</span>file<span class="token punctuation">.</span><span class="token function">Fd</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token number">0x1</span><span class="token operator">|</span><span class="token number">0x2</span><span class="token punctuation">,</span> offset<span class="token punctuation">,</span> size<span class="token punctuation">)</span>
+    <span class="token keyword">if</span> err <span class="token operator">==</span> syscall<span class="token punctuation">.</span>ENOSYS <span class="token operator">||</span> err <span class="token operator">==</span> syscall<span class="token punctuation">.</span>EOPNOTSUPP <span class="token punctuation">{</span>
+        <span class="token keyword">return</span> syscall<span class="token punctuation">.</span>EPERM
+    <span class="token punctuation">}</span>
+    <span class="token keyword">return</span> err
+<span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>可以看到，本质上都是系统调用 <code>fallocate</code> ，然后带不同的参数而已。指定文件偏移和长度，就能预分配物理空间或者释放物理空间了。</p>
+<p>这里有一个知识点：punch hole 的调用要保证 4k 对齐才能释放空间。</p>
+<p>举个例子，比如：</p>
+<p>punch hole [0, 6k] 的数据，你会发现只有 [0, 4k] 的数据物理块被释放了，[4k, 6k] 所占的 4k 物理块还占着空间呢。</p>
+<p>这个很容易理解，因为磁盘的物理空间是划分成 4k 的 block，这个是最小单位了，不能再分了，你无法切割一个最小的单位。</p>
+<p><strong>值得注意的是，就算你没有 4k 对齐的发送调用，fallocate 也不会报错，这个请注意了。</strong></p>
+
+                
+            </div>
+            <hr/>
+
+            
+
+
+
+            <div class="tag_share" style="display: block;">
+                <div class="post-meta__tag-list" style="display: inline-block;">
+                    
+                        <div class="article-tag">
+                            
+                                <a href="/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/">
+                                    <span class="chip bg-color">操作系统</span>
+                                </a>
+                            
+                                <a href="/tags/%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F/">
+                                    <span class="chip bg-color">文件系统</span>
+                                </a>
+                            
+                                <a href="/tags/inode/">
+                                    <span class="chip bg-color">inode</span>
+                                </a>
+                            
+                        </div>
+                    
+                </div>
+                <div class="post_share" style="zoom: 80%; width: fit-content; display: inline-block; float: right; margin: -0.15rem 0;">
+                    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/fyxemmmm/fyxemmmm.github.io/libs/share/css/share.min.css">
+<div id="article-share">
+
+    
+    <div class="social-share" data-sites="qq,wechat,weibo" data-wechat-qrcode-helper="<p>微信扫一扫即可分享！</p>"></div>
+    <script src="https://cdn.jsdelivr.net/gh/fyxemmmm/fyxemmmm.github.io/libs/share/js/social-share.min.js"></script>
+    
+
+    
+
+</div>
+
+                </div>
+            </div>
+            
+        </div>
+    </div>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+<article id="prenext-posts" class="prev-next articles">
+    <div class="row article-row">
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge left-badge text-color">
+                <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
+            <div class="card">
+                <a href="/2021/09/07/jie-du-jin-cheng-jian-tong-xun/">
+                    <div class="card-image">
+                        
+                        <img src="https://image.fyxemmmm.cn/blog/images/ins-6.jpg" class="responsive-img" alt="图解「进程间通讯」">
+                        
+                        <span class="card-title">图解「进程间通讯」</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            解读Linux中所有的进程通讯方法及细节
+                        
+                    </div>
+                    <div class="publish-info">
+                        <span class="publish-date">
+                            <i class="far fa-clock fa-fw icon-date"></i>2021-09-07
+                        </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/" class="post-category">
+                                    操作系统
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/%E8%BF%9B%E7%A8%8B/">
+                        <span class="chip bg-color">进程</span>
+                    </a>
+                    
+                    <a href="/tags/%E9%80%9A%E8%AE%AF/">
+                        <span class="chip bg-color">通讯</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge right-badge text-color">
+                本篇&nbsp;<i class="far fa-dot-circle"></i>
+            </div>
+            <div class="card">
+                <a href="/2021/09/09/linux-wen-jian-xi-tong-mi-mi/">
+                    <div class="card-image">
+                        
+                        <img src="https://image.fyxemmmm.cn/blog/images/ins-128.jpg" class="responsive-img" alt="Linux の 文件系统秘密">
+                        
+                        <span class="card-title">Linux の 文件系统秘密</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            文件系统、inode、稀疏语义详解
+                        
+                    </div>
+                    <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2021-09-09
+                            </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/" class="post-category">
+                                    操作系统
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/">
+                        <span class="chip bg-color">操作系统</span>
+                    </a>
+                    
+                    <a href="/tags/%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F/">
+                        <span class="chip bg-color">文件系统</span>
+                    </a>
+                    
+                    <a href="/tags/inode/">
+                        <span class="chip bg-color">inode</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+    </div>
+</article>
+
+</div>
+
+
+
+<!-- 代码块功能依赖 -->
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/fyxemmmm/fyxemmmm.github.io/libs/codeBlock/codeBlockFuction.js"></script>
+
+<!-- 代码语言 -->
+
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/fyxemmmm/fyxemmmm.github.io/libs/codeBlock/codeLang.js"></script>
+
+
+<!-- 代码块复制 -->
+
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/fyxemmmm/fyxemmmm.github.io/libs/codeBlock/codeCopy.js"></script>
+
+
+<!-- 代码块收缩 -->
+
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/fyxemmmm/fyxemmmm.github.io/libs/codeBlock/codeShrink.js"></script>
+
+
+    </div>
+    <div id="toc-aside" class="expanded col l3 hide-on-med-and-down">
+        <div class="toc-widget card" style="background-color: white;">
+            <div class="toc-title"><i class="far fa-list-alt"></i>&nbsp;&nbsp;目录</div>
+            <div id="toc-content"></div>
+        </div>
+    </div>
+</div>
+
+<!-- TOC 悬浮按钮. -->
+
+<div id="floating-toc-btn" class="hide-on-med-and-down">
+    <a class="btn-floating btn-large bg-color">
+        <i class="fas fa-list-ul"></i>
+    </a>
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/gh/fyxemmmm/fyxemmmm.github.io/libs/tocbot/tocbot.min.js"></script>
+<script>
+    $(function () {
+        tocbot.init({
+            tocSelector: '#toc-content',
+            contentSelector: '#articleContent',
+            headingsOffset: -($(window).height() * 0.4 - 45),
+            collapseDepth: Number('0'),
+            headingSelector: 'h1, h2, h3, h4'
+        });
+
+        // modify the toc link href to support Chinese.
+        let i = 0;
+        let tocHeading = 'toc-heading-';
+        $('#toc-content a').each(function () {
+            $(this).attr('href', '#' + tocHeading + (++i));
+        });
+
+        // modify the heading title id to support Chinese.
+        i = 0;
+        $('#articleContent').children('h1, h2, h3, h4').each(function () {
+            $(this).attr('id', tocHeading + (++i));
+        });
+
+        // Set scroll toc fixed.
+        let tocHeight = parseInt($(window).height() * 0.4 - 64);
+        let $tocWidget = $('.toc-widget');
+        $(window).scroll(function () {
+            let scroll = $(window).scrollTop();
+            /* add post toc fixed. */
+            if (scroll > tocHeight) {
+                $tocWidget.addClass('toc-fixed');
+            } else {
+                $tocWidget.removeClass('toc-fixed');
+            }
+        });
+
+        
+        /* 修复文章卡片 div 的宽度. */
+        let fixPostCardWidth = function (srcId, targetId) {
+            let srcDiv = $('#' + srcId);
+            if (srcDiv.length === 0) {
+                return;
+            }
+
+            let w = srcDiv.width();
+            if (w >= 450) {
+                w = w + 21;
+            } else if (w >= 350 && w < 450) {
+                w = w + 18;
+            } else if (w >= 300 && w < 350) {
+                w = w + 16;
+            } else {
+                w = w + 14;
+            }
+            $('#' + targetId).width(w);
+        };
+
+        // 切换TOC目录展开收缩的相关操作.
+        const expandedClass = 'expanded';
+        let $tocAside = $('#toc-aside');
+        let $mainContent = $('#main-content');
+        $('#floating-toc-btn .btn-floating').click(function () {
+            if ($tocAside.hasClass(expandedClass)) {
+                $tocAside.removeClass(expandedClass).hide();
+                $mainContent.removeClass('l9');
+            } else {
+                $tocAside.addClass(expandedClass).show();
+                $mainContent.addClass('l9');
+            }
+            fixPostCardWidth('artDetail', 'prenext-posts');
+        });
+        
+    });
+</script>
+
+    
+
+</main>
+
+
+
+
+    <footer class="page-footer bg-color">
+    
+
+    <div class="container row center-align"
+         style="margin-bottom: 0px !important;">
+        <div class="col s12 m8 l8 copy-right">
+            Copyright&nbsp;&copy;
+            
+                <span id="year">2018-2021</span>
+            
+            <span id="year">2018</span>
+            <a href="/about" target="_blank"></a>
+            |&nbsp;Powered by&nbsp;<a href="https://github.com/fyxemmmm" target="_blank">yuxuan</a>
+            <!-- |&nbsp;Theme&nbsp;<a href="https://github.com/blinkfox/hexo-theme-matery" target="_blank">Matery</a> -->
+            <br>
+            愿你历尽千帆，归来任是少年。
+
+
+            <!-- 
+                &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
+                        class="white-color">52.6k</span>
+            
+            
+            
+            
+                <span id="busuanzi_container_site_pv">
+                &nbsp;|&nbsp;<i class="far fa-eye"></i>&nbsp;总访问量:&nbsp;
+                    <span id="busuanzi_value_site_pv" class="white-color"></span>
+            </span>
+            
+            
+                <span id="busuanzi_container_site_uv">
+                &nbsp;|&nbsp;<i class="fas fa-users"></i>&nbsp;总访问人数:&nbsp;
+                    <span id="busuanzi_value_site_uv" class="white-color"></span>
+            </span>
+             -->
+
+
+            <br>
+
+            <!-- 运行天数提醒. -->
+            
+            <br>
+            
+        </div>
+        <div class="col s12 m4 l4 social-link ">
+    <a href="https://github.com/fyxemmmm" class="tooltipped" target="_blank" data-tooltip="访问我的GitHub" data-position="top" data-delay="50">
+        <i class="fab fa-github"></i>
+    </a>
+
+
+
+    <a href="mailto:fyxemmmm@gmail.com" class="tooltipped" target="_blank" data-tooltip="邮件联系我" data-position="top" data-delay="50">
+        <i class="fas fa-envelope-open"></i>
+    </a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <a href="/atom.xml" class="tooltipped" target="_blank" data-tooltip="RSS 订阅" data-position="top" data-delay="50">
+        <i class="fas fa-rss"></i>
+    </a>
+
+</div>
+    </div>
+</footer>
+
+<div class="progress-bar"></div>
+
+
+    <!-- 搜索遮罩框 -->
+<div id="searchModal" class="modal">
+    <div class="modal-content">
+        <div class="search-header">
+            <span class="title"><i class="fas fa-search"></i>&nbsp;&nbsp;搜索</span>
+            <input type="search" id="searchInput" name="s" placeholder="请输入搜索的关键字"
+                   class="search-input">
+        </div>
+        <div id="searchResult"></div>
+    </div>
+</div>
+
+<script type="text/javascript">
+$(function () {
+    var searchFunc = function (path, search_id, content_id) {
+        'use strict';
+        $.ajax({
+            url: path,
+            dataType: "xml",
+            success: function (xmlResponse) {
+                // get the contents from search data
+                var datas = $("entry", xmlResponse).map(function () {
+                    return {
+                        title: $("title", this).text(),
+                        content: $("content", this).text(),
+                        url: $("url", this).text()
+                    };
+                }).get();
+                var $input = document.getElementById(search_id);
+                var $resultContent = document.getElementById(content_id);
+                $input.addEventListener('input', function () {
+                    var str = '<ul class=\"search-result-list\">';
+                    var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+                    $resultContent.innerHTML = "";
+                    if (this.value.trim().length <= 0) {
+                        return;
+                    }
+                    // perform local searching
+                    datas.forEach(function (data) {
+                        var isMatch = true;
+                        var data_title = data.title.trim().toLowerCase();
+                        var data_content = data.content.trim().replace(/<[^>]+>/g, "").toLowerCase();
+                        var data_url = data.url;
+                        data_url = data_url.indexOf('/') === 0 ? data.url : '/' + data_url;
+                        var index_title = -1;
+                        var index_content = -1;
+                        var first_occur = -1;
+                        // only match artiles with not empty titles and contents
+                        if (data_title !== '' && data_content !== '') {
+                            keywords.forEach(function (keyword, i) {
+                                index_title = data_title.indexOf(keyword);
+                                index_content = data_content.indexOf(keyword);
+                                if (index_title < 0 && index_content < 0) {
+                                    isMatch = false;
+                                } else {
+                                    if (index_content < 0) {
+                                        index_content = 0;
+                                    }
+                                    if (i === 0) {
+                                        first_occur = index_content;
+                                    }
+                                }
+                            });
+                        }
+                        // show search results
+                        if (isMatch) {
+                            str += "<li><a href='" + data_url + "' class='search-result-title'>" + data_title + "</a>";
+                            var content = data.content.trim().replace(/<[^>]+>/g, "");
+                            if (first_occur >= 0) {
+                                // cut out 100 characters
+                                var start = first_occur - 20;
+                                var end = first_occur + 80;
+                                if (start < 0) {
+                                    start = 0;
+                                }
+                                if (start === 0) {
+                                    end = 100;
+                                }
+                                if (end > content.length) {
+                                    end = content.length;
+                                }
+                                var match_content = content.substr(start, end);
+                                // highlight all keywords
+                                keywords.forEach(function (keyword) {
+                                    var regS = new RegExp(keyword, "gi");
+                                    match_content = match_content.replace(regS, "<em class=\"search-keyword\">" + keyword + "</em>");
+                                });
+
+                                str += "<p class=\"search-result\">" + match_content + "...</p>"
+                            }
+                            str += "</li>";
+                        }
+                    });
+                    str += "</ul>";
+                    $resultContent.innerHTML = str;
+                });
+            }
+        });
+    };
+
+    searchFunc('/search.xml', 'searchInput', 'searchResult');
+});
+</script>
+
+    <!-- 回到顶部按钮 -->
+<div id="backTop" class="top-scroll">
+    <a class="btn-floating btn-large waves-effect waves-light" href="#!">
+        <i class="fas fa-arrow-up"></i>
+    </a>
+</div>
+
+
+    <script src="https://cdn.jsdelivr.net/gh/fyxemmmm/fyxemmmm.github.io/libs/materialize/materialize.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/fyxemmmm/fyxemmmm.github.io/libs/masonry/masonry.pkgd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/fyxemmmm/fyxemmmm.github.io/libs/aos/aos.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/fyxemmmm/fyxemmmm.github.io/libs/scrollprogress/scrollProgress.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/fyxemmmm/fyxemmmm.github.io/libs/lightGallery/js/lightgallery-all.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/fyxemmmm/fyxemmmm.github.io/js/matery.js"></script>
+
+    <!-- Baidu Analytics -->
+
+    <!-- Baidu Push -->
+
+    
+    
+
+    
+
+    
+
+    <!--腾讯兔小巢-->
+    
+    
+
+    
+
+    
+
+    
+    <script src="https://cdn.jsdelivr.net/gh/fyxemmmm/fyxemmmm.github.io/libs/instantpage/instantpage.js" type="module"></script>
+    
+
+</body>
+
+</html>
