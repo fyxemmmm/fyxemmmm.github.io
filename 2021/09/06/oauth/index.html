@@ -465,26 +465,26 @@
 <p><img src="https://image.fyxemmmm.cn/blog/images/oauth-3.jpg"></p>
 <p><strong>第一步：在豆瓣官网点击用 qq 登录</strong></p>
 <p>当你点击用 qq 登录的小图标时，实际上是向豆瓣的服务器发起了一个请求。</p>
-<p>http:// <a target="_blank" rel="noopener" href="http://www.douban.com/leadToAuthorize">www.douban.com/leadToAuthorize</a></p>
+<p><code>http:// www.douban.com/leadToAuthorize</code></p>
 <p>豆瓣服务器会响应一个重定向地址，指向 qq 授权登录的页面地址。</p>
-<p>http:// <a target="_blank" rel="noopener" href="http://www.qq.com/authorize">www.qq.com/authorize</a></p>
+<p><code>http:// www.qq.com/authorize</code></p>
 <p>当然，这个重定向地址还附带了一个回调地址，这是在 QQ 那边登陆成功后需要跳回的豆瓣地址。</p>
-<p><a target="_blank" rel="noopener" href="http://www.qq.com/authorize">http://www.qq.com/authorize</a>?<br>callback=<a target="_blank" rel="noopener" href="http://www.douban.com/callback">www.douban.com/callback</a></p>
+<p><code>http://www.qq.com/authorize?callback=www.douban.com/callback</code></p>
 <p>这跳回的地址是必然的嘛，不然 QQ 怎么知道在我这边登陆成功后我要干嘛，上杆子找人家 QQ 授权的网站那么多。</p>
 <p>这部分的流程是黄色的这部分。</p>
 <p><img src="https://image.fyxemmmm.cn/blog/images/oauth-4.jpg"></p>
 <p><strong>第二步：跳转到 qq 登录页面输入用户名密码，然后点授权并登录</strong></p>
 <p>上一步，浏览器接到重定向地址</p>
-<p><a target="_blank" rel="noopener" href="http://www.qq.com/authorize">http://www.qq.com/authorize</a>?<br>callback=<a target="_blank" rel="noopener" href="http://www.douban.com/callback">www.douban.com/callback</a></p>
+<p><code>http://www.qq.com/authorize?callback=www.douban.com/callback</code></p>
 <p>自然没什么好说的，乖乖访问过去。</p>
 <p>这回访问的就是 QQ 的页面了。</p>
 <p><img src="https://image.fyxemmmm.cn/blog/images/oauth-5.jpg"></p>
 <p>用户输入 QQ 号和密码，点击授权并登陆，这里走 QQ 服务器自己的校验逻辑，与豆瓣毫无关系。</p>
 <p>若校验成功，会响应给浏览器一个重定向地址</p>
-<p><a target="_blank" rel="noopener" href="http://www.douban.com/callback">www.douban.com/callback</a></p>
+<p><code>www.douban.com/callback</code></p>
 <p>没错，就是上一步传给 QQ 服务器的 callback 参数！</p>
 <p>但除了这个地址外，还附上了一个 code，我们叫它<strong>授权码</strong>。</p>
-<p><a target="_blank" rel="noopener" href="http://www.douban.com/callback?code=xxx">www.douban.com/callback?code=xxx</a></p>
+<p><code>www.douban.com/callback?code=xxx</code></p>
 <p>这个 code 是豆瓣服务唯一关心的事情，至于你那边如何校验用户，无所谓，只要最终能给我一个 code 码，我就认为这个用户在你那里登陆成功了。</p>
 <p>这部分的流程是黄色的这部分。</p>
 <p><img src="https://image.fyxemmmm.cn/blog/images/oauth-6.jpg"></p>
@@ -492,11 +492,15 @@
 <p>这一步背后的过程其实是最繁琐的，但对于用户来说是完全感知不到的。</p>
 <p>用户在 QQ 登录页面点击授权登陆后，就直接跳转到豆瓣首页了，但其实经历了很多隐藏的过程。</p>
 <p>首先接上一步，QQ 服务器在判断登录成功后，使页面重定向到之前豆瓣发来的 callback 并附上 code 授权码。</p>
-<p><a target="_blank" rel="noopener" href="http://www.douban.com/callback?code=xxx">www.douban.com/callback?code=xxx</a></p>
+<p><code>www.douban.com/callback?code=xxx</code></p>
 <p>浏览器接到重定向，乖乖发起请求，此时请求的是<strong>豆瓣服务器</strong>。</p>
 <p>豆瓣服务器收到请求后，对 QQ 服务器发起了两次请求：</p>
-<p>\1. 用拿到的 code 去换 token</p>
-<p>\2. 再用拿到的 token 换取用户信息</p>
+<ol>
+<li><p>用拿到的 code 去换 token</p>
+</li>
+<li><p>再用拿到的 token 换取用户信息</p>
+</li>
+</ol>
 <p>这个 code 和 token 都是有失效时间的，也因此保证了只要不在短时间内泄漏出去，就不会有安全风险。</p>
 <p>拿到用户信息之后，就返回给了浏览器。注意此时的浏览器上是豆瓣的首页，豆瓣也因此可以将你的个人信息展示出来。</p>
 <p><img src="https://image.fyxemmmm.cn/blog/images/oauth-17.png"></p>
@@ -534,7 +538,7 @@
 <p><strong>第二步</strong>，使用 QQ 页面进行授权。</p>
 <p><img src="https://image.fyxemmmm.cn/blog/images/oauth-14.jpg"></p>
 <p><strong>第三步</strong>，授权成功跳回豆瓣首页。</p>
-<p><img src="https://image.fyxemmmm.cn/blog/images/oauth-15.jpg"></p>
+<p><img src="https://image.fyxemmmm.cn/blog/images/oauth-18.png"></p>
 
                 
             </div>
