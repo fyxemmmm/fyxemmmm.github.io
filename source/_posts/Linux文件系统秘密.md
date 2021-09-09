@@ -1,5 +1,5 @@
 ---
-title: Linux の 文件系统秘密
+title: Linux の 文件系统
 date: 2021-09-09 23:50:09
 author: yuxuan
 img: https://image.fyxemmmm.cn/blog/images/ins-128.jpg
@@ -9,7 +9,7 @@ cover: false
 coverImg: 
 toc: true
 mathjax: false
-summary: 文件系统、inode、稀疏语义详解
+summary: 文件系统、inode、稀疏语义
 categories: 操作系统
 tags:
   - 操作系统

@@ -53,16 +53,15 @@ tags:
 
 当你点击用 qq 登录的小图标时，实际上是向豆瓣的服务器发起了一个请求。
 
-http:// www.douban.com/leadToAuthorize
+`http:// www.douban.com/leadToAuthorize`
 
 豆瓣服务器会响应一个重定向地址，指向 qq 授权登录的页面地址。
 
-http:// www.qq.com/authorize
+`http:// www.qq.com/authorize`
 
 当然，这个重定向地址还附带了一个回调地址，这是在 QQ 那边登陆成功后需要跳回的豆瓣地址。
 
-http://www.qq.com/authorize?
-callback=www.douban.com/callback
+`http://www.qq.com/authorize?callback=www.douban.com/callback`
 
 这跳回的地址是必然的嘛，不然 QQ 怎么知道在我这边登陆成功后我要干嘛，上杆子找人家 QQ 授权的网站那么多。
 
@@ -74,8 +73,7 @@ callback=www.douban.com/callback
 
 上一步，浏览器接到重定向地址
 
-http://www.qq.com/authorize?
-callback=www.douban.com/callback
+`http://www.qq.com/authorize?callback=www.douban.com/callback`
 
 自然没什么好说的，乖乖访问过去。
 
@@ -87,13 +85,13 @@ callback=www.douban.com/callback
 
 若校验成功，会响应给浏览器一个重定向地址
 
-www.douban.com/callback
+`www.douban.com/callback`
 
 没错，就是上一步传给 QQ 服务器的 callback 参数！
 
 但除了这个地址外，还附上了一个 code，我们叫它**授权码**。
 
-www.douban.com/callback?code=xxx
+`www.douban.com/callback?code=xxx`
 
 这个 code 是豆瓣服务唯一关心的事情，至于你那边如何校验用户，无所谓，只要最终能给我一个 code 码，我就认为这个用户在你那里登陆成功了。
 
@@ -109,15 +107,15 @@ www.douban.com/callback?code=xxx
 
 首先接上一步，QQ 服务器在判断登录成功后，使页面重定向到之前豆瓣发来的 callback 并附上 code 授权码。
 
-www.douban.com/callback?code=xxx
+`www.douban.com/callback?code=xxx`
 
 浏览器接到重定向，乖乖发起请求，此时请求的是**豆瓣服务器**。
 
 豆瓣服务器收到请求后，对 QQ 服务器发起了两次请求：
 
-\1. 用拿到的 code 去换 token
+1. 用拿到的 code 去换 token
 
-\2. 再用拿到的 token 换取用户信息
+2. 再用拿到的 token 换取用户信息
 
 这个 code 和 token 都是有失效时间的，也因此保证了只要不在短时间内泄漏出去，就不会有安全风险。
 
@@ -197,4 +195,4 @@ http://www.ruanyifeng.com/blog/2014/05/oauth_2_0.html
 
 **第三步**，授权成功跳回豆瓣首页。
 
-![](https://image.fyxemmmm.cn/blog/images/oauth-15.jpg)
+![](https://image.fyxemmmm.cn/blog/images/oauth-18.png)
