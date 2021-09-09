@@ -7,7 +7,7 @@ top: true
 hide: false
 cover: false
 coverImg: 
-toc: false
+toc: true
 mathjax: false
 summary: 深入理解 tcp timewait
 categories: 协议
@@ -156,6 +156,8 @@ tags:
 第二，确保连接方能在时间范围内，关闭自己的连接。其实，也是因为丢包造成的，参见下图：
 
 ![](https://image.fyxemmmm.cn/blog/images/img1.webp)
+![](https://image.fyxemmmm.cn/blog/images/tw-1.png)
+![](https://image.fyxemmmm.cn/blog/images/tw-2.png)
 
 - 主动关闭方关闭了连接，发送了FIN；
 - 被动关闭方回复ACK同时也执行关闭动作，发送FIN包；此时，被动关闭的一方进入LAST_ACK状态
