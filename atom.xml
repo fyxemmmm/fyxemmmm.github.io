@@ -6,7 +6,7 @@
   <link href="https://fyxemmmm.github.io/atom.xml" rel="self"/>
   
   <link href="https://fyxemmmm.github.io/"/>
-  <updated>2021-09-11T06:31:51.883Z</updated>
+  <updated>2021-09-19T05:07:18.416Z</updated>
   <id>https://fyxemmmm.github.io/</id>
   
   <author>
@@ -17,11 +17,64 @@
   <generator uri="https://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>golang 安全计数</title>
+    <link href="https://fyxemmmm.github.io/2021/09/19/go-yu-yan-shi-xian-an-quan-ji-shu-de-ruo-gan-chong-fang-fa/"/>
+    <id>https://fyxemmmm.github.io/2021/09/19/go-yu-yan-shi-xian-an-quan-ji-shu-de-ruo-gan-chong-fang-fa/</id>
+    <published>2021-09-19T05:04:54.000Z</published>
+    <updated>2021-09-19T05:07:18.416Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;本文是一篇如何用 goroutine-safe 的方式实现计数器的方法汇总。&lt;/p&gt;
+&lt;h3 id=&quot;不要这样做&quot;&gt;&lt;a href=&quot;#不要这样做&quot; class=&quot;headerlink&quot;</summary>
+        
+      
+    
+    
+    
+    <category term="golang" scheme="https://fyxemmmm.github.io/categories/golang/"/>
+    
+    
+    <category term="安全计数" scheme="https://fyxemmmm.github.io/tags/%E5%AE%89%E5%85%A8%E8%AE%A1%E6%95%B0/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>mysql 索引下推</title>
+    <link href="https://fyxemmmm.github.io/2021/09/15/mysql-suo-yin-xia-tui/"/>
+    <id>https://fyxemmmm.github.io/2021/09/15/mysql-suo-yin-xia-tui/</id>
+    <published>2021-09-15T04:59:58.000Z</published>
+    <updated>2021-09-19T05:02:28.552Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;&lt;strong&gt;回表操作&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;对于数据库来说，只要涉及到索引，必然绕不过去回表操作。当然这也是我们今天所讲内容的前置基础。&lt;/p&gt;
+&lt;p&gt;说到回表，我们需要从索引开始说起。别担心，不会长篇大论，这里只是简单讲下主键索引与普通索引，目的是让大家对回</summary>
+        
+      
+    
+    
+    
+    <category term="mysql" scheme="https://fyxemmmm.github.io/categories/mysql/"/>
+    
+    
+    <category term="索引下推" scheme="https://fyxemmmm.github.io/tags/%E7%B4%A2%E5%BC%95%E4%B8%8B%E6%8E%A8/"/>
+    
+  </entry>
+  
+  <entry>
     <title>golang string与bytes的转换</title>
     <link href="https://fyxemmmm.github.io/2021/09/11/golang-string-bytes-mi-mi/"/>
     <id>https://fyxemmmm.github.io/2021/09/11/golang-string-bytes-mi-mi/</id>
     <published>2021-09-11T06:26:56.000Z</published>
-    <updated>2021-09-11T06:31:51.883Z</updated>
+    <updated>2021-09-19T04:36:51.194Z</updated>
     
     
       
@@ -78,7 +131,7 @@
     <link href="https://fyxemmmm.github.io/2021/09/07/jie-du-jin-cheng-jian-tong-xun/"/>
     <id>https://fyxemmmm.github.io/2021/09/07/jie-du-jin-cheng-jian-tong-xun/</id>
     <published>2021-09-07T15:37:44.000Z</published>
-    <updated>2021-09-09T15:43:25.939Z</updated>
+    <updated>2021-09-19T04:50:15.358Z</updated>
     
     
       
@@ -190,7 +243,7 @@
     <link href="https://fyxemmmm.github.io/2021/09/01/channel-shi-xian-yuan-li/"/>
     <id>https://fyxemmmm.github.io/2021/09/01/channel-shi-xian-yuan-li/</id>
     <published>2021-08-31T16:11:55.000Z</published>
-    <updated>2021-09-04T05:53:03.666Z</updated>
+    <updated>2021-09-19T04:31:56.705Z</updated>
     
     
       
@@ -374,7 +427,7 @@
     <link href="https://fyxemmmm.github.io/2021/08/18/ying-he-golang-select-yuan-li/"/>
     <id>https://fyxemmmm.github.io/2021/08/18/ying-he-golang-select-yuan-li/</id>
     <published>2021-08-18T13:30:03.000Z</published>
-    <updated>2021-09-02T17:11:59.550Z</updated>
+    <updated>2021-09-19T04:55:37.995Z</updated>
     
     
       
@@ -480,7 +533,7 @@
     <link href="https://fyxemmmm.github.io/2021/08/14/context-shi-xian-yuan-li/"/>
     <id>https://fyxemmmm.github.io/2021/08/14/context-shi-xian-yuan-li/</id>
     <published>2021-08-14T04:25:24.000Z</published>
-    <updated>2021-09-02T16:39:33.345Z</updated>
+    <updated>2021-09-19T05:08:02.424Z</updated>
     
     
       

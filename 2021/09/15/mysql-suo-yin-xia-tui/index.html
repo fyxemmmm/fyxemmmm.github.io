@@ -4,7 +4,7 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="keywords" content="标签: http2, yuxuanの博客">
+    <meta name="keywords" content="mysql 索引下推, yuxuanの博客">
     <meta name="description" content="">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
@@ -16,7 +16,7 @@
     <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-    <title>标签: http2 | yuxuanの博客</title>
+    <title>mysql 索引下推 | yuxuanの博客</title>
     <link rel="icon" type="image/png" href="/favicon.png">
 
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/fyxemmmm/fyxemmmm.github.io/libs/awesome/css/all.css">
@@ -265,376 +265,508 @@
 
 </header>
 
-    <div class="bg-cover pd-header about-cover">
-    <div class="container">
-    <div class="row">
-    <div class="col s10 offset-s1 m8 offset-m2 l8 offset-l2">
-        <div class="brand">
-            <div class="title center-align">
-                
-                yuxuanの博客
-                
-            </div>
+    
 
-            <div class="description center-align">
-                
-                <span id="subtitle"></span>
-                <script src="https://cdn.jsdelivr.net/npm/typed.js@2.0.11"></script>
-                <script>
-                    var typed = new Typed("#subtitle", {
-                        strings: [ 
-                            
-                                "你的善良必须有点锋芒，不然就等于零。",
-                            
-                                "Your kindness must be a little sharp, otherwise it&#39;s zero.",
-                            
-                        ],
-                        startDelay: 300,
-                        typeSpeed: 100,
-                        loop: true,
-                        backSpeed: 50,
-                        showCursor: true
-                    });
-                </script>
-                
+
+
+<div class="bg-cover pd-header post-cover" style="background-image: url('https://image.fyxemmmm.cn/blog/images/ins-96.jpg')">
+    <div class="container" style="right: 0px;left: 0px;">
+        <div class="row">
+            <div class="col s12 m12 l12">
+                <div class="brand">
+                    <h1 class="description center-align post-title">mysql 索引下推</h1>
+                </div>
             </div>
         </div>
     </div>
 </div>
 
 
+
+
+<main class="post-container content">
+
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fyxemmmm/fyxemmmm.github.io/libs/tocbot/tocbot.css">
+<style>
+    #articleContent h1::before,
+    #articleContent h2::before,
+    #articleContent h3::before,
+    #articleContent h4::before,
+    #articleContent h5::before,
+    #articleContent h6::before {
+        display: block;
+        content: " ";
+        height: 100px;
+        margin-top: -100px;
+        visibility: hidden;
+    }
+
+    #articleContent :focus {
+        outline: none;
+    }
+
+    .toc-fixed {
+        position: fixed;
+        top: 64px;
+    }
+
+    .toc-widget {
+        width: 345px;
+        padding-left: 20px;
+    }
+
+    .toc-widget .toc-title {
+        padding: 35px 0 15px 17px;
+        font-size: 1.5rem;
+        font-weight: bold;
+        line-height: 1.5rem;
+    }
+
+    .toc-widget ol {
+        padding: 0;
+        list-style: none;
+    }
+
+    #toc-content {
+        padding-bottom: 30px;
+        overflow: auto;
+    }
+
+    #toc-content ol {
+        padding-left: 10px;
+    }
+
+    #toc-content ol li {
+        padding-left: 10px;
+    }
+
+    #toc-content .toc-link:hover {
+        color: #42b983;
+        font-weight: 700;
+        text-decoration: underline;
+    }
+
+    #toc-content .toc-link::before {
+        background-color: transparent;
+        max-height: 25px;
+
+        position: absolute;
+        right: 23.5vw;
+        display: block;
+    }
+
+    #toc-content .is-active-link {
+        color: #42b983;
+    }
+
+    #floating-toc-btn {
+        position: fixed;
+        right: 15px;
+        bottom: 76px;
+        padding-top: 15px;
+        margin-bottom: 0;
+        z-index: 998;
+    }
+
+    #floating-toc-btn .btn-floating {
+        width: 48px;
+        height: 48px;
+    }
+
+    #floating-toc-btn .btn-floating i {
+        line-height: 48px;
+        font-size: 1.4rem;
+    }
+</style>
+<div class="row">
+    <div id="main-content" class="col s12 m12 l9">
+        <!-- 文章内容详情 -->
+<div id="artDetail">
+    <div class="card">
+        <div class="card-content article-info">
+            <div class="row tag-cate">
+                <div class="col s7">
+                    
+                    <div class="article-tag">
+                        
+                            <a href="/tags/%E7%B4%A2%E5%BC%95%E4%B8%8B%E6%8E%A8/">
+                                <span class="chip bg-color">索引下推</span>
+                            </a>
+                        
+                    </div>
+                    
+                </div>
+                <div class="col s5 right-align">
+                    
+                    <div class="post-cate">
+                        <i class="fas fa-bookmark fa-fw icon-category"></i>
+                        
+                            <a href="/categories/mysql/" class="post-category">
+                                mysql
+                            </a>
+                        
+                    </div>
+                    
+                </div>
+            </div>
+
+            <div class="post-info">
+                
+                <div class="post-date info-break-policy">
+                    <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
+                    2021-09-15
+                </div>
+                
+
+                
+
+                
+
+                
+                <div class="info-break-policy">
+                    <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
+                    3 分
+                </div>
+                
+
+                
+            </div>
+        </div>
+        <hr class="clearfix">
+
+        
+        <!-- 是否加载使用自带的 prismjs. -->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fyxemmmm/fyxemmmm.github.io/libs/prism/prism.css">
+        
+
+        
+
+        <div class="card-content article-card-content">
+            <div id="articleContent">
+                <p><strong>回表操作</strong></p>
+<p>对于数据库来说，只要涉及到索引，必然绕不过去回表操作。当然这也是我们今天所讲内容的前置基础。</p>
+<p>说到回表，我们需要从索引开始说起。别担心，不会长篇大论，这里只是简单讲下主键索引与普通索引，目的是让大家对回表操作有个认识。如果你对回表操作很熟悉了，那么可以跳过这一段。</p>
+<p>这里我们只以 InnoDB 存储引擎作为讲解对象。</p>
+<p><strong>主键索引</strong></p>
+<p>主键索引在底层的数据存储是通过 B+ 树来实现的。简单来说，就是除叶子节之外的其他节点都存储的是主键值。而叶子节点上存储的是整行的数据。</p>
+<p>大体结构如下图所示。</p>
+<p><img src="https://image.fyxemmmm.cn/blog/images/syxt-2.jpg"></p>
+<p><strong>非主键索引</strong></p>
+<p>除了主键索引外，其它的索引都被称为非主键索引。与主键索引不同的是，非主键索引的叶子节点上存储的是主键的值。</p>
+<p><img src="https://image.fyxemmmm.cn/blog/images/syxt-3.jpg"></p>
+<p>那让我们再回到刚开始的问题：什么是回表操作？</p>
+<p>当我们在非主键索引上查找一行数据时，此时的查找方式是先搜索非主键索引树，拿到对应的主键值，再到主键索引树上查找对应的行数据。</p>
+<p>这种操作就叫作回表操作。</p>
+<p>好了，这里你应该了解了什么是回表操作了。</p>
+<p>简单来讲，就是在非主键索引树上拿到对应的主键值，然后再回到主键索引上找到对应的行数据。</p>
+<p>这样做的前提条件是，所要查找的字段不存在于非主键索引树上。</p>
+<p><strong>低版本实现</strong></p>
+<p>讲完了回表操作，让我们继续回到这篇文章的主题——索引下推。</p>
+<p>其实在 MySQL 5.6 版本之前是没有索引下推这个功能的，从 5.6 版本后才加上了这个优化。所以在引出索引下推前，我们还是先来回顾下没有这个功能时是怎样一种处理方式。</p>
+<p>我们以一个真实例子来进行讲解。</p>
+<p>在这里有张用户表 user，记录着用户的姓名，性别，身高，年龄等信息。表中 id 是自增主键，(name,sex) 是联合索引。在这里用 1 表示男，2 表示女。现在需要查找所有姓王的男性信息。</p>
+<p>SQL 实现起来很简单：</p>
+<p><img src="https://image.fyxemmmm.cn/blog/images/syxt-4.jpg"></p>
+<p>但是它的实现原理是什么呢？</p>
+<p>根据联合索引最左前缀原则，我们在非主键索引树上找到第一个满足条件的值时，通过叶子节点记录的主键值再回到主键索引树上查找到对应的行数据，再对比是否为当前所要查找的性别。</p>
+<p>整个原理可以用下边的图进行表示。</p>
+<p><img src="https://image.fyxemmmm.cn/blog/images/syxt-5.jpg"></p>
+<p>看到了吧，低版本中需要每条数据都进行回表，增加了树的搜索次数。如果遇到所要查找的数据量很大的话，性能必然有所缺失。</p>
+<p><strong>高版本实现</strong></p>
+<p>讲完了低版本实现，让我们继续回到这篇文章的主题——索引下推。</p>
+<p>知道了痛点，那怎么解决？很简单，只有符合条件了再进行回表。结合我们的例子来说就是当满足了性别 sex = 1 ，再回表查找。这样原本可能需要进行回表查找 4 次，现在可能只需要 2 次就可以了。</p>
+<p><img src="https://image.fyxemmmm.cn/blog/images/syxt-6.jpg"></p>
+<p>所以本质来说，索引下推就是只有符合条件再进行回表，对索引中包含的字段先进行判断，不符合条件的跳过，减少了不必要的回表操作。</p>
+<p><strong>总结</strong></p>
+<p><strong>回表操作</strong></p>
+<ul>
+<li>当所要查找的字段不在非主键索引树上时，需要通过叶子节点的主键值去主键索引上获取对应的行数据，这个过程称为回表操作。</li>
+</ul>
+<p><strong>索引下推</strong></p>
+<ul>
+<li>索引下推主要是减少了不必要的回表操作。对于查找出来的数据，先过滤掉不符合条件的，其余的再去主键索引树上查找。</li>
+</ul>
+
+                
+            </div>
+            <hr/>
+
+            
+
+
+
+            <div class="tag_share" style="display: block;">
+                <div class="post-meta__tag-list" style="display: inline-block;">
+                    
+                        <div class="article-tag">
+                            
+                                <a href="/tags/%E7%B4%A2%E5%BC%95%E4%B8%8B%E6%8E%A8/">
+                                    <span class="chip bg-color">索引下推</span>
+                                </a>
+                            
+                        </div>
+                    
+                </div>
+                <div class="post_share" style="zoom: 80%; width: fit-content; display: inline-block; float: right; margin: -0.15rem 0;">
+                    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/fyxemmmm/fyxemmmm.github.io/libs/share/css/share.min.css">
+<div id="article-share">
+
+    
+    <div class="social-share" data-sites="qq,wechat,weibo" data-wechat-qrcode-helper="<p>微信扫一扫即可分享！</p>"></div>
+    <script src="https://cdn.jsdelivr.net/gh/fyxemmmm/fyxemmmm.github.io/libs/share/js/social-share.min.js"></script>
+    
+
+    
+
+</div>
+
+                </div>
+            </div>
+            
+        </div>
+    </div>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+<article id="prenext-posts" class="prev-next articles">
+    <div class="row article-row">
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge left-badge text-color">
+                <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
+            <div class="card">
+                <a href="/2021/09/11/golang-string-bytes-mi-mi/">
+                    <div class="card-image">
+                        
+                        <img src="https://image.fyxemmmm.cn/blog/images/ins-161.jpg" class="responsive-img" alt="golang string与bytes的转换">
+                        
+                        <span class="card-title">golang string与bytes的转换</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            了解string与bytes的底层实现
+                        
+                    </div>
+                    <div class="publish-info">
+                        <span class="publish-date">
+                            <i class="far fa-clock fa-fw icon-date"></i>2021-09-11
+                        </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/golang/" class="post-category">
+                                    golang
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/golang/">
+                        <span class="chip bg-color">golang</span>
+                    </a>
+                    
+                    <a href="/tags/string/">
+                        <span class="chip bg-color">string</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge right-badge text-color">
+                下一篇&nbsp;<i class="fas fa-chevron-right"></i>
+            </div>
+            <div class="card">
+                <a href="/2021/09/19/go-yu-yan-shi-xian-an-quan-ji-shu-de-ruo-gan-chong-fang-fa/">
+                    <div class="card-image">
+                        
+                        <img src="https://image.fyxemmmm.cn/blog/images/ins-170.jpg" class="responsive-img" alt="golang 安全计数">
+                        
+                        <span class="card-title">golang 安全计数</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            Go 语言实现安全计数的若干种方法
+                        
+                    </div>
+                    <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2021-09-19
+                            </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/golang/" class="post-category">
+                                    golang
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/%E5%AE%89%E5%85%A8%E8%AE%A1%E6%95%B0/">
+                        <span class="chip bg-color">安全计数</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+    </div>
+</article>
+
+</div>
+
+
+
+<!-- 代码块功能依赖 -->
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/fyxemmmm/fyxemmmm.github.io/libs/codeBlock/codeBlockFuction.js"></script>
+
+<!-- 代码语言 -->
+
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/fyxemmmm/fyxemmmm.github.io/libs/codeBlock/codeLang.js"></script>
+
+
+<!-- 代码块复制 -->
+
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/fyxemmmm/fyxemmmm.github.io/libs/codeBlock/codeCopy.js"></script>
+
+
+<!-- 代码块收缩 -->
+
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/fyxemmmm/fyxemmmm.github.io/libs/codeBlock/codeShrink.js"></script>
+
+
+    </div>
+    <div id="toc-aside" class="expanded col l3 hide-on-med-and-down">
+        <div class="toc-widget card" style="background-color: white;">
+            <div class="toc-title"><i class="far fa-list-alt"></i>&nbsp;&nbsp;目录</div>
+            <div id="toc-content"></div>
+        </div>
+    </div>
+</div>
+
+<!-- TOC 悬浮按钮. -->
+
+<div id="floating-toc-btn" class="hide-on-med-and-down">
+    <a class="btn-floating btn-large bg-color">
+        <i class="fas fa-list-ul"></i>
+    </a>
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/gh/fyxemmmm/fyxemmmm.github.io/libs/tocbot/tocbot.min.js"></script>
 <script>
-    $('.bg-cover').css('background-image', 'url(https://image.fyxemmmm.cn/blog/images/banner1.jpg)');
+    $(function () {
+        tocbot.init({
+            tocSelector: '#toc-content',
+            contentSelector: '#articleContent',
+            headingsOffset: -($(window).height() * 0.4 - 45),
+            collapseDepth: Number('0'),
+            headingSelector: 'h1, h2, h3, h4'
+        });
+
+        // modify the toc link href to support Chinese.
+        let i = 0;
+        let tocHeading = 'toc-heading-';
+        $('#toc-content a').each(function () {
+            $(this).attr('href', '#' + tocHeading + (++i));
+        });
+
+        // modify the heading title id to support Chinese.
+        i = 0;
+        $('#articleContent').children('h1, h2, h3, h4').each(function () {
+            $(this).attr('id', tocHeading + (++i));
+        });
+
+        // Set scroll toc fixed.
+        let tocHeight = parseInt($(window).height() * 0.4 - 64);
+        let $tocWidget = $('.toc-widget');
+        $(window).scroll(function () {
+            let scroll = $(window).scrollTop();
+            /* add post toc fixed. */
+            if (scroll > tocHeight) {
+                $tocWidget.addClass('toc-fixed');
+            } else {
+                $tocWidget.removeClass('toc-fixed');
+            }
+        });
+
+        
+        /* 修复文章卡片 div 的宽度. */
+        let fixPostCardWidth = function (srcId, targetId) {
+            let srcDiv = $('#' + srcId);
+            if (srcDiv.length === 0) {
+                return;
+            }
+
+            let w = srcDiv.width();
+            if (w >= 450) {
+                w = w + 21;
+            } else if (w >= 350 && w < 450) {
+                w = w + 18;
+            } else if (w >= 300 && w < 350) {
+                w = w + 16;
+            } else {
+                w = w + 14;
+            }
+            $('#' + targetId).width(w);
+        };
+
+        // 切换TOC目录展开收缩的相关操作.
+        const expandedClass = 'expanded';
+        let $tocAside = $('#toc-aside');
+        let $mainContent = $('#main-content');
+        $('#floating-toc-btn .btn-floating').click(function () {
+            if ($tocAside.hasClass(expandedClass)) {
+                $tocAside.removeClass(expandedClass).hide();
+                $mainContent.removeClass('l9');
+            } else {
+                $tocAside.addClass(expandedClass).show();
+                $mainContent.addClass('l9');
+            }
+            fixPostCardWidth('artDetail', 'prenext-posts');
+        });
+        
+    });
 </script>
 
-
-    </div>
-</div>
-
-<main class="content">
-
     
 
-<div id="tags" class="container chip-container">
-    <div class="card">
-        <div class="card-content">
-            <div class="tag-title center-align">
-                <i class="fas fa-tags"></i>&nbsp;&nbsp;文章标签
-            </div>
-            <div class="tag-chips">
-                
-                
-                <a href="/tags/%E5%AE%89%E5%85%A8%E8%AE%A1%E6%95%B0/" title="安全计数: 1">
-                    <span class="chip center-align waves-effect waves-light
-                             chip-default "
-                            data-tagname="安全计数" style="background-color: #F9EBEA;">安全计数
-                        <span class="tag-length">1</span>
-                    </span>
-                </a>
-                
-                
-                <a href="/tags/golang/" title="golang: 7">
-                    <span class="chip center-align waves-effect waves-light
-                             chip-default "
-                            data-tagname="golang" style="background-color: #F5EEF8;">golang
-                        <span class="tag-length">7</span>
-                    </span>
-                </a>
-                
-                
-                <a href="/tags/channel/" title="channel: 1">
-                    <span class="chip center-align waves-effect waves-light
-                             chip-default "
-                            data-tagname="channel" style="background-color: #D5F5E3;">channel
-                        <span class="tag-length">1</span>
-                    </span>
-                </a>
-                
-                
-                <a href="/tags/context/" title="context: 1">
-                    <span class="chip center-align waves-effect waves-light
-                             chip-default "
-                            data-tagname="context" style="background-color: #E8F8F5;">context
-                        <span class="tag-length">1</span>
-                    </span>
-                </a>
-                
-                
-                <a href="/tags/string/" title="string: 1">
-                    <span class="chip center-align waves-effect waves-light
-                             chip-default "
-                            data-tagname="string" style="background-color: #FEF9E7;">string
-                        <span class="tag-length">1</span>
-                    </span>
-                </a>
-                
-                
-                <a href="/tags/http2/" title="http2: 3">
-                    <span class="chip center-align waves-effect waves-light
-                             chip-active "
-                            data-tagname="http2" style="background-color: #F8F9F9;">http2
-                        <span class="tag-length">3</span>
-                    </span>
-                </a>
-                
-                
-                <a href="/tags/kubernetes/" title="kubernetes: 1">
-                    <span class="chip center-align waves-effect waves-light
-                             chip-default "
-                            data-tagname="kubernetes" style="background-color: #82E0AA;">kubernetes
-                        <span class="tag-length">1</span>
-                    </span>
-                </a>
-                
-                
-                <a href="/tags/kafka/" title="kafka: 1">
-                    <span class="chip center-align waves-effect waves-light
-                             chip-default "
-                            data-tagname="kafka" style="background-color: #D7BDE2;">kafka
-                        <span class="tag-length">1</span>
-                    </span>
-                </a>
-                
-                
-                <a href="/tags/%E7%B4%A2%E5%BC%95%E4%B8%8B%E6%8E%A8/" title="索引下推: 1">
-                    <span class="chip center-align waves-effect waves-light
-                             chip-default "
-                            data-tagname="索引下推" style="background-color: #A3E4D7;">索引下推
-                        <span class="tag-length">1</span>
-                    </span>
-                </a>
-                
-                
-                <a href="/tags/oauth/" title="oauth: 1">
-                    <span class="chip center-align waves-effect waves-light
-                             chip-default "
-                            data-tagname="oauth" style="background-color: #85C1E9;">oauth
-                        <span class="tag-length">1</span>
-                    </span>
-                </a>
-                
-                
-                <a href="/tags/%E5%8D%95%E7%82%B9%E7%99%BB%E5%BD%95/" title="单点登录: 1">
-                    <span class="chip center-align waves-effect waves-light
-                             chip-default "
-                            data-tagname="单点登录" style="background-color: #F8C471;">单点登录
-                        <span class="tag-length">1</span>
-                    </span>
-                </a>
-                
-                
-                <a href="/tags/http/" title="http: 1">
-                    <span class="chip center-align waves-effect waves-light
-                             chip-default "
-                            data-tagname="http" style="background-color: #F9E79F;">http
-                        <span class="tag-length">1</span>
-                    </span>
-                </a>
-                
-                
-                <a href="/tags/%E5%88%86%E5%B8%83%E5%BC%8F%E4%BA%8B%E5%8A%A1/" title="分布式事务: 1">
-                    <span class="chip center-align waves-effect waves-light
-                             chip-default "
-                            data-tagname="分布式事务" style="background-color: #F5EEF8;">分布式事务
-                        <span class="tag-length">1</span>
-                    </span>
-                </a>
-                
-                
-                <a href="/tags/%E8%AF%81%E4%B9%A6/" title="证书: 1">
-                    <span class="chip center-align waves-effect waves-light
-                             chip-default "
-                            data-tagname="证书" style="background-color: #E8F8F5;">证书
-                        <span class="tag-length">1</span>
-                    </span>
-                </a>
-                
-                
-                <a href="/tags/ca/" title="ca: 1">
-                    <span class="chip center-align waves-effect waves-light
-                             chip-default "
-                            data-tagname="ca" style="background-color: #D7BDE2;">ca
-                        <span class="tag-length">1</span>
-                    </span>
-                </a>
-                
-                
-                <a href="/tags/%E8%87%AA%E7%AD%BE/" title="自签: 1">
-                    <span class="chip center-align waves-effect waves-light
-                             chip-default "
-                            data-tagname="自签" style="background-color: #F8F9F9;">自签
-                        <span class="tag-length">1</span>
-                    </span>
-                </a>
-                
-                
-                <a href="/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/" title="操作系统: 2">
-                    <span class="chip center-align waves-effect waves-light
-                             chip-default "
-                            data-tagname="操作系统" style="background-color: #F8F9F9;">操作系统
-                        <span class="tag-length">2</span>
-                    </span>
-                </a>
-                
-                
-                <a href="/tags/%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F/" title="文件系统: 1">
-                    <span class="chip center-align waves-effect waves-light
-                             chip-default "
-                            data-tagname="文件系统" style="background-color: #85C1E9;">文件系统
-                        <span class="tag-length">1</span>
-                    </span>
-                </a>
-                
-                
-                <a href="/tags/inode/" title="inode: 1">
-                    <span class="chip center-align waves-effect waves-light
-                             chip-default "
-                            data-tagname="inode" style="background-color: #82E0AA;">inode
-                        <span class="tag-length">1</span>
-                    </span>
-                </a>
-                
-                
-                <a href="/tags/%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/" title="内存管理: 2">
-                    <span class="chip center-align waves-effect waves-light
-                             chip-default "
-                            data-tagname="内存管理" style="background-color: #D5F5E3;">内存管理
-                        <span class="tag-length">2</span>
-                    </span>
-                </a>
-                
-                
-                <a href="/tags/tcp/" title="tcp: 1">
-                    <span class="chip center-align waves-effect waves-light
-                             chip-default "
-                            data-tagname="tcp" style="background-color: #F8C471;">tcp
-                        <span class="tag-length">1</span>
-                    </span>
-                </a>
-                
-                
-                <a href="/tags/%E8%BF%9B%E7%A8%8B/" title="进程: 1">
-                    <span class="chip center-align waves-effect waves-light
-                             chip-default "
-                            data-tagname="进程" style="background-color: #D7BDE2;">进程
-                        <span class="tag-length">1</span>
-                    </span>
-                </a>
-                
-                
-                <a href="/tags/%E9%80%9A%E8%AE%AF/" title="通讯: 1">
-                    <span class="chip center-align waves-effect waves-light
-                             chip-default "
-                            data-tagname="通讯" style="background-color: #D5F5E3;">通讯
-                        <span class="tag-length">1</span>
-                    </span>
-                </a>
-                
-            </div>
-        </div>
-    </div>
-</div>
-
-    
-
-    <article id="articles" class="container articles">
-        <div class="row tags-posts">
-            
-            
-            <div class="article tag-post col s12 m6 l4" data-tags="http2" data-aos="fade-up">
-                <div class="card">
-                    <a href="/2021/08/26/http2-xiang-jie-xia/">
-                        <div class="card-image tag-image">
-                            
-                            <img src="https://image.fyxemmmm.cn/blog/fj/images/fj-16.jpg" class="responsive-img" alt="http2详解 [下]">
-                            
-                            <span class="card-title">http2详解 [下]</span>
-                        </div>
-                    </a>
-                    <div class="card-content article-content">
-                        <div class="publish-info">
-                            <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2021-08-26
-                            </span>
-                            <span class="publish-author">
-                                
-                                <i class="fas fa-bookmark fa-fw icon-category"></i>
-                                
-                                <a href="/categories/%E5%8D%8F%E8%AE%AE/" class="post-category">
-                                协议
-                                </a>
-                                
-                                
-                            </span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            
-            <div class="article tag-post col s12 m6 l4" data-tags="http2" data-aos="fade-up">
-                <div class="card">
-                    <a href="/2021/08/25/http2-xiang-jie-zhong/">
-                        <div class="card-image tag-image">
-                            
-                            <img src="https://image.fyxemmmm.cn/blog/fj/images/fj-25.jpg" class="responsive-img" alt="http2详解 [中]">
-                            
-                            <span class="card-title">http2详解 [中]</span>
-                        </div>
-                    </a>
-                    <div class="card-content article-content">
-                        <div class="publish-info">
-                            <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2021-08-25
-                            </span>
-                            <span class="publish-author">
-                                
-                                <i class="fas fa-bookmark fa-fw icon-category"></i>
-                                
-                                <a href="/categories/%E5%8D%8F%E8%AE%AE/" class="post-category">
-                                协议
-                                </a>
-                                
-                                
-                            </span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            
-            <div class="article tag-post col s12 m6 l4" data-tags="http2" data-aos="fade-up">
-                <div class="card">
-                    <a href="/2021/08/24/http2-xiang-jie-shang/">
-                        <div class="card-image tag-image">
-                            
-                            <img src="https://image.fyxemmmm.cn/blog/fj/images/fj-66.jpg" class="responsive-img" alt="http2详解 [上]">
-                            
-                            <span class="card-title">http2详解 [上]</span>
-                        </div>
-                    </a>
-                    <div class="card-content article-content">
-                        <div class="publish-info">
-                            <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2021-08-24
-                            </span>
-                            <span class="publish-author">
-                                
-                                <i class="fas fa-bookmark fa-fw icon-category"></i>
-                                
-                                <a href="/categories/%E5%8D%8F%E8%AE%AE/" class="post-category">
-                                协议
-                                </a>
-                                
-                                
-                            </span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-        </div>
-    </article>
 </main>
 
 

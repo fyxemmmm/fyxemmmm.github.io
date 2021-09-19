@@ -449,119 +449,119 @@
         <div class="card-content article-card-content">
             <div id="articleContent">
                 <h2 id="byte类型"><a href="#byte类型" class="headerlink" title="byte类型"></a>byte类型</h2><p>我们看一下官方对<code>byte</code>的定义：</p>
-<pre class="line-numbers language-none"><code class="language-none">// byte is an alias for uint8 and is equivalent to uint8 in all ways. It is
-// used, by convention, to distinguish byte values from 8-bit unsigned
-// integer values.
-type byte = uint8<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+<pre class="line-numbers language-go" data-language="go"><code class="language-go"><span class="token comment">// byte is an alias for uint8 and is equivalent to uint8 in all ways. It is</span>
+<span class="token comment">// used, by convention, to distinguish byte values from 8-bit unsigned</span>
+<span class="token comment">// integer values.</span>
+<span class="token keyword">type</span> <span class="token builtin">byte</span> <span class="token operator">=</span> <span class="token builtin">uint8</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
 
 <p>我们可以看到<code>byte</code>就是<code>uint8</code>的别名，它是用来区分<strong>字节值</strong>和<strong>8位无符号整数值</strong>。</p>
 <p>其实可以把<code>byte</code>当作一个<code>ASCII</code>码的一个字符。</p>
 <p>示例：</p>
-<pre class="line-numbers language-none"><code class="language-none">var ch byte = 65
-var ch byte = '\x41'
-var ch byte = 'A'<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<pre class="line-numbers language-go" data-language="go"><code class="language-go"><span class="token keyword">var</span> ch <span class="token builtin">byte</span> <span class="token operator">=</span> <span class="token number">65</span>
+<span class="token keyword">var</span> ch <span class="token builtin">byte</span> <span class="token operator">=</span> <span class="token string">'\x41'</span>
+<span class="token keyword">var</span> ch <span class="token builtin">byte</span> <span class="token operator">=</span> <span class="token string">'A'</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
 
 <h2 id="byte类型-1"><a href="#byte类型-1" class="headerlink" title="[]byte类型"></a><code>[]byte</code>类型</h2><p><code>[]byte</code>就是一个<code>byte</code>类型的切片，切片本质也是一个结构体，定义如下：</p>
-<pre class="line-numbers language-none"><code class="language-none">// src/runtime/slice.go
-type slice struct {
-    array unsafe.Pointer
-    len   int
-    cap   int
-}<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<pre class="line-numbers language-go" data-language="go"><code class="language-go"><span class="token comment">// src/runtime/slice.go</span>
+<span class="token keyword">type</span> slice <span class="token keyword">struct</span> <span class="token punctuation">{</span>
+    array unsafe<span class="token punctuation">.</span>Pointer
+    <span class="token builtin">len</span>   <span class="token builtin">int</span>
+    <span class="token builtin">cap</span>   <span class="token builtin">int</span>
+<span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
 <p>这里简单说明一下这几个字段，<code>array</code>代表底层数组的指针，<code>len</code>代表切片长度，<code>cap</code>代表容量。看一个简单示例：</p>
-<pre class="line-numbers language-none"><code class="language-none">func main()  {
- sl := make([]byte,0,2)
- sl = append(sl, 'A')
- sl = append(sl,'B')
- fmt.Println(sl)
-}<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<pre class="line-numbers language-go" data-language="go"><code class="language-go"><span class="token keyword">func</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span>  <span class="token punctuation">{</span>
+ sl <span class="token operator">:=</span> <span class="token function">make</span><span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token builtin">byte</span><span class="token punctuation">,</span><span class="token number">0</span><span class="token punctuation">,</span><span class="token number">2</span><span class="token punctuation">)</span>
+ sl <span class="token operator">=</span> <span class="token function">append</span><span class="token punctuation">(</span>sl<span class="token punctuation">,</span> <span class="token string">'A'</span><span class="token punctuation">)</span>
+ sl <span class="token operator">=</span> <span class="token function">append</span><span class="token punctuation">(</span>sl<span class="token punctuation">,</span><span class="token string">'B'</span><span class="token punctuation">)</span>
+ fmt<span class="token punctuation">.</span><span class="token function">Println</span><span class="token punctuation">(</span>sl<span class="token punctuation">)</span>
+<span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
 <p>根据这个例子我们可以画一个图：<img src="https://image.fyxemmmm.cn/blog/images/wxbs1.png"></p>
 <h2 id="string类型"><a href="#string类型" class="headerlink" title="string类型"></a>string类型</h2><p>先来看一下<code>string</code>的官方定义：</p>
-<pre class="line-numbers language-none"><code class="language-none">// string is the set of all strings of 8-bit bytes, conventionally but not
-// necessarily representing UTF-8-encoded text. A string may be empty, but
-// not nil. Values of string type are immutable.
-type string string<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+<pre class="line-numbers language-go" data-language="go"><code class="language-go"><span class="token comment">// string is the set of all strings of 8-bit bytes, conventionally but not</span>
+<span class="token comment">// necessarily representing UTF-8-encoded text. A string may be empty, but</span>
+<span class="token comment">// not nil. Values of string type are immutable.</span>
+<span class="token keyword">type</span> <span class="token builtin">string</span> <span class="token builtin">string</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
 
 <p><code>string</code>是一个<code>8</code>位字节的集合，通常但不一定代表UTF-8编码的文本。string可以为空，但是不能为nil。<strong>string的值是不能改变的</strong>。</p>
 <p>看一个简单的例子：</p>
-<pre class="line-numbers language-none"><code class="language-none">func main()  {
- str := "asong"
- fmt.Println(str)
-}<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+<pre class="line-numbers language-go" data-language="go"><code class="language-go"><span class="token keyword">func</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span>  <span class="token punctuation">{</span>
+ str <span class="token operator">:=</span> <span class="token string">"asong"</span>
+ fmt<span class="token punctuation">.</span><span class="token function">Println</span><span class="token punctuation">(</span>str<span class="token punctuation">)</span>
+<span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
 
 <p><code>string</code>类型本质也是一个结构体，定义如下：</p>
-<pre class="line-numbers language-none"><code class="language-none">type stringStruct struct {
-    str unsafe.Pointer
-    len int
-}<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+<pre class="line-numbers language-go" data-language="go"><code class="language-go"><span class="token keyword">type</span> stringStruct <span class="token keyword">struct</span> <span class="token punctuation">{</span>
+    str unsafe<span class="token punctuation">.</span>Pointer
+    <span class="token builtin">len</span> <span class="token builtin">int</span>
+<span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
 
 <p><code>stringStruct</code>和<code>slice</code>还是很相似的，<code>str</code>指针指向的是某个数组的首地址，<code>len</code>代表的就是数组长度。怎么和<code>slice</code>这么相似，底层指向的也是数组，是什么数组呢？我们看看他在实例化时调用的方法：</p>
-<pre class="line-numbers language-none"><code class="language-none">//go:nosplit
-func gostringnocopy(str *byte) string {
- ss := stringStruct{str: unsafe.Pointer(str), len: findnull(str)}
- s := *(*string)(unsafe.Pointer(&amp;ss))
- return s
-}<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<pre class="line-numbers language-go" data-language="go"><code class="language-go"><span class="token comment">//go:nosplit</span>
+<span class="token keyword">func</span> <span class="token function">gostringnocopy</span><span class="token punctuation">(</span>str <span class="token operator">*</span><span class="token builtin">byte</span><span class="token punctuation">)</span> <span class="token builtin">string</span> <span class="token punctuation">{</span>
+ ss <span class="token operator">:=</span> stringStruct<span class="token punctuation">{</span>str<span class="token punctuation">:</span> unsafe<span class="token punctuation">.</span><span class="token function">Pointer</span><span class="token punctuation">(</span>str<span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token builtin">len</span><span class="token punctuation">:</span> <span class="token function">findnull</span><span class="token punctuation">(</span>str<span class="token punctuation">)</span><span class="token punctuation">}</span>
+ s <span class="token operator">:=</span> <span class="token operator">*</span><span class="token punctuation">(</span><span class="token operator">*</span><span class="token builtin">string</span><span class="token punctuation">)</span><span class="token punctuation">(</span>unsafe<span class="token punctuation">.</span><span class="token function">Pointer</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>ss<span class="token punctuation">)</span><span class="token punctuation">)</span>
+ <span class="token keyword">return</span> s
+<span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
 <p>入参是一个<code>byte</code>类型的指针，从这我们可以看出<code>string</code>类型底层是一个<code>byte</code>类型的数组，所以我们可以画出这样一个图片：</p>
 <p><img src="https://image.fyxemmmm.cn/blog/images/wxbs2.png"></p>
 <h2 id="string和-byte有什么区别"><a href="#string和-byte有什么区别" class="headerlink" title="string和[]byte有什么区别"></a>string和[]byte有什么区别</h2><p>上面我们一起分析了<code>string</code>类型，其实他底层本质就是一个<code>byte</code>类型的数组，那么问题就来了，<code>string</code>类型为什么还要在数组的基础上再进行一次封装呢？</p>
 <p>这是因为在<code>Go</code>语言中<code>string</code>类型被设计为不可变的，不仅是在<code>Go</code>语言，其他语言中<code>string</code>类型也是被设计为不可变的，这样的好处就是：在并发场景下，我们可以在不加锁的控制下，多次使用同一字符串，在保证高效共享的情况下而不用担心安全问题。</p>
 <p><code>string</code>类型虽然是不能更改的，但是可以被替换，因为<code>stringStruct</code>中的<code>str</code>指针是可以改变的，只是指针指向的内容是不可以改变的。看个例子：</p>
-<pre class="line-numbers language-none"><code class="language-none">func main()  {
- str := "song"
- fmt.Printf("%p\n",[]byte(str))
- str = "asong"
- fmt.Printf("%p\n",[]byte(str))
-}
-// 运行结果
-0xc00001a090
-0xc00001a098<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<pre class="line-numbers language-go" data-language="go"><code class="language-go"><span class="token keyword">func</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span>  <span class="token punctuation">{</span>
+ str <span class="token operator">:=</span> <span class="token string">"song"</span>
+ fmt<span class="token punctuation">.</span><span class="token function">Printf</span><span class="token punctuation">(</span><span class="token string">"%p\n"</span><span class="token punctuation">,</span><span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token function">byte</span><span class="token punctuation">(</span>str<span class="token punctuation">)</span><span class="token punctuation">)</span>
+ str <span class="token operator">=</span> <span class="token string">"asong"</span>
+ fmt<span class="token punctuation">.</span><span class="token function">Printf</span><span class="token punctuation">(</span><span class="token string">"%p\n"</span><span class="token punctuation">,</span><span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token function">byte</span><span class="token punctuation">(</span>str<span class="token punctuation">)</span><span class="token punctuation">)</span>
+<span class="token punctuation">}</span>
+<span class="token comment">// 运行结果</span>
+<span class="token number">0xc00001a090</span>
+<span class="token number">0xc00001a098</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
 <p>我们可以看出来，指针指向的位置发生了变化，也就说每一个更改字符串，就需要重新分配一次内存，之前分配的空间会被<code>gc</code>回收。</p>
 <h2 id="string和-byte标准转换"><a href="#string和-byte标准转换" class="headerlink" title="string和[]byte标准转换"></a>string和[]byte标准转换</h2><p><code>Go</code>语言中提供了标准方式对<code>string</code>和<code>[]byte</code>进行转换，先看一个例子：</p>
-<pre class="line-numbers language-none"><code class="language-none">func main()  {
- str := "asong"
- by := []byte(str)
+<pre class="line-numbers language-go" data-language="go"><code class="language-go"><span class="token keyword">func</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span>  <span class="token punctuation">{</span>
+ str <span class="token operator">:=</span> <span class="token string">"asong"</span>
+ by <span class="token operator">:=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token function">byte</span><span class="token punctuation">(</span>str<span class="token punctuation">)</span>
 
- str1 := string(by)
- fmt.Println(str1)
-}<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+ str1 <span class="token operator">:=</span> <span class="token function">string</span><span class="token punctuation">(</span>by<span class="token punctuation">)</span>
+ fmt<span class="token punctuation">.</span><span class="token function">Println</span><span class="token punctuation">(</span>str1<span class="token punctuation">)</span>
+<span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
 <p>标准转换用起来还是比较简单的，那你知道他们内部是怎样实现转换的吗？我们来分析一下：</p>
 <ul>
 <li><code>string</code>类型转换到<code>[]byte</code>类型</li>
 </ul>
 <p>我们对上面的代码执行如下指令<code>go tool compile -N -l -S ./string_to_byte/string.go</code>，可以看到调用的是<code>runtime.stringtoslicebyte</code>：</p>
-<pre class="line-numbers language-none"><code class="language-none">// runtime/string.go go 1.15.7
-const tmpStringBufSize = 32
+<pre class="line-numbers language-go" data-language="go"><code class="language-go"><span class="token comment">// runtime/string.go go 1.15.7</span>
+<span class="token keyword">const</span> tmpStringBufSize <span class="token operator">=</span> <span class="token number">32</span>
 
-type tmpBuf [tmpStringBufSize]byte
+<span class="token keyword">type</span> tmpBuf <span class="token punctuation">[</span>tmpStringBufSize<span class="token punctuation">]</span><span class="token builtin">byte</span>
 
-func stringtoslicebyte(buf *tmpBuf, s string) []byte {
- var b []byte
- if buf != nil &amp;&amp; len(s) &lt;= len(buf) {
-  *buf = tmpBuf{}
-  b = buf[:len(s)]
- } else {
-  b = rawbyteslice(len(s))
- }
- copy(b, s)
- return b
-}
-// rawbyteslice allocates a new byte slice. The byte slice is not zeroed.
-func rawbyteslice(size int) (b []byte) {
- cap := roundupsize(uintptr(size))
- p := mallocgc(cap, nil, false)
- if cap != uintptr(size) {
-  memclrNoHeapPointers(add(p, uintptr(size)), cap-uintptr(size))
- }
+<span class="token keyword">func</span> <span class="token function">stringtoslicebyte</span><span class="token punctuation">(</span>buf <span class="token operator">*</span>tmpBuf<span class="token punctuation">,</span> s <span class="token builtin">string</span><span class="token punctuation">)</span> <span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token builtin">byte</span> <span class="token punctuation">{</span>
+ <span class="token keyword">var</span> b <span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token builtin">byte</span>
+ <span class="token keyword">if</span> buf <span class="token operator">!=</span> <span class="token boolean">nil</span> <span class="token operator">&amp;&amp;</span> <span class="token function">len</span><span class="token punctuation">(</span>s<span class="token punctuation">)</span> <span class="token operator">&lt;=</span> <span class="token function">len</span><span class="token punctuation">(</span>buf<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token operator">*</span>buf <span class="token operator">=</span> tmpBuf<span class="token punctuation">{</span><span class="token punctuation">}</span>
+  b <span class="token operator">=</span> buf<span class="token punctuation">[</span><span class="token punctuation">:</span><span class="token function">len</span><span class="token punctuation">(</span>s<span class="token punctuation">)</span><span class="token punctuation">]</span>
+ <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+  b <span class="token operator">=</span> <span class="token function">rawbyteslice</span><span class="token punctuation">(</span><span class="token function">len</span><span class="token punctuation">(</span>s<span class="token punctuation">)</span><span class="token punctuation">)</span>
+ <span class="token punctuation">}</span>
+ <span class="token function">copy</span><span class="token punctuation">(</span>b<span class="token punctuation">,</span> s<span class="token punctuation">)</span>
+ <span class="token keyword">return</span> b
+<span class="token punctuation">}</span>
+<span class="token comment">// rawbyteslice allocates a new byte slice. The byte slice is not zeroed.</span>
+<span class="token keyword">func</span> <span class="token function">rawbyteslice</span><span class="token punctuation">(</span>size <span class="token builtin">int</span><span class="token punctuation">)</span> <span class="token punctuation">(</span>b <span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token builtin">byte</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+ <span class="token builtin">cap</span> <span class="token operator">:=</span> <span class="token function">roundupsize</span><span class="token punctuation">(</span><span class="token function">uintptr</span><span class="token punctuation">(</span>size<span class="token punctuation">)</span><span class="token punctuation">)</span>
+ p <span class="token operator">:=</span> <span class="token function">mallocgc</span><span class="token punctuation">(</span><span class="token builtin">cap</span><span class="token punctuation">,</span> <span class="token boolean">nil</span><span class="token punctuation">,</span> <span class="token boolean">false</span><span class="token punctuation">)</span>
+ <span class="token keyword">if</span> <span class="token builtin">cap</span> <span class="token operator">!=</span> <span class="token function">uintptr</span><span class="token punctuation">(</span>size<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token function">memclrNoHeapPointers</span><span class="token punctuation">(</span><span class="token function">add</span><span class="token punctuation">(</span>p<span class="token punctuation">,</span> <span class="token function">uintptr</span><span class="token punctuation">(</span>size<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token builtin">cap</span><span class="token operator">-</span><span class="token function">uintptr</span><span class="token punctuation">(</span>size<span class="token punctuation">)</span><span class="token punctuation">)</span>
+ <span class="token punctuation">}</span>
 
- *(*slice)(unsafe.Pointer(&amp;b)) = slice{p, size, int(cap)}
- return
-}<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+ <span class="token operator">*</span><span class="token punctuation">(</span><span class="token operator">*</span>slice<span class="token punctuation">)</span><span class="token punctuation">(</span>unsafe<span class="token punctuation">.</span><span class="token function">Pointer</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>b<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token operator">=</span> slice<span class="token punctuation">{</span>p<span class="token punctuation">,</span> size<span class="token punctuation">,</span> <span class="token function">int</span><span class="token punctuation">(</span><span class="token builtin">cap</span><span class="token punctuation">)</span><span class="token punctuation">}</span>
+ <span class="token keyword">return</span>
+<span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
 <p>这里分了两种状况，通过字符串长度来决定是否需要重新分配一块内存。也就是说预先定义了一个长度为<code>32</code>的数组，字符串的长度超过了这个数组的长度，就说明<code>[]byte</code>不够用了，需要重新分配一块内存了。这也算是一种优化吧，<code>32</code>是阈值，只有超过<code>32</code>才会进行内存分配。</p>
 <p>最后我们会通过调用<code>copy</code>方法实现string到[]byte的拷贝，具体实现在<code>src/runtime/slice.go</code>中的<code>slicestringcopy</code>方法，这里就不贴这段代码了，这段代码的核心思路就是：<strong>将string的底层数组从头部复制n个到[]byte对应的底层数组中去</strong></p>
@@ -569,77 +569,77 @@ func rawbyteslice(size int) (b []byte) {
 <li><code>[]byte</code>类型转换到<code>string</code>类型</li>
 </ul>
 <p><code>[]byte</code>类型转换到<code>string</code>类型本质调用的就是<code>runtime.slicebytetostring</code>：</p>
-<pre class="line-numbers language-none"><code class="language-none">// 以下无关的代码片段
-func slicebytetostring(buf *tmpBuf, ptr *byte, n int) (str string) {
- if n == 0 {
-  return ""
- }
- if n == 1 {
-  p := unsafe.Pointer(&amp;staticuint64s[*ptr])
-  if sys.BigEndian {
-   p = add(p, 7)
-  }
-  stringStructOf(&amp;str).str = p
-  stringStructOf(&amp;str).len = 1
-  return
- }
+<pre class="line-numbers language-go" data-language="go"><code class="language-go"><span class="token comment">// 以下无关的代码片段</span>
+<span class="token keyword">func</span> <span class="token function">slicebytetostring</span><span class="token punctuation">(</span>buf <span class="token operator">*</span>tmpBuf<span class="token punctuation">,</span> ptr <span class="token operator">*</span><span class="token builtin">byte</span><span class="token punctuation">,</span> n <span class="token builtin">int</span><span class="token punctuation">)</span> <span class="token punctuation">(</span>str <span class="token builtin">string</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+ <span class="token keyword">if</span> n <span class="token operator">==</span> <span class="token number">0</span> <span class="token punctuation">{</span>
+  <span class="token keyword">return</span> <span class="token string">""</span>
+ <span class="token punctuation">}</span>
+ <span class="token keyword">if</span> n <span class="token operator">==</span> <span class="token number">1</span> <span class="token punctuation">{</span>
+  p <span class="token operator">:=</span> unsafe<span class="token punctuation">.</span><span class="token function">Pointer</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>staticuint64s<span class="token punctuation">[</span><span class="token operator">*</span>ptr<span class="token punctuation">]</span><span class="token punctuation">)</span>
+  <span class="token keyword">if</span> sys<span class="token punctuation">.</span>BigEndian <span class="token punctuation">{</span>
+   p <span class="token operator">=</span> <span class="token function">add</span><span class="token punctuation">(</span>p<span class="token punctuation">,</span> <span class="token number">7</span><span class="token punctuation">)</span>
+  <span class="token punctuation">}</span>
+  <span class="token function">stringStructOf</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>str<span class="token punctuation">)</span><span class="token punctuation">.</span>str <span class="token operator">=</span> p
+  <span class="token function">stringStructOf</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>str<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token builtin">len</span> <span class="token operator">=</span> <span class="token number">1</span>
+  <span class="token keyword">return</span>
+ <span class="token punctuation">}</span>
 
- var p unsafe.Pointer
- if buf != nil &amp;&amp; n &lt;= len(buf) {
-  p = unsafe.Pointer(buf)
- } else {
-  p = mallocgc(uintptr(n), nil, false)
- }
- stringStructOf(&amp;str).str = p
- stringStructOf(&amp;str).len = n
- memmove(p, unsafe.Pointer(ptr), uintptr(n))
- return
-}<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+ <span class="token keyword">var</span> p unsafe<span class="token punctuation">.</span>Pointer
+ <span class="token keyword">if</span> buf <span class="token operator">!=</span> <span class="token boolean">nil</span> <span class="token operator">&amp;&amp;</span> n <span class="token operator">&lt;=</span> <span class="token function">len</span><span class="token punctuation">(</span>buf<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  p <span class="token operator">=</span> unsafe<span class="token punctuation">.</span><span class="token function">Pointer</span><span class="token punctuation">(</span>buf<span class="token punctuation">)</span>
+ <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+  p <span class="token operator">=</span> <span class="token function">mallocgc</span><span class="token punctuation">(</span><span class="token function">uintptr</span><span class="token punctuation">(</span>n<span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token boolean">nil</span><span class="token punctuation">,</span> <span class="token boolean">false</span><span class="token punctuation">)</span>
+ <span class="token punctuation">}</span>
+ <span class="token function">stringStructOf</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>str<span class="token punctuation">)</span><span class="token punctuation">.</span>str <span class="token operator">=</span> p
+ <span class="token function">stringStructOf</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>str<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token builtin">len</span> <span class="token operator">=</span> n
+ <span class="token function">memmove</span><span class="token punctuation">(</span>p<span class="token punctuation">,</span> unsafe<span class="token punctuation">.</span><span class="token function">Pointer</span><span class="token punctuation">(</span>ptr<span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token function">uintptr</span><span class="token punctuation">(</span>n<span class="token punctuation">)</span><span class="token punctuation">)</span>
+ <span class="token keyword">return</span>
+<span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
 <p>这段代码我们可以看出会根据<code>[]byte</code>的长度来决定是否重新分配内存，最后通过<code>memove</code>可以拷贝数组到字符串。</p>
 <h2 id="string和-byte强转换"><a href="#string和-byte强转换" class="headerlink" title="string和[]byte强转换"></a>string和[]byte强转换</h2><p>标准的转换方法都会发生内存拷贝，所以为了减少内存拷贝和内存申请我们可以使用强转换的方式对两者进行转换。在标准库中有对这两种方法实现：</p>
-<pre class="line-numbers language-none"><code class="language-none">// runtime/string.go
-func slicebytetostringtmp(ptr *byte, n int) (str string) {
- stringStructOf(&amp;str).str = unsafe.Pointer(ptr)
- stringStructOf(&amp;str).len = n
- return
-}
+<pre class="line-numbers language-go" data-language="go"><code class="language-go"><span class="token comment">// runtime/string.go</span>
+<span class="token keyword">func</span> <span class="token function">slicebytetostringtmp</span><span class="token punctuation">(</span>ptr <span class="token operator">*</span><span class="token builtin">byte</span><span class="token punctuation">,</span> n <span class="token builtin">int</span><span class="token punctuation">)</span> <span class="token punctuation">(</span>str <span class="token builtin">string</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+ <span class="token function">stringStructOf</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>str<span class="token punctuation">)</span><span class="token punctuation">.</span>str <span class="token operator">=</span> unsafe<span class="token punctuation">.</span><span class="token function">Pointer</span><span class="token punctuation">(</span>ptr<span class="token punctuation">)</span>
+ <span class="token function">stringStructOf</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>str<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token builtin">len</span> <span class="token operator">=</span> n
+ <span class="token keyword">return</span>
+<span class="token punctuation">}</span>
 
-func stringtoslicebytetmp(s string) []byte {
-    str := (*stringStruct)(unsafe.Pointer(&amp;s))
-    ret := slice{array: unsafe.Pointer(str.str), len: str.len, cap: str.len}
-    return *(*[]byte)(unsafe.Pointer(&amp;ret))
-}<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<span class="token keyword">func</span> <span class="token function">stringtoslicebytetmp</span><span class="token punctuation">(</span>s <span class="token builtin">string</span><span class="token punctuation">)</span> <span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token builtin">byte</span> <span class="token punctuation">{</span>
+    str <span class="token operator">:=</span> <span class="token punctuation">(</span><span class="token operator">*</span>stringStruct<span class="token punctuation">)</span><span class="token punctuation">(</span>unsafe<span class="token punctuation">.</span><span class="token function">Pointer</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>s<span class="token punctuation">)</span><span class="token punctuation">)</span>
+    ret <span class="token operator">:=</span> slice<span class="token punctuation">{</span>array<span class="token punctuation">:</span> unsafe<span class="token punctuation">.</span><span class="token function">Pointer</span><span class="token punctuation">(</span>str<span class="token punctuation">.</span>str<span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token builtin">len</span><span class="token punctuation">:</span> str<span class="token punctuation">.</span><span class="token builtin">len</span><span class="token punctuation">,</span> <span class="token builtin">cap</span><span class="token punctuation">:</span> str<span class="token punctuation">.</span><span class="token builtin">len</span><span class="token punctuation">}</span>
+    <span class="token keyword">return</span> <span class="token operator">*</span><span class="token punctuation">(</span><span class="token operator">*</span><span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token builtin">byte</span><span class="token punctuation">)</span><span class="token punctuation">(</span>unsafe<span class="token punctuation">.</span><span class="token function">Pointer</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>ret<span class="token punctuation">)</span><span class="token punctuation">)</span>
+<span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
 <p>通过这两个方法我们可知道，主要使用的就是<code>unsafe.Pointer</code>进行指针替换，为什么这样可以呢？因为<code>string</code>和<code>slice</code>的结构字段是相似的：</p>
-<pre class="line-numbers language-none"><code class="language-none">type stringStruct struct {
-    str unsafe.Pointer
-    len int
-}
-type slice struct {
-    array unsafe.Pointer
-    len   int
-    cap   int
-}<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<pre class="line-numbers language-go" data-language="go"><code class="language-go"><span class="token keyword">type</span> stringStruct <span class="token keyword">struct</span> <span class="token punctuation">{</span>
+    str unsafe<span class="token punctuation">.</span>Pointer
+    <span class="token builtin">len</span> <span class="token builtin">int</span>
+<span class="token punctuation">}</span>
+<span class="token keyword">type</span> slice <span class="token keyword">struct</span> <span class="token punctuation">{</span>
+    array unsafe<span class="token punctuation">.</span>Pointer
+    <span class="token builtin">len</span>   <span class="token builtin">int</span>
+    <span class="token builtin">cap</span>   <span class="token builtin">int</span>
+<span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
 <p>唯一不同的就是<code>cap</code>字段，<code>array</code>和<code>str</code>是一致的，<code>len</code>是一致的，所以他们的内存布局上是对齐的，这样我们就可以直接通过<code>unsafe.Pointer</code>进行指针替换。</p>
 <h2 id="两种转换如何取舍"><a href="#两种转换如何取舍" class="headerlink" title="两种转换如何取舍"></a>两种转换如何取舍</h2><p>当然是推荐大家使用标准转换方式了，毕竟标准转换方式是更安全的！但是如果你是在高性能场景下使用，是可以考虑使用强转换的方式的，但是要注意强转换的使用方式，他不是安全的，这里举个例子：</p>
-<pre class="line-numbers language-none"><code class="language-none">func stringtoslicebytetmp(s string) []byte {
- str := (*reflect.StringHeader)(unsafe.Pointer(&amp;s))
- ret := reflect.SliceHeader{Data: str.Data, Len: str.Len, Cap: str.Len}
- return *(*[]byte)(unsafe.Pointer(&amp;ret))
-}
+<pre class="line-numbers language-go" data-language="go"><code class="language-go"><span class="token keyword">func</span> <span class="token function">stringtoslicebytetmp</span><span class="token punctuation">(</span>s <span class="token builtin">string</span><span class="token punctuation">)</span> <span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token builtin">byte</span> <span class="token punctuation">{</span>
+ str <span class="token operator">:=</span> <span class="token punctuation">(</span><span class="token operator">*</span>reflect<span class="token punctuation">.</span>StringHeader<span class="token punctuation">)</span><span class="token punctuation">(</span>unsafe<span class="token punctuation">.</span><span class="token function">Pointer</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>s<span class="token punctuation">)</span><span class="token punctuation">)</span>
+ ret <span class="token operator">:=</span> reflect<span class="token punctuation">.</span>SliceHeader<span class="token punctuation">{</span>Data<span class="token punctuation">:</span> str<span class="token punctuation">.</span>Data<span class="token punctuation">,</span> Len<span class="token punctuation">:</span> str<span class="token punctuation">.</span>Len<span class="token punctuation">,</span> Cap<span class="token punctuation">:</span> str<span class="token punctuation">.</span>Len<span class="token punctuation">}</span>
+ <span class="token keyword">return</span> <span class="token operator">*</span><span class="token punctuation">(</span><span class="token operator">*</span><span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token builtin">byte</span><span class="token punctuation">)</span><span class="token punctuation">(</span>unsafe<span class="token punctuation">.</span><span class="token function">Pointer</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>ret<span class="token punctuation">)</span><span class="token punctuation">)</span>
+<span class="token punctuation">}</span>
 
-func main()  {
- str := "hello"
- by := stringtoslicebytetmp(str)
- by[0] = 'H'
-}<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<span class="token keyword">func</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span>  <span class="token punctuation">{</span>
+ str <span class="token operator">:=</span> <span class="token string">"hello"</span>
+ by <span class="token operator">:=</span> <span class="token function">stringtoslicebytetmp</span><span class="token punctuation">(</span>str<span class="token punctuation">)</span>
+ by<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token string">'H'</span>
+<span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
 <p>运行结果：</p>
-<pre class="line-numbers language-none"><code class="language-none">unexpected fault address 0x109d65f
-fatal error: fault
-[signal SIGBUS: bus error code=0x2 addr=0x109d65f pc=0x107eabc]<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<pre class="line-numbers language-go" data-language="go"><code class="language-go">unexpected fault address <span class="token number">0x109d65f</span>
+fatal <span class="token builtin">error</span><span class="token punctuation">:</span> fault
+<span class="token punctuation">[</span>signal SIGBUS<span class="token punctuation">:</span> bus <span class="token builtin">error</span> code<span class="token operator">=</span><span class="token number">0x2</span> addr<span class="token operator">=</span><span class="token number">0x109d65f</span> pc<span class="token operator">=</span><span class="token number">0x107eabc</span><span class="token punctuation">]</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
 
 <p>我们可以看到程序直接发生严重错误了，即使使用<code>defer</code>+<code>recover</code>也无法捕获。原因是什么呢？</p>
 <p>我们前面介绍过，<code>string</code>类型是不能改变的，也就是底层数据是不能更改的，这里因为我们使用的是强转换的方式，那么<code>by</code>指向了<code>str</code>的底层数组，现在对这个数组中的元素进行更改，就会出现这个问题，导致整个程序<code>down</code>掉！</p>
@@ -766,49 +766,44 @@ fatal error: fault
         
         <div class="article col s12 m6" data-aos="fade-up">
             <div class="article-badge right-badge text-color">
-                本篇&nbsp;<i class="far fa-dot-circle"></i>
+                下一篇&nbsp;<i class="fas fa-chevron-right"></i>
             </div>
             <div class="card">
-                <a href="/2021/09/11/golang-string-bytes-mi-mi/">
+                <a href="/2021/09/15/mysql-suo-yin-xia-tui/">
                     <div class="card-image">
                         
-                        <img src="https://image.fyxemmmm.cn/blog/images/ins-161.jpg" class="responsive-img" alt="golang string与bytes的转换">
+                        <img src="https://image.fyxemmmm.cn/blog/images/ins-96.jpg" class="responsive-img" alt="mysql 索引下推">
                         
-                        <span class="card-title">golang string与bytes的转换</span>
+                        <span class="card-title">mysql 索引下推</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            了解string与bytes的底层实现
+                            熟悉一下mysql的"新版本"特性
                         
                     </div>
                     <div class="publish-info">
                             <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2021-09-11
+                                <i class="far fa-clock fa-fw icon-date"></i>2021-09-15
                             </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-bookmark fa-fw icon-category"></i>
                             
-                            <a href="/categories/golang/" class="post-category">
-                                    golang
+                            <a href="/categories/mysql/" class="post-category">
+                                    mysql
                                 </a>
                             
                             
                         </span>
                     </div>
                 </div>
-
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/golang/">
-                        <span class="chip bg-color">golang</span>
-                    </a>
-                    
-                    <a href="/tags/string/">
-                        <span class="chip bg-color">string</span>
+                    <a href="/tags/%E7%B4%A2%E5%BC%95%E4%B8%8B%E6%8E%A8/">
+                        <span class="chip bg-color">索引下推</span>
                     </a>
                     
                 </div>
@@ -962,7 +957,7 @@ fatal error: fault
 
             <!-- 
                 &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                        class="white-color">54.6k</span>
+                        class="white-color">56.9k</span>
             
             
             

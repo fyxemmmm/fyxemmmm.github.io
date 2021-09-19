@@ -492,7 +492,6 @@ ch <span class="token operator">:=</span> <span class="token function">make</spa
 <p>G1这时候会暂停直到出现一个receiver。</p>
 <p>这个地方需要介绍一下Golang的scheduler的。我们知道goroutine是用户空间的线程，创建和管理协程都是通过Go的runtime，而不是通过OS的thread。</p>
 <p>但是Go的runtime调度执行goroutine却是基于OS thread的。如下图：<br><img src="https://image.fyxemmmm.cn/blog/images/channel-8.png"></p>
-<p>具体关于golang的scheduler的原理，可以看前面的一篇博客，关于go的scheduler原理分析。</p>
 <p>当向已经满的channel里面写入数据时候，会发生什么呢？如下图：</p>
 <p><img src="https://image.fyxemmmm.cn/blog/images/channel-9.png"></p>
 <p>上图流程大概如下：</p>
@@ -1010,7 +1009,7 @@ ch <span class="token operator">:=</span> <span class="token function">make</spa
 
             <!-- 
                 &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                        class="white-color">54.6k</span>
+                        class="white-color">56.9k</span>
             
             
             
