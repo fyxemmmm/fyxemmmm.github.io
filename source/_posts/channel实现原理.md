@@ -97,8 +97,6 @@ G1这时候会暂停直到出现一个receiver。
 
 
 
-具体关于golang的scheduler的原理，可以看前面的一篇博客，关于go的scheduler原理分析。
-
 当向已经满的channel里面写入数据时候，会发生什么呢？如下图：
 
 ![](https://image.fyxemmmm.cn/blog/images/channel-9.png)

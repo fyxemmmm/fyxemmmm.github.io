@@ -223,3 +223,9 @@ func reflect_rselect(cases []runtimeSelect) (int, bool) {
 
 ![](https://image.fyxemmmm.cn/blog/images/%E8%B5%84%E6%BA%90/select17.webp)
 
+> select 语法是配套于 channel 一起用的语法，核心点是实现了 IO 多路复用的原理，能够在应用层去监听多个 channel 是否已经准备就绪。
+
+## 小结 select case：
+> 把 select 里面每个 case 在编译后转成 scase 结构体
+先用 runtime.fastrandn 打乱全部 case 的初始顺序
+调用 select go 方法逐个锁住 channel 们。去遍历是否有就绪的 channel，有的话则命中其中一个就绪 channel。如果没有就绪的 channel 就会走 default 逻辑，若 default 逻辑都没有就会先解锁所有 channel，让 select 对应的协程就会 gopark 进行休眠，等待 channel 就绪的通知。当有 channel 就绪就会唤醒，重新走刚开始的步骤，命中其中一个就绪 channel

@@ -19,7 +19,7 @@ tags:
 
 我们看一下官方对`byte`的定义：
 
-```
+```go
 // byte is an alias for uint8 and is equivalent to uint8 in all ways. It is
 // used, by convention, to distinguish byte values from 8-bit unsigned
 // integer values.
@@ -32,7 +32,7 @@ type byte = uint8
 
 示例：
 
-```
+```go
 var ch byte = 65
 var ch byte = '\x41'
 var ch byte = 'A'
@@ -42,7 +42,7 @@ var ch byte = 'A'
 
 `[]byte`就是一个`byte`类型的切片，切片本质也是一个结构体，定义如下：
 
-```
+```go
 // src/runtime/slice.go
 type slice struct {
     array unsafe.Pointer
@@ -53,7 +53,7 @@ type slice struct {
 
 这里简单说明一下这几个字段，`array`代表底层数组的指针，`len`代表切片长度，`cap`代表容量。看一个简单示例：
 
-```
+```go
 func main()  {
  sl := make([]byte,0,2)
  sl = append(sl, 'A')
@@ -68,7 +68,7 @@ func main()  {
 
 先来看一下`string`的官方定义：
 
-```
+```go
 // string is the set of all strings of 8-bit bytes, conventionally but not
 // necessarily representing UTF-8-encoded text. A string may be empty, but
 // not nil. Values of string type are immutable.
@@ -79,7 +79,7 @@ type string string
 
 看一个简单的例子：
 
-```
+```go
 func main()  {
  str := "asong"
  fmt.Println(str)
@@ -88,7 +88,7 @@ func main()  {
 
 `string`类型本质也是一个结构体，定义如下：
 
-```
+```go
 type stringStruct struct {
     str unsafe.Pointer
     len int
@@ -97,7 +97,7 @@ type stringStruct struct {
 
 `stringStruct`和`slice`还是很相似的，`str`指针指向的是某个数组的首地址，`len`代表的就是数组长度。怎么和`slice`这么相似，底层指向的也是数组，是什么数组呢？我们看看他在实例化时调用的方法：
 
-```
+```go
 //go:nosplit
 func gostringnocopy(str *byte) string {
  ss := stringStruct{str: unsafe.Pointer(str), len: findnull(str)}
@@ -118,7 +118,7 @@ func gostringnocopy(str *byte) string {
 
 `string`类型虽然是不能更改的，但是可以被替换，因为`stringStruct`中的`str`指针是可以改变的，只是指针指向的内容是不可以改变的。看个例子：
 
-```
+```go
 func main()  {
  str := "song"
  fmt.Printf("%p\n",[]byte(str))
@@ -136,7 +136,7 @@ func main()  {
 
 `Go`语言中提供了标准方式对`string`和`[]byte`进行转换，先看一个例子：
 
-```
+```go
 func main()  {
  str := "asong"
  by := []byte(str)
@@ -152,7 +152,7 @@ func main()  {
 
 我们对上面的代码执行如下指令`go tool compile -N -l -S ./string_to_byte/string.go`，可以看到调用的是`runtime.stringtoslicebyte`：
 
-```
+```go
 // runtime/string.go go 1.15.7
 const tmpStringBufSize = 32
 
@@ -190,7 +190,7 @@ func rawbyteslice(size int) (b []byte) {
 
 `[]byte`类型转换到`string`类型本质调用的就是`runtime.slicebytetostring`：
 
-```
+```go
 // 以下无关的代码片段
 func slicebytetostring(buf *tmpBuf, ptr *byte, n int) (str string) {
  if n == 0 {
@@ -225,7 +225,7 @@ func slicebytetostring(buf *tmpBuf, ptr *byte, n int) (str string) {
 
 标准的转换方法都会发生内存拷贝，所以为了减少内存拷贝和内存申请我们可以使用强转换的方式对两者进行转换。在标准库中有对这两种方法实现：
 
-```
+```go
 // runtime/string.go
 func slicebytetostringtmp(ptr *byte, n int) (str string) {
  stringStructOf(&str).str = unsafe.Pointer(ptr)
@@ -242,7 +242,7 @@ func stringtoslicebytetmp(s string) []byte {
 
 通过这两个方法我们可知道，主要使用的就是`unsafe.Pointer`进行指针替换，为什么这样可以呢？因为`string`和`slice`的结构字段是相似的：
 
-```
+```go
 type stringStruct struct {
     str unsafe.Pointer
     len int
@@ -260,7 +260,7 @@ type slice struct {
 
 当然是推荐大家使用标准转换方式了，毕竟标准转换方式是更安全的！但是如果你是在高性能场景下使用，是可以考虑使用强转换的方式的，但是要注意强转换的使用方式，他不是安全的，这里举个例子：
 
-```
+```go
 func stringtoslicebytetmp(s string) []byte {
  str := (*reflect.StringHeader)(unsafe.Pointer(&s))
  ret := reflect.SliceHeader{Data: str.Data, Len: str.Len, Cap: str.Len}
@@ -276,7 +276,7 @@ func main()  {
 
 运行结果：
 
-```
+```go
 unexpected fault address 0x109d65f
 fatal error: fault
 [signal SIGBUS: bus error code=0x2 addr=0x109d65f pc=0x107eabc]
