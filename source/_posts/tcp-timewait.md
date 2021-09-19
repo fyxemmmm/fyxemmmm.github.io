@@ -1,5 +1,5 @@
 ---
-title: tcp timewait 踩坑实战
+title: 深入理解 tcp timewait
 date: 2021-08-17 21:26:15
 author: yuxuan
 img: https://image.fyxemmmm.cn/blog/images/djsy.jpg
@@ -9,7 +9,7 @@ cover: false
 coverImg: 
 toc: true
 mathjax: false
-summary: 深入理解 tcp timewait
+summary: tcp timewait 踩坑实战
 categories: 协议
 tags:
   - 操作系统
