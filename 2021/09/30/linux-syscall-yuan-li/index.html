@@ -1,0 +1,1153 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+
+
+<head>
+    <meta charset="utf-8">
+    <meta name="keywords" content="Linux syscall 原理, yuxuanの博客">
+    <meta name="description" content="">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="renderer" content="webkit|ie-stand|ie-comp">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+
+
+    <title>Linux syscall 原理 | yuxuanの博客</title>
+    <link rel="icon" type="image/png" href="/favicon.png">
+
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/fyxemmmm/fyxemmmm.github.io/libs/awesome/css/all.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/fyxemmmm/fyxemmmm.github.io/libs/materialize/materialize.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/fyxemmmm/fyxemmmm.github.io/libs/aos/aos.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/fyxemmmm/fyxemmmm.github.io/libs/animate/animate.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/fyxemmmm/fyxemmmm.github.io/libs/lightGallery/css/lightgallery.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/fyxemmmm/fyxemmmm.github.io/css/matery.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/fyxemmmm/fyxemmmm.github.io/css/my.css">
+
+    <script src="https://cdn.jsdelivr.net/gh/fyxemmmm/fyxemmmm.github.io/libs/jquery/jquery.min.js"></script>
+
+<meta name="generator" content="Hexo 5.4.0">
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
+<link rel="alternate" href="/atom.xml" title="yuxuanの博客" type="application/atom+xml">
+</head>
+
+
+
+
+<body>
+    <header class="navbar-fixed">
+    <nav id="headNav" class="bg-color nav-transparent">
+        <div id="navContainer" class="nav-wrapper container">
+            <div class="brand-logo">
+                <a href="/" class="waves-effect waves-light">
+                    
+                    <img src="/medias/logo.png" class="logo-img" alt="LOGO">
+                    
+                    <span class="logo-span">yuxuanの博客</span>
+                </a>
+            </div>
+            
+
+<a href="#" data-target="mobile-nav" class="sidenav-trigger button-collapse"><i class="fas fa-bars"></i></a>
+<ul class="right nav-menu">
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/" class="waves-effect waves-light">
+      
+      <i class="fas fa-home" style="zoom: 0.6;"></i>
+      
+      <span>首页</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/tags" class="waves-effect waves-light">
+      
+      <i class="fas fa-tags" style="zoom: 0.6;"></i>
+      
+      <span>标签</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/categories/" class="waves-effect waves-light">
+      
+      <i class="fas fa-bookmark" style="zoom: 0.6;"></i>
+      
+      <span>分类</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/archives/" class="waves-effect waves-light">
+      
+      <i class="fas fa-archive" style="zoom: 0.6;"></i>
+      
+      <span>归档</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/about/" class="waves-effect waves-light">
+      
+      <i class="fas fa-user-circle" style="zoom: 0.6;"></i>
+      
+      <span>关于</span>
+    </a>
+    
+  </li>
+  
+  <li>
+    <a href="#searchModal" class="modal-trigger waves-effect waves-light">
+      <i id="searchIcon" class="fas fa-search" title="搜索" style="zoom: 0.85;"></i>
+    </a>
+  </li>
+</ul>
+
+
+<div id="mobile-nav" class="side-nav sidenav">
+
+    <div class="mobile-head bg-color">
+        
+        <img src="/medias/logo.png" class="logo-img circle responsive-img">
+        
+        <div class="logo-name">yuxuanの博客</div>
+        <div class="logo-desc">
+            
+            Never really desperate, only the lost of the soul.
+            
+        </div>
+    </div>
+
+    
+
+    <ul class="menu-list mobile-menu-list">
+        
+        <li class="m-nav-item">
+	  
+		<a href="/" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-home"></i>
+			
+			首页
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/tags" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-tags"></i>
+			
+			标签
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/categories/" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-bookmark"></i>
+			
+			分类
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/archives/" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-archive"></i>
+			
+			归档
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/about/" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-user-circle"></i>
+			
+			关于
+		</a>
+          
+        </li>
+        
+        
+        <li><div class="divider"></div></li>
+        <li>
+            <a href="https://github.com/fyxemmmm/fyxemmmm.github.io" class="waves-effect waves-light" target="_blank">
+                <i class="fab fa-github-square fa-fw"></i>Fork Me
+            </a>
+        </li>
+        
+    </ul>
+</div>
+
+
+        </div>
+
+        
+            <style>
+    .nav-transparent .github-corner {
+        display: none !important;
+    }
+
+    .github-corner {
+        position: absolute;
+        z-index: 10;
+        top: 0;
+        right: 0;
+        border: 0;
+        transform: scale(1.1);
+    }
+
+    .github-corner svg {
+        color: #0f9d58;
+        fill: #fff;
+        height: 64px;
+        width: 64px;
+    }
+
+    .github-corner:hover .octo-arm {
+        animation: a 0.56s ease-in-out;
+    }
+
+    .github-corner .octo-arm {
+        animation: none;
+    }
+
+    @keyframes a {
+        0%,
+        to {
+            transform: rotate(0);
+        }
+        20%,
+        60% {
+            transform: rotate(-25deg);
+        }
+        40%,
+        80% {
+            transform: rotate(10deg);
+        }
+    }
+</style>
+
+<a href="https://github.com/fyxemmmm/fyxemmmm.github.io" class="github-corner tooltipped hide-on-med-and-down" target="_blank"
+   data-tooltip="Fork Me" data-position="left" data-delay="50">
+    <svg viewBox="0 0 250 250" aria-hidden="true">
+        <path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path>
+        <path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2"
+              fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path>
+        <path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z"
+              fill="currentColor" class="octo-body"></path>
+    </svg>
+</a>
+        
+    </nav>
+
+</header>
+
+    
+
+
+
+<div class="bg-cover pd-header post-cover" style="background-image: url('https://image.fyxemmmm.cn/blog/images/ins-56.jpg')">
+    <div class="container" style="right: 0px;left: 0px;">
+        <div class="row">
+            <div class="col s12 m12 l12">
+                <div class="brand">
+                    <h1 class="description center-align post-title">Linux syscall 原理</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<main class="post-container content">
+
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fyxemmmm/fyxemmmm.github.io/libs/tocbot/tocbot.css">
+<style>
+    #articleContent h1::before,
+    #articleContent h2::before,
+    #articleContent h3::before,
+    #articleContent h4::before,
+    #articleContent h5::before,
+    #articleContent h6::before {
+        display: block;
+        content: " ";
+        height: 100px;
+        margin-top: -100px;
+        visibility: hidden;
+    }
+
+    #articleContent :focus {
+        outline: none;
+    }
+
+    .toc-fixed {
+        position: fixed;
+        top: 64px;
+    }
+
+    .toc-widget {
+        width: 345px;
+        padding-left: 20px;
+    }
+
+    .toc-widget .toc-title {
+        padding: 35px 0 15px 17px;
+        font-size: 1.5rem;
+        font-weight: bold;
+        line-height: 1.5rem;
+    }
+
+    .toc-widget ol {
+        padding: 0;
+        list-style: none;
+    }
+
+    #toc-content {
+        padding-bottom: 30px;
+        overflow: auto;
+    }
+
+    #toc-content ol {
+        padding-left: 10px;
+    }
+
+    #toc-content ol li {
+        padding-left: 10px;
+    }
+
+    #toc-content .toc-link:hover {
+        color: #42b983;
+        font-weight: 700;
+        text-decoration: underline;
+    }
+
+    #toc-content .toc-link::before {
+        background-color: transparent;
+        max-height: 25px;
+
+        position: absolute;
+        right: 23.5vw;
+        display: block;
+    }
+
+    #toc-content .is-active-link {
+        color: #42b983;
+    }
+
+    #floating-toc-btn {
+        position: fixed;
+        right: 15px;
+        bottom: 76px;
+        padding-top: 15px;
+        margin-bottom: 0;
+        z-index: 998;
+    }
+
+    #floating-toc-btn .btn-floating {
+        width: 48px;
+        height: 48px;
+    }
+
+    #floating-toc-btn .btn-floating i {
+        line-height: 48px;
+        font-size: 1.4rem;
+    }
+</style>
+<div class="row">
+    <div id="main-content" class="col s12 m12 l9">
+        <!-- 文章内容详情 -->
+<div id="artDetail">
+    <div class="card">
+        <div class="card-content article-info">
+            <div class="row tag-cate">
+                <div class="col s7">
+                    
+                    <div class="article-tag">
+                        
+                            <a href="/tags/%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8/">
+                                <span class="chip bg-color">系统调用</span>
+                            </a>
+                        
+                    </div>
+                    
+                </div>
+                <div class="col s5 right-align">
+                    
+                    <div class="post-cate">
+                        <i class="fas fa-bookmark fa-fw icon-category"></i>
+                        
+                            <a href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/" class="post-category">
+                                操作系统
+                            </a>
+                        
+                    </div>
+                    
+                </div>
+            </div>
+
+            <div class="post-info">
+                
+                <div class="post-date info-break-policy">
+                    <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
+                    2021-09-30
+                </div>
+                
+
+                
+
+                
+
+                
+                <div class="info-break-policy">
+                    <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
+                    11 分
+                </div>
+                
+
+                
+            </div>
+        </div>
+        <hr class="clearfix">
+
+        
+        <!-- 是否加载使用自带的 prismjs. -->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fyxemmmm/fyxemmmm.github.io/libs/prism/prism.css">
+        
+
+        
+
+        <div class="card-content article-card-content">
+            <div id="articleContent">
+                <h2 id="一、Syscall意义"><a href="#一、Syscall意义" class="headerlink" title="一、Syscall意义"></a>一、Syscall意义</h2><p>内核提供用户空间程序与内核空间进行交互的一套标准接口，这些接口让用户态程序能受限访问硬件设备，比如申请系统资源，操作设备读写，创建新进程等。用户空间发生请求，内核空间负责执行，这些接口便是用户空间和内核空间共同识别的桥梁，这里提到两个字“受限”，是由于为了保证内核稳定性，而不能让用户空间程序随意更改系统，必须是内核对外开放的且满足权限的程序才能调用相应接口。</p>
+<p>在用户空间和内核空间之间，有一个叫做Syscall(系统调用, system call)的中间层，是连接用户态和内核态的桥梁。这样即提高了内核的安全型，也便于移植，只需实现同一套接口即可。Linux系统，用户空间通过向内核空间发出Syscall，产生软中断，从而让程序陷入内核态，执行相应的操作。对于每个系统调用都会有一个对应的系统调用号，比很多操作系统要少很多。</p>
+<p>安全性与稳定性：内核驻留在受保护的地址空间，用户空间程序无法直接执行内核代码，也无法访问内核数据，通过系统调用</p>
+<p>性能：Linux上下文切换时间很短，以及系统调用处理过程非常精简，内核优化得好，所以性能上往往比很多其他操作系统执行要好。</p>
+<h2 id="二、Syscall查找方式"><a href="#二、Syscall查找方式" class="headerlink" title="二、Syscall查找方式"></a>二、Syscall查找方式</h2><p>这里以kill()方法为例子，来找一找kill()方法系统调用的过程。</p>
+<p>Tips 1： 用户空间的方法<code>xxx</code>，对应系统调用层方法则是<code>sys_xxx</code>；<br>Tips 2： <code>unistd.h</code>文件记录着系统调用中断号的信息。</p>
+<p>故用户空间<code>kill</code>方法则对应系统调用层便是<code>sys_kill</code>，这个方法去哪里找呢？从<code>/kernel/include/uapi/asm-generic/unistd.h</code>等还有很多<code>unistd.h</code>去慢慢查看，查看关键字<code>sys_kill</code>，便能看到下面几行：</p>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token comment">/* kernel/signal.c */</span>
+<span class="token function">__SYSCALL</span><span class="token punctuation">(</span>__NR_kill<span class="token punctuation">,</span> sys_kill<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+
+<p>根据这个能得到一丝线索，那就是kill对应的方法sys_kill位于<code>/kernel/signal.c</code>文件。</p>
+<p>Tips 3： 宏定义SYSCALL_DEFINEx(xxx,…)，展开后对应的方法则是<code>sys_xxx</code>；<br>Tips 4： 方法参数的个数x，对应于SYSCALL_DEFINEx。</p>
+<p><code>kill(int pid, int sig)</code>方法共两个参数，则对应方法于<code>SYSCALL_DEFINE2(kill,...)</code>，进入signal.c文件，再次搜索关键字，便能看到方法：</p>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token function">SYSCALL_DEFINE2</span><span class="token punctuation">(</span>kill<span class="token punctuation">,</span> <span class="token class-name">pid_t</span><span class="token punctuation">,</span> pid<span class="token punctuation">,</span> <span class="token keyword">int</span><span class="token punctuation">,</span> sig<span class="token punctuation">)</span>
+<span class="token punctuation">{</span>
+    <span class="token keyword">struct</span> <span class="token class-name">siginfo</span> info<span class="token punctuation">;</span>
+    info<span class="token punctuation">.</span>si_signo <span class="token operator">=</span> sig<span class="token punctuation">;</span>
+    info<span class="token punctuation">.</span>si_errno <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+    info<span class="token punctuation">.</span>si_code <span class="token operator">=</span> SI_USER<span class="token punctuation">;</span>
+    info<span class="token punctuation">.</span>si_pid <span class="token operator">=</span> <span class="token function">task_tgid_vnr</span><span class="token punctuation">(</span>current<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    info<span class="token punctuation">.</span>si_uid <span class="token operator">=</span> <span class="token function">from_kuid_munged</span><span class="token punctuation">(</span><span class="token function">current_user_ns</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token function">current_uid</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">return</span> <span class="token function">kill_something_info</span><span class="token punctuation">(</span>sig<span class="token punctuation">,</span> <span class="token operator">&amp;</span>info<span class="token punctuation">,</span> pid<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p><code>SYSCALL_DEFINE2(kill, pid_t, pid, int, sig)</code> 基本等价于 <code>asmlinkage long sys_kill(int pid, int sig)</code>，这里用的是基本等价，往下看会解释原因。</p>
+<h4 id="实用技巧"><a href="#实用技巧" class="headerlink" title="实用技巧"></a>实用技巧</h4><p>比如kill命令, 有两个参数. 则可以直接在kernel目录下搜索 “SYSCALL_DEFINE2(kill”,即可直接找到,所有对应的Syscall方法位于signal.c</p>
+<h2 id="三、Syscall流程"><a href="#三、Syscall流程" class="headerlink" title="三、Syscall流程"></a>三、Syscall流程</h2><p>Syscall是通过中断方式实现的，ARM平台上通过swi中断来实现系统调用，实现从用户态切换到内核态，发送软中断swi时，从中断向量表中查看跳转代码，其中异常向量表定义在文件/kernelarch/arm/kernel/entry-armv.S(汇编语言文件)。当执行系统调用时会根据系统调用号从系统调用表中来查看目标函数的入口地址，在calls.S文件中声明了入口地址信息。</p>
+<p>总体流程：kill() -&gt; kill.S -&gt; swi陷入内核态 -&gt; 从sys_call_table查看到sys_kill -&gt; ret_fast_syscall -&gt; 回到用户态执行kill()下一行代码。 下面介绍部分核心流程：</p>
+<p>3.1： 用户程序通过软中断swi指令切入内核态，执行vector_swi处的指令。<code>vector_swi</code>在文件<code>/kenel/arch/arm/kernel/entry-common.S</code>中定义，此处省略。像每一个异常处理程序一样，要做的第一件事当然就是保护现场了。紧接着是获得系统调用的系统调用号</p>
+<p>3.2： 仍以kill()函数为例，来详细说说Syscall调用流程，用户空间kill()定义位于文件<code>kill.S</code>。</p>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">include</span> <span class="token string">&lt;private/bionic_asm.h&gt;</span></span>
+<span class="token function">ENTRY</span><span class="token punctuation">(</span>kill<span class="token punctuation">)</span>
+    mov     ip<span class="token punctuation">,</span> r7
+    ldr     r7<span class="token punctuation">,</span> <span class="token operator">=</span>__NR_kill
+    swi     #<span class="token number">0</span>
+    mov     r7<span class="token punctuation">,</span> ip
+    cmn     r0<span class="token punctuation">,</span> #<span class="token punctuation">(</span>MAX_ERRNO <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">)</span>
+    bxls    lr
+    neg     r0<span class="token punctuation">,</span> r0
+    b       __set_errno_internal
+<span class="token function">END</span><span class="token punctuation">(</span>kill<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>当调用kill时, 系统先保存r7内容, 然后将__NR_kill值放入r7, 再执行swi软中断指令切换进内核态。</p>
+<p>3.3： Linux内核中，每个Syscall都有唯一的系统调用号对应，kill的系统调用号为__NR_kill，用户空间的系统调用号定义于<code>/bionic/libc/kernel/uapi/asm-generic/unistd.h</code>，如下：</p>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">define</span> <span class="token macro-name">__NR_kill</span> <span class="token expression"><span class="token punctuation">(</span>__NR_SYSCALL_BASE <span class="token operator">+</span> <span class="token number">37</span><span class="token punctuation">)</span></span></span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p>其中__NR_SYSCALL_BASE=0，也就是__NR_kill系统调用号=37。</p>
+<p>3.4： 在内核中有与系统调用号对应的系统调用表，定义在文件<code>/kernel/arch/arm/kernel/calls.S</code>，如下：</p>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token comment">/* 35 */</span>    <span class="token function">CALL</span><span class="token punctuation">(</span>sys_ni_syscall<span class="token punctuation">)</span>        <span class="token comment">/* was sys_ftime */</span>
+            <span class="token function">CALL</span><span class="token punctuation">(</span>sys_sync<span class="token punctuation">)</span>
+            <span class="token function">CALL</span><span class="token punctuation">(</span>sys_kill<span class="token punctuation">)</span>  <span class="token comment">//此处为37号</span>
+            <span class="token function">CALL</span><span class="token punctuation">(</span>sys_rename<span class="token punctuation">)</span>
+            <span class="token function">CALL</span><span class="token punctuation">(</span>sys_mkdir<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>到这里可知37号系统调用对应sys_kill()，该方法所对应的函数声明在syscalls.h文件</p>
+<p>3.5： 文件<code>/kernel/include/linux/syscalls.h</code>中有如下声明：</p>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c">asmlinkage <span class="token keyword">long</span> <span class="token function">sys_kill</span><span class="token punctuation">(</span><span class="token keyword">int</span> pid<span class="token punctuation">,</span> <span class="token keyword">int</span> sig<span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p>asmlinkage是gcc标签，代表函数读取的参数来自于栈中，而非寄存器。</p>
+<h4 id="3-1-SYSCALL-DEFINE"><a href="#3-1-SYSCALL-DEFINE" class="headerlink" title="3.1 SYSCALL_DEFINE"></a>3.1 SYSCALL_DEFINE</h4><p>sys_kill()定义在内核源码找不到直接定义，而是通过<code>syscalls.h</code>文件中的SYSCALL_DEFINE宏定义。前面已经讲过sys_kill是通过语句<code>SYSCALL_DEFINE2(kill, pid_t, pid, int, sig)</code>来定义，下面来一层层剖开，这条宏定义的真面目：</p>
+<p>等价 1：</p>
+<p><code>syscalls.h</code>中有大量如下宏定义：</p>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">define</span> <span class="token macro-name function">SYSCALL_DEFINE0</span><span class="token expression"><span class="token punctuation">(</span>sname<span class="token punctuation">)</span>                    </span><span class="token punctuation">\</span>
+    <span class="token expression"><span class="token function">SYSCALL_METADATA</span><span class="token punctuation">(</span>_</span><span class="token punctuation">##</span><span class="token expression">sname<span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>                </span><span class="token punctuation">\</span>
+    <span class="token expression">asmlinkage <span class="token keyword">long</span> sys_</span><span class="token punctuation">##</span><span class="token expression"><span class="token function">sname</span><span class="token punctuation">(</span><span class="token keyword">void</span><span class="token punctuation">)</span></span></span>
+<span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">define</span> <span class="token macro-name function">SYSCALL_DEFINE1</span><span class="token expression"><span class="token punctuation">(</span>name<span class="token punctuation">,</span> <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">)</span> <span class="token function">SYSCALL_DEFINEx</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">,</span> _</span><span class="token punctuation">##</span><span class="token expression">name<span class="token punctuation">,</span> __VA_ARGS__<span class="token punctuation">)</span></span></span>
+<span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">define</span> <span class="token macro-name function">SYSCALL_DEFINE2</span><span class="token expression"><span class="token punctuation">(</span>name<span class="token punctuation">,</span> <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">)</span> <span class="token function">SYSCALL_DEFINEx</span><span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">,</span> _</span><span class="token punctuation">##</span><span class="token expression">name<span class="token punctuation">,</span> __VA_ARGS__<span class="token punctuation">)</span></span></span>
+<span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">define</span> <span class="token macro-name function">SYSCALL_DEFINE3</span><span class="token expression"><span class="token punctuation">(</span>name<span class="token punctuation">,</span> <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">)</span> <span class="token function">SYSCALL_DEFINEx</span><span class="token punctuation">(</span><span class="token number">3</span><span class="token punctuation">,</span> _</span><span class="token punctuation">##</span><span class="token expression">name<span class="token punctuation">,</span> __VA_ARGS__<span class="token punctuation">)</span></span></span>
+<span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">define</span> <span class="token macro-name function">SYSCALL_DEFINE4</span><span class="token expression"><span class="token punctuation">(</span>name<span class="token punctuation">,</span> <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">)</span> <span class="token function">SYSCALL_DEFINEx</span><span class="token punctuation">(</span><span class="token number">4</span><span class="token punctuation">,</span> _</span><span class="token punctuation">##</span><span class="token expression">name<span class="token punctuation">,</span> __VA_ARGS__<span class="token punctuation">)</span></span></span>
+<span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">define</span> <span class="token macro-name function">SYSCALL_DEFINE5</span><span class="token expression"><span class="token punctuation">(</span>name<span class="token punctuation">,</span> <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">)</span> <span class="token function">SYSCALL_DEFINEx</span><span class="token punctuation">(</span><span class="token number">5</span><span class="token punctuation">,</span> _</span><span class="token punctuation">##</span><span class="token expression">name<span class="token punctuation">,</span> __VA_ARGS__<span class="token punctuation">)</span></span></span>
+<span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">define</span> <span class="token macro-name function">SYSCALL_DEFINE6</span><span class="token expression"><span class="token punctuation">(</span>name<span class="token punctuation">,</span> <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">)</span> <span class="token function">SYSCALL_DEFINEx</span><span class="token punctuation">(</span><span class="token number">6</span><span class="token punctuation">,</span> _</span><span class="token punctuation">##</span><span class="token expression">name<span class="token punctuation">,</span> __VA_ARGS__<span class="token punctuation">)</span></span></span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>可得出原语句等价：</p>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token function">SYSCALL_DEFINEx</span><span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">,</span> _kill<span class="token punctuation">,</span> <span class="token class-name">pid_t</span><span class="token punctuation">,</span> pid<span class="token punctuation">,</span> <span class="token keyword">int</span><span class="token punctuation">,</span> sig<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p>等价 2：</p>
+<p><code>syscalls.h</code>中有如下宏定义：</p>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">define</span> <span class="token macro-name function">SYSCALL_DEFINEx</span><span class="token expression"><span class="token punctuation">(</span>x<span class="token punctuation">,</span> sname<span class="token punctuation">,</span> <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">)</span>                </span><span class="token punctuation">\</span>
+    <span class="token expression"><span class="token function">SYSCALL_METADATA</span><span class="token punctuation">(</span>sname<span class="token punctuation">,</span> x<span class="token punctuation">,</span> __VA_ARGS__<span class="token punctuation">)</span>            </span><span class="token punctuation">\</span>
+    <span class="token expression"><span class="token function">__SYSCALL_DEFINEx</span><span class="token punctuation">(</span>x<span class="token punctuation">,</span> sname<span class="token punctuation">,</span> __VA_ARGS__<span class="token punctuation">)</span></span></span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+
+<p>可得出原语句等价：</p>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token function">SYSCALL_METADATA</span><span class="token punctuation">(</span>_kill<span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">,</span> <span class="token class-name">pid_t</span><span class="token punctuation">,</span> pid<span class="token punctuation">,</span> <span class="token keyword">int</span><span class="token punctuation">,</span> sig<span class="token punctuation">)</span>
+<span class="token function">__SYSCALL_DEFINEx</span><span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">,</span> _kill<span class="token punctuation">,</span> <span class="token class-name">pid_t</span><span class="token punctuation">,</span> pid<span class="token punctuation">,</span> <span class="token keyword">int</span><span class="token punctuation">,</span> sig<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+
+<p>define __SYSCALL_DEFINEx(x, name, …)</p>
+<p>等价 3：</p>
+<p><code>syscalls.h</code>中有如下宏定义：</p>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">define</span> <span class="token macro-name function">__SYSCALL_DEFINEx</span><span class="token expression"><span class="token punctuation">(</span>x<span class="token punctuation">,</span> name<span class="token punctuation">,</span> <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">)</span>                    </span><span class="token punctuation">\</span>
+    <span class="token expression">asmlinkage <span class="token keyword">long</span> sys</span><span class="token punctuation">##</span><span class="token expression"><span class="token function">name</span><span class="token punctuation">(</span><span class="token function">__MAP</span><span class="token punctuation">(</span>x<span class="token punctuation">,</span>__SC_DECL<span class="token punctuation">,</span>__VA_ARGS__<span class="token punctuation">)</span><span class="token punctuation">)</span>    </span><span class="token punctuation">\</span>
+        <span class="token expression"><span class="token keyword">__attribute__</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token function">alias</span><span class="token punctuation">(</span><span class="token function">__stringify</span><span class="token punctuation">(</span>SyS</span><span class="token punctuation">##</span><span class="token expression">name<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>        </span><span class="token punctuation">\</span>
+    <span class="token expression"><span class="token keyword">static</span> <span class="token keyword">inline</span> <span class="token keyword">long</span> SYSC</span><span class="token punctuation">##</span><span class="token expression"><span class="token function">name</span><span class="token punctuation">(</span><span class="token function">__MAP</span><span class="token punctuation">(</span>x<span class="token punctuation">,</span>__SC_DECL<span class="token punctuation">,</span>__VA_ARGS__<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>    </span><span class="token punctuation">\</span>
+    <span class="token expression">asmlinkage <span class="token keyword">long</span> SyS</span><span class="token punctuation">##</span><span class="token expression"><span class="token function">name</span><span class="token punctuation">(</span><span class="token function">__MAP</span><span class="token punctuation">(</span>x<span class="token punctuation">,</span>__SC_LONG<span class="token punctuation">,</span>__VA_ARGS__<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>    </span><span class="token punctuation">\</span>
+    <span class="token expression">asmlinkage <span class="token keyword">long</span> SyS</span><span class="token punctuation">##</span><span class="token expression"><span class="token function">name</span><span class="token punctuation">(</span><span class="token function">__MAP</span><span class="token punctuation">(</span>x<span class="token punctuation">,</span>__SC_LONG<span class="token punctuation">,</span>__VA_ARGS__<span class="token punctuation">)</span><span class="token punctuation">)</span>    </span><span class="token punctuation">\</span>
+    <span class="token expression"><span class="token punctuation">{</span>                                </span><span class="token punctuation">\</span>
+        <span class="token expression"><span class="token keyword">long</span> ret <span class="token operator">=</span> SYSC</span><span class="token punctuation">##</span><span class="token expression"><span class="token function">name</span><span class="token punctuation">(</span><span class="token function">__MAP</span><span class="token punctuation">(</span>x<span class="token punctuation">,</span>__SC_CAST<span class="token punctuation">,</span>__VA_ARGS__<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>    </span><span class="token punctuation">\</span>
+        <span class="token expression"><span class="token function">__MAP</span><span class="token punctuation">(</span>x<span class="token punctuation">,</span>__SC_TEST<span class="token punctuation">,</span>__VA_ARGS__<span class="token punctuation">)</span><span class="token punctuation">;</span>                </span><span class="token punctuation">\</span>
+        <span class="token expression"><span class="token function">__PROTECT</span><span class="token punctuation">(</span>x<span class="token punctuation">,</span> ret<span class="token punctuation">,</span><span class="token function">__MAP</span><span class="token punctuation">(</span>x<span class="token punctuation">,</span>__SC_ARGS<span class="token punctuation">,</span>__VA_ARGS__<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>    </span><span class="token punctuation">\</span>
+        <span class="token expression"><span class="token keyword">return</span> ret<span class="token punctuation">;</span>                        </span><span class="token punctuation">\</span>
+    <span class="token expression"><span class="token punctuation">}</span>                                </span><span class="token punctuation">\</span>
+    <span class="token expression"><span class="token keyword">static</span> <span class="token keyword">inline</span> <span class="token keyword">long</span> SYSC</span><span class="token punctuation">##</span><span class="token expression"><span class="token function">name</span><span class="token punctuation">(</span><span class="token function">__MAP</span><span class="token punctuation">(</span>x<span class="token punctuation">,</span>__SC_DECL<span class="token punctuation">,</span>__VA_ARGS__<span class="token punctuation">)</span><span class="token punctuation">)</span></span></span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>可得出原语句等价：</p>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c">asmlinkage <span class="token keyword">long</span> <span class="token function">sys_kill</span><span class="token punctuation">(</span><span class="token function">__MAP</span><span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">,</span>__SC_DECL<span class="token punctuation">,</span>__VA_ARGS__<span class="token punctuation">)</span><span class="token punctuation">)</span>    \
+    <span class="token keyword">__attribute__</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token function">alias</span><span class="token punctuation">(</span><span class="token function">__stringify</span><span class="token punctuation">(</span>SyS_kill<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>        \
+<span class="token keyword">static</span> <span class="token keyword">inline</span> <span class="token keyword">long</span> <span class="token function">SYSC_kill</span><span class="token punctuation">(</span><span class="token function">__MAP</span><span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">,</span>__SC_DECL<span class="token punctuation">,</span>__VA_ARGS__<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>    \
+asmlinkage <span class="token keyword">long</span> <span class="token function">SyS_kill</span><span class="token punctuation">(</span><span class="token function">__MAP</span><span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">,</span>__SC_LONG<span class="token punctuation">,</span>__VA_ARGS__<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>    \
+asmlinkage <span class="token keyword">long</span> <span class="token function">SyS_kill</span><span class="token punctuation">(</span><span class="token function">__MAP</span><span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">,</span>__SC_LONG<span class="token punctuation">,</span>__VA_ARGS__<span class="token punctuation">)</span><span class="token punctuation">)</span>    \
+<span class="token punctuation">{</span>                                \
+    <span class="token keyword">long</span> ret <span class="token operator">=</span> <span class="token function">SYSC_kill</span><span class="token punctuation">(</span><span class="token function">__MAP</span><span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">,</span>__SC_CAST<span class="token punctuation">,</span>__VA_ARGS__<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>    \
+    <span class="token function">__MAP</span><span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">,</span>__SC_TEST<span class="token punctuation">,</span>__VA_ARGS__<span class="token punctuation">)</span><span class="token punctuation">;</span>                \
+    <span class="token function">__PROTECT</span><span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">,</span> ret<span class="token punctuation">,</span><span class="token function">__MAP</span><span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">,</span>__SC_ARGS<span class="token punctuation">,</span>__VA_ARGS__<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>    \
+    <span class="token keyword">return</span> ret<span class="token punctuation">;</span>                        \
+<span class="token punctuation">}</span>                                \
+<span class="token keyword">static</span> <span class="token keyword">inline</span> <span class="token keyword">long</span> <span class="token function">SYSC_kill</span><span class="token punctuation">(</span><span class="token function">__MAP</span><span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">,</span>__SC_DECL<span class="token punctuation">,</span>__VA_ARGS__<span class="token punctuation">)</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>这里<code>__VA_ARGS__</code>等于 <code>pid_t, pid, int, sig</code>。</p>
+<p>等价 4:</p>
+<p>先说说这里涉及的宏定义</p>
+<p>__MAP宏定义：</p>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">define</span> <span class="token macro-name function">__MAP0</span><span class="token expression"><span class="token punctuation">(</span>m<span class="token punctuation">,</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">)</span></span></span>
+<span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">define</span> <span class="token macro-name function">__MAP1</span><span class="token expression"><span class="token punctuation">(</span>m<span class="token punctuation">,</span>t<span class="token punctuation">,</span>a<span class="token punctuation">)</span> <span class="token function">m</span><span class="token punctuation">(</span>t<span class="token punctuation">,</span>a<span class="token punctuation">)</span></span></span>
+<span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">define</span> <span class="token macro-name function">__MAP2</span><span class="token expression"><span class="token punctuation">(</span>m<span class="token punctuation">,</span>t<span class="token punctuation">,</span>a<span class="token punctuation">,</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">)</span> <span class="token function">m</span><span class="token punctuation">(</span>t<span class="token punctuation">,</span>a<span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token function">__MAP1</span><span class="token punctuation">(</span>m<span class="token punctuation">,</span>__VA_ARGS__<span class="token punctuation">)</span></span></span>
+<span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">define</span> <span class="token macro-name function">__MAP3</span><span class="token expression"><span class="token punctuation">(</span>m<span class="token punctuation">,</span>t<span class="token punctuation">,</span>a<span class="token punctuation">,</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">)</span> <span class="token function">m</span><span class="token punctuation">(</span>t<span class="token punctuation">,</span>a<span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token function">__MAP2</span><span class="token punctuation">(</span>m<span class="token punctuation">,</span>__VA_ARGS__<span class="token punctuation">)</span></span></span>
+<span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">define</span> <span class="token macro-name function">__MAP4</span><span class="token expression"><span class="token punctuation">(</span>m<span class="token punctuation">,</span>t<span class="token punctuation">,</span>a<span class="token punctuation">,</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">)</span> <span class="token function">m</span><span class="token punctuation">(</span>t<span class="token punctuation">,</span>a<span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token function">__MAP3</span><span class="token punctuation">(</span>m<span class="token punctuation">,</span>__VA_ARGS__<span class="token punctuation">)</span></span></span>
+<span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">define</span> <span class="token macro-name function">__MAP5</span><span class="token expression"><span class="token punctuation">(</span>m<span class="token punctuation">,</span>t<span class="token punctuation">,</span>a<span class="token punctuation">,</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">)</span> <span class="token function">m</span><span class="token punctuation">(</span>t<span class="token punctuation">,</span>a<span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token function">__MAP4</span><span class="token punctuation">(</span>m<span class="token punctuation">,</span>__VA_ARGS__<span class="token punctuation">)</span></span></span>
+<span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">define</span> <span class="token macro-name function">__MAP6</span><span class="token expression"><span class="token punctuation">(</span>m<span class="token punctuation">,</span>t<span class="token punctuation">,</span>a<span class="token punctuation">,</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">)</span> <span class="token function">m</span><span class="token punctuation">(</span>t<span class="token punctuation">,</span>a<span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token function">__MAP5</span><span class="token punctuation">(</span>m<span class="token punctuation">,</span>__VA_ARGS__<span class="token punctuation">)</span></span></span>
+<span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">define</span> <span class="token macro-name function">__MAP</span><span class="token expression"><span class="token punctuation">(</span>n<span class="token punctuation">,</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">)</span> __MAP</span><span class="token punctuation">##</span><span class="token expression"><span class="token function">n</span><span class="token punctuation">(</span>__VA_ARGS__<span class="token punctuation">)</span></span></span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>相关宏定义：</p>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">define</span> <span class="token macro-name function">__SC_DECL</span><span class="token expression"><span class="token punctuation">(</span>t<span class="token punctuation">,</span> a<span class="token punctuation">)</span>    t a</span></span>
+<span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">define</span> <span class="token macro-name function">__SC_LONG</span><span class="token expression"><span class="token punctuation">(</span>t<span class="token punctuation">,</span> a<span class="token punctuation">)</span> <span class="token function">__typeof</span><span class="token punctuation">(</span><span class="token function">__builtin_choose_expr</span><span class="token punctuation">(</span><span class="token function">__TYPE_IS_LL</span><span class="token punctuation">(</span>t<span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token number">0LL</span><span class="token punctuation">,</span> <span class="token number">0L</span><span class="token punctuation">)</span><span class="token punctuation">)</span> a</span></span>
+<span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">define</span> <span class="token macro-name function">__SC_CAST</span><span class="token expression"><span class="token punctuation">(</span>t<span class="token punctuation">,</span> a<span class="token punctuation">)</span>    <span class="token punctuation">(</span>t<span class="token punctuation">)</span> a</span></span>
+<span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">define</span> <span class="token macro-name function">__SC_ARGS</span><span class="token expression"><span class="token punctuation">(</span>t<span class="token punctuation">,</span> a<span class="token punctuation">)</span>    a</span></span>
+<span class="token macro property"><span class="token directive-hash">#</span><span class="token directive keyword">define</span> <span class="token macro-name function">__SC_TEST</span><span class="token expression"><span class="token punctuation">(</span>t<span class="token punctuation">,</span> a<span class="token punctuation">)</span> <span class="token punctuation">(</span><span class="token keyword">void</span><span class="token punctuation">)</span><span class="token function">BUILD_BUG_ON_ZERO</span><span class="token punctuation">(</span><span class="token operator">!</span><span class="token function">__TYPE_IS_LL</span><span class="token punctuation">(</span>t<span class="token punctuation">)</span> <span class="token operator">&amp;&amp;</span> <span class="token keyword">sizeof</span><span class="token punctuation">(</span>t<span class="token punctuation">)</span> <span class="token operator">&gt;</span> <span class="token keyword">sizeof</span><span class="token punctuation">(</span><span class="token keyword">long</span><span class="token punctuation">)</span><span class="token punctuation">)</span></span></span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>展开：</p>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token function">__MAP</span><span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">,</span>__SC_DECL<span class="token punctuation">,</span> <span class="token class-name">pid_t</span><span class="token punctuation">,</span> pid<span class="token punctuation">,</span> <span class="token keyword">int</span><span class="token punctuation">,</span> sig<span class="token punctuation">)</span> <span class="token comment">//等价于 pid_t pid, int sig</span>
+<span class="token function">__MAP</span><span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">,</span>__SC_LONG<span class="token punctuation">,</span>__VA_ARGS__<span class="token punctuation">)</span> <span class="token comment">//等价于 long pid, long sig</span>
+<span class="token function">__MAP</span><span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">,</span>__SC_CAST<span class="token punctuation">,</span>__VA_ARGS__<span class="token punctuation">)</span> <span class="token comment">//等价于 (pid_t) pid, (int)sig</span>
+<span class="token function">__MAP</span><span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">,</span>__SC_ARGS<span class="token punctuation">,</span>__VA_ARGS__<span class="token punctuation">)</span> <span class="token comment">//等价于 pid, sig</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>可得出原语句等价：</p>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token comment">//函数声明sys_kill()，并别名指向SyS_kill</span>
+asmlinkage <span class="token keyword">long</span> <span class="token function">sys_kill</span><span class="token punctuation">(</span><span class="token class-name">pid_t</span> pid<span class="token punctuation">,</span> <span class="token keyword">int</span> sig<span class="token punctuation">)</span> <span class="token keyword">__attribute__</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token function">alias</span><span class="token punctuation">(</span><span class="token function">__stringify</span><span class="token punctuation">(</span>SyS_kill<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">static</span> <span class="token keyword">inline</span> <span class="token keyword">long</span> <span class="token function">SYSC_kill</span><span class="token punctuation">(</span><span class="token class-name">pid_t</span> pid<span class="token punctuation">,</span> <span class="token keyword">int</span> sig<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token comment">//函数声明SyS_kill()</span>
+asmlinkage <span class="token keyword">long</span> <span class="token function">SyS_kill</span><span class="token punctuation">(</span><span class="token keyword">long</span> pid<span class="token punctuation">,</span> <span class="token keyword">long</span> sig<span class="token punctuation">)</span><span class="token punctuation">;</span>
+asmlinkage <span class="token keyword">long</span> <span class="token function">SyS_kill</span><span class="token punctuation">(</span><span class="token keyword">long</span> pid<span class="token punctuation">,</span> <span class="token keyword">long</span> sig<span class="token punctuation">)</span>
+<span class="token punctuation">{</span>
+    <span class="token keyword">long</span> ret <span class="token operator">=</span> <span class="token function">SYSC_kill</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token class-name">pid_t</span><span class="token punctuation">)</span> pid<span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token keyword">int</span><span class="token punctuation">)</span>sig<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">BUILD_BUG_ON_ZERO</span><span class="token punctuation">(</span><span class="token keyword">sizeof</span><span class="token punctuation">(</span><span class="token class-name">pid_t</span><span class="token punctuation">)</span> <span class="token operator">&gt;</span> <span class="token keyword">sizeof</span><span class="token punctuation">(</span><span class="token keyword">long</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">BUILD_BUG_ON_ZERO</span><span class="token punctuation">(</span><span class="token keyword">sizeof</span><span class="token punctuation">(</span><span class="token keyword">int</span><span class="token punctuation">)</span> <span class="token operator">&gt;</span> <span class="token keyword">sizeof</span><span class="token punctuation">(</span><span class="token keyword">long</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">__PROTECT</span><span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">,</span> ret<span class="token punctuation">,</span> pid<span class="token punctuation">,</span> sig<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">return</span> ret<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+<span class="token keyword">static</span> <span class="token keyword">inline</span> <span class="token keyword">long</span> <span class="token function">SYSC_kill</span><span class="token punctuation">(</span><span class="token class-name">pid_t</span> pid<span class="token punctuation">,</span> <span class="token keyword">int</span> sig<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>通过以上分析过程：</p>
+<ul>
+<li>kill添加了<code>sys_</code>前缀，声明sys_kill()函数；</li>
+<li>定义SYSC_kill()函数和SyS_kill()函数；</li>
+<li>sys_kill，通过别名机制等同于SyS_kill().</li>
+</ul>
+<p>看到这或许很多人(包括我)会觉得诧异，为何要如此复杂呢，后来查资料，发现这是由于之前64位Linux存在<code>CVE-2009-2009</code>的漏洞，简单说就是32位参数存放在64位寄存器，修改符号扩展可能导致产生一个非法内存地址，从而导致系统崩溃或者提升权限。 为了修复这个问题，把寄存器高位清零即可，但做起来比较困难，为了做尽可能少的修改，将调用参数统一采用使用long型来接收，再强转为相应参数。 窥见一斑，可见Linux大师们精湛的宏定义，已经用得出神入化。</p>
+<p>如果觉得很复杂，那么可以忽略这个宏定义，只要记住<code>SYSCALL_DEFINE2(kill, pid_t, pid, int, sig)</code> 基本等价于 <code>asmlinkage long sys_kill(int pid, int sig)</code> 就足够了。</p>
+<h2 id="四、总结"><a href="#四、总结" class="headerlink" title="四、总结"></a>四、总结</h2><h4 id="4-1-内核空间"><a href="#4-1-内核空间" class="headerlink" title="4.1 内核空间"></a>4.1 内核空间</h4><ol>
+<li>系统调用的函数原型的指针：位于文件/kernel/arch/arm/kernel/calls.S，格式为<code>CALL(sys_xxx)</code>，指定了目标函数的入口地址。</li>
+<li>系统调用号的宏定义：位于文件/kernel/arch/arm/include/Uapi/asm/unistd.h，记录着内核空间的系统调用号，格式为<code>#define__NR_xxx (__NR_SYSCALL_BASE+[num])</code></li>
+<li>系统调用的函数声明：位于文件/kernel/include/linux/syscalls.h，格式为<code>asmlinkage long sys_xxx(args ...);</code></li>
+<li>系统调用的函数实现：不同函数位于不同文件，比如kill()位于/kernel/kernel/signal.c文件，格式为<code>SYSCALL_DEFINEx(x, sname, ...)</code></li>
+</ol>
+<p>前面这4步都是在内核空间相关的文件定义，有了这些，那么内核就可以使用相应的系统调用号。</p>
+<h4 id="4-2-用户空间"><a href="#4-2-用户空间" class="headerlink" title="4.2 用户空间"></a>4.2 用户空间</h4><ol>
+<li><p>系统调用号的宏定义：位于文件/bionic/libc/kernel/uapi/asm-arm/asm/unistd.h，记录着用户空间的系统调用号，格式为<code>#define__NR_xxx (__NR_SYSCALL_BASE+[num])</code>。这个文件就是由内核空间同名的头文件自动生成的，所以该文件与内核空间的系统调用号是完全一致。</p>
+</li>
+<li><p>汇编定义相关函数的中断调用过程：位于文件/bionic/libc/arch-arm/syscalls/xxx.S，比如kill()位于kill.S，格式为：</p>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token function">ENTRY</span><span class="token punctuation">(</span>xxx<span class="token punctuation">)</span>
+    mov     ip<span class="token punctuation">,</span> r7
+    ldr     r7<span class="token punctuation">,</span> <span class="token operator">=</span>__NR_xxx
+    swi     #<span class="token number">0</span>
+    mov     r7<span class="token punctuation">,</span> ip
+    cmn     r0<span class="token punctuation">,</span> #<span class="token punctuation">(</span>MAX_ERRNO <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">)</span>
+    bxls    lr
+    neg     r0<span class="token punctuation">,</span> r0
+    b       __set_errno_internal
+<span class="token function">END</span><span class="token punctuation">(</span>xxx<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></li>
+</ol>
+<p>当然kill()方法还有函数声明，有了这些，用户空间也能在程序中使用系统调用。明白了这些过程，那么自己新添加系统调用其实也并不是多困难的一件事，新增系统调用号还需要修改syscalls总个数，但强烈不建议自己新增系统调用号，尽量保持与linux kernel主线一致，兼容性更好，所以就不进一步介绍新增流程了。</p>
+
+                
+            </div>
+            <hr/>
+
+            
+
+
+
+            <div class="tag_share" style="display: block;">
+                <div class="post-meta__tag-list" style="display: inline-block;">
+                    
+                        <div class="article-tag">
+                            
+                                <a href="/tags/%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8/">
+                                    <span class="chip bg-color">系统调用</span>
+                                </a>
+                            
+                        </div>
+                    
+                </div>
+                <div class="post_share" style="zoom: 80%; width: fit-content; display: inline-block; float: right; margin: -0.15rem 0;">
+                    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/fyxemmmm/fyxemmmm.github.io/libs/share/css/share.min.css">
+<div id="article-share">
+
+    
+    <div class="social-share" data-sites="qq,wechat,weibo" data-wechat-qrcode-helper="<p>微信扫一扫即可分享！</p>"></div>
+    <script src="https://cdn.jsdelivr.net/gh/fyxemmmm/fyxemmmm.github.io/libs/share/js/social-share.min.js"></script>
+    
+
+    
+
+</div>
+
+                </div>
+            </div>
+            
+        </div>
+    </div>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+<article id="prenext-posts" class="prev-next articles">
+    <div class="row article-row">
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge left-badge text-color">
+                <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
+            <div class="card">
+                <a href="/2021/09/26/rust-suo-you-quan/">
+                    <div class="card-image">
+                        
+                        <img src="https://image.fyxemmmm.cn/blog/images/ins-4.jpg" class="responsive-img" alt="Rust 核心概念">
+                        
+                        <span class="card-title">Rust 核心概念</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            Rust 所有权、借用等关键技术点
+                        
+                    </div>
+                    <div class="publish-info">
+                        <span class="publish-date">
+                            <i class="far fa-clock fa-fw icon-date"></i>2021-09-26
+                        </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/rust/" class="post-category">
+                                    rust
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/%E6%89%80%E6%9C%89%E6%9D%83/">
+                        <span class="chip bg-color">所有权</span>
+                    </a>
+                    
+                    <a href="/tags/%E5%80%9F%E7%94%A8/">
+                        <span class="chip bg-color">借用</span>
+                    </a>
+                    
+                    <a href="/tags/%E5%BC%95%E7%94%A8/">
+                        <span class="chip bg-color">引用</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge right-badge text-color">
+                下一篇&nbsp;<i class="fas fa-chevron-right"></i>
+            </div>
+            <div class="card">
+                <a href="/2021/10/03/pprof/">
+                    <div class="card-image">
+                        
+                        <img src="https://image.fyxemmmm.cn/blog/images/ins-29.jpg" class="responsive-img" alt="golang pprof 实操">
+                        
+                        <span class="card-title">golang pprof 实操</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            性能诊断的神 - pprof
+                        
+                    </div>
+                    <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2021-10-03
+                            </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/golang/" class="post-category">
+                                    golang
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/pprof/">
+                        <span class="chip bg-color">pprof</span>
+                    </a>
+                    
+                    <a href="/tags/%E6%80%A7%E8%83%BD%E8%AF%8A%E6%96%AD/">
+                        <span class="chip bg-color">性能诊断</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+    </div>
+</article>
+
+</div>
+
+
+
+<!-- 代码块功能依赖 -->
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/fyxemmmm/fyxemmmm.github.io/libs/codeBlock/codeBlockFuction.js"></script>
+
+<!-- 代码语言 -->
+
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/fyxemmmm/fyxemmmm.github.io/libs/codeBlock/codeLang.js"></script>
+
+
+<!-- 代码块复制 -->
+
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/fyxemmmm/fyxemmmm.github.io/libs/codeBlock/codeCopy.js"></script>
+
+
+<!-- 代码块收缩 -->
+
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/fyxemmmm/fyxemmmm.github.io/libs/codeBlock/codeShrink.js"></script>
+
+
+    </div>
+    <div id="toc-aside" class="expanded col l3 hide-on-med-and-down">
+        <div class="toc-widget card" style="background-color: white;">
+            <div class="toc-title"><i class="far fa-list-alt"></i>&nbsp;&nbsp;目录</div>
+            <div id="toc-content"></div>
+        </div>
+    </div>
+</div>
+
+<!-- TOC 悬浮按钮. -->
+
+<div id="floating-toc-btn" class="hide-on-med-and-down">
+    <a class="btn-floating btn-large bg-color">
+        <i class="fas fa-list-ul"></i>
+    </a>
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/gh/fyxemmmm/fyxemmmm.github.io/libs/tocbot/tocbot.min.js"></script>
+<script>
+    $(function () {
+        tocbot.init({
+            tocSelector: '#toc-content',
+            contentSelector: '#articleContent',
+            headingsOffset: -($(window).height() * 0.4 - 45),
+            collapseDepth: Number('0'),
+            headingSelector: 'h1, h2, h3, h4'
+        });
+
+        // modify the toc link href to support Chinese.
+        let i = 0;
+        let tocHeading = 'toc-heading-';
+        $('#toc-content a').each(function () {
+            $(this).attr('href', '#' + tocHeading + (++i));
+        });
+
+        // modify the heading title id to support Chinese.
+        i = 0;
+        $('#articleContent').children('h1, h2, h3, h4').each(function () {
+            $(this).attr('id', tocHeading + (++i));
+        });
+
+        // Set scroll toc fixed.
+        let tocHeight = parseInt($(window).height() * 0.4 - 64);
+        let $tocWidget = $('.toc-widget');
+        $(window).scroll(function () {
+            let scroll = $(window).scrollTop();
+            /* add post toc fixed. */
+            if (scroll > tocHeight) {
+                $tocWidget.addClass('toc-fixed');
+            } else {
+                $tocWidget.removeClass('toc-fixed');
+            }
+        });
+
+        
+        /* 修复文章卡片 div 的宽度. */
+        let fixPostCardWidth = function (srcId, targetId) {
+            let srcDiv = $('#' + srcId);
+            if (srcDiv.length === 0) {
+                return;
+            }
+
+            let w = srcDiv.width();
+            if (w >= 450) {
+                w = w + 21;
+            } else if (w >= 350 && w < 450) {
+                w = w + 18;
+            } else if (w >= 300 && w < 350) {
+                w = w + 16;
+            } else {
+                w = w + 14;
+            }
+            $('#' + targetId).width(w);
+        };
+
+        // 切换TOC目录展开收缩的相关操作.
+        const expandedClass = 'expanded';
+        let $tocAside = $('#toc-aside');
+        let $mainContent = $('#main-content');
+        $('#floating-toc-btn .btn-floating').click(function () {
+            if ($tocAside.hasClass(expandedClass)) {
+                $tocAside.removeClass(expandedClass).hide();
+                $mainContent.removeClass('l9');
+            } else {
+                $tocAside.addClass(expandedClass).show();
+                $mainContent.addClass('l9');
+            }
+            fixPostCardWidth('artDetail', 'prenext-posts');
+        });
+        
+    });
+</script>
+
+    
+
+</main>
+
+
+
+
+    <footer class="page-footer bg-color">
+    
+
+    <div class="container row center-align"
+         style="margin-bottom: 0px !important;">
+        <div class="col s12 m8 l8 copy-right">
+            Copyright&nbsp;&copy;
+            
+                <span id="year">2018-2021</span>
+            
+            <span id="year">2018</span>
+            <a href="/about" target="_blank"></a>
+            |&nbsp;Powered by&nbsp;<a href="https://github.com/fyxemmmm" target="_blank">yuxuan</a>
+            <!-- |&nbsp;Theme&nbsp;<a href="https://github.com/blinkfox/hexo-theme-matery" target="_blank">Matery</a> -->
+            <br>
+            愿你历尽千帆，归来任是少年。
+
+
+            <!-- 
+                &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
+                        class="white-color">78.8k</span>
+            
+            
+            
+            
+                <span id="busuanzi_container_site_pv">
+                &nbsp;|&nbsp;<i class="far fa-eye"></i>&nbsp;总访问量:&nbsp;
+                    <span id="busuanzi_value_site_pv" class="white-color"></span>
+            </span>
+            
+            
+                <span id="busuanzi_container_site_uv">
+                &nbsp;|&nbsp;<i class="fas fa-users"></i>&nbsp;总访问人数:&nbsp;
+                    <span id="busuanzi_value_site_uv" class="white-color"></span>
+            </span>
+             -->
+
+
+            <br>
+
+            <!-- 运行天数提醒. -->
+            
+            <br>
+            
+        </div>
+        <div class="col s12 m4 l4 social-link ">
+    <a href="https://github.com/fyxemmmm" class="tooltipped" target="_blank" data-tooltip="访问我的GitHub" data-position="top" data-delay="50">
+        <i class="fab fa-github"></i>
+    </a>
+
+
+
+    <a href="mailto:fyxemmmm@gmail.com" class="tooltipped" target="_blank" data-tooltip="邮件联系我" data-position="top" data-delay="50">
+        <i class="fas fa-envelope-open"></i>
+    </a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <a href="/atom.xml" class="tooltipped" target="_blank" data-tooltip="RSS 订阅" data-position="top" data-delay="50">
+        <i class="fas fa-rss"></i>
+    </a>
+
+</div>
+    </div>
+</footer>
+
+<div class="progress-bar"></div>
+
+
+    <!-- 搜索遮罩框 -->
+<div id="searchModal" class="modal">
+    <div class="modal-content">
+        <div class="search-header">
+            <span class="title"><i class="fas fa-search"></i>&nbsp;&nbsp;搜索</span>
+            <input type="search" id="searchInput" name="s" placeholder="请输入搜索的关键字"
+                   class="search-input">
+        </div>
+        <div id="searchResult"></div>
+    </div>
+</div>
+
+<script type="text/javascript">
+$(function () {
+    var searchFunc = function (path, search_id, content_id) {
+        'use strict';
+        $.ajax({
+            url: path,
+            dataType: "xml",
+            success: function (xmlResponse) {
+                // get the contents from search data
+                var datas = $("entry", xmlResponse).map(function () {
+                    return {
+                        title: $("title", this).text(),
+                        content: $("content", this).text(),
+                        url: $("url", this).text()
+                    };
+                }).get();
+                var $input = document.getElementById(search_id);
+                var $resultContent = document.getElementById(content_id);
+                $input.addEventListener('input', function () {
+                    var str = '<ul class=\"search-result-list\">';
+                    var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+                    $resultContent.innerHTML = "";
+                    if (this.value.trim().length <= 0) {
+                        return;
+                    }
+                    // perform local searching
+                    datas.forEach(function (data) {
+                        var isMatch = true;
+                        var data_title = data.title.trim().toLowerCase();
+                        var data_content = data.content.trim().replace(/<[^>]+>/g, "").toLowerCase();
+                        var data_url = data.url;
+                        data_url = data_url.indexOf('/') === 0 ? data.url : '/' + data_url;
+                        var index_title = -1;
+                        var index_content = -1;
+                        var first_occur = -1;
+                        // only match artiles with not empty titles and contents
+                        if (data_title !== '' && data_content !== '') {
+                            keywords.forEach(function (keyword, i) {
+                                index_title = data_title.indexOf(keyword);
+                                index_content = data_content.indexOf(keyword);
+                                if (index_title < 0 && index_content < 0) {
+                                    isMatch = false;
+                                } else {
+                                    if (index_content < 0) {
+                                        index_content = 0;
+                                    }
+                                    if (i === 0) {
+                                        first_occur = index_content;
+                                    }
+                                }
+                            });
+                        }
+                        // show search results
+                        if (isMatch) {
+                            str += "<li><a href='" + data_url + "' class='search-result-title'>" + data_title + "</a>";
+                            var content = data.content.trim().replace(/<[^>]+>/g, "");
+                            if (first_occur >= 0) {
+                                // cut out 100 characters
+                                var start = first_occur - 20;
+                                var end = first_occur + 80;
+                                if (start < 0) {
+                                    start = 0;
+                                }
+                                if (start === 0) {
+                                    end = 100;
+                                }
+                                if (end > content.length) {
+                                    end = content.length;
+                                }
+                                var match_content = content.substr(start, end);
+                                // highlight all keywords
+                                keywords.forEach(function (keyword) {
+                                    var regS = new RegExp(keyword, "gi");
+                                    match_content = match_content.replace(regS, "<em class=\"search-keyword\">" + keyword + "</em>");
+                                });
+
+                                str += "<p class=\"search-result\">" + match_content + "...</p>"
+                            }
+                            str += "</li>";
+                        }
+                    });
+                    str += "</ul>";
+                    $resultContent.innerHTML = str;
+                });
+            }
+        });
+    };
+
+    searchFunc('/search.xml', 'searchInput', 'searchResult');
+});
+</script>
+
+    <!-- 回到顶部按钮 -->
+<div id="backTop" class="top-scroll">
+    <a class="btn-floating btn-large waves-effect waves-light" href="#!">
+        <i class="fas fa-arrow-up"></i>
+    </a>
+</div>
+
+
+    <script src="https://cdn.jsdelivr.net/gh/fyxemmmm/fyxemmmm.github.io/libs/materialize/materialize.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/fyxemmmm/fyxemmmm.github.io/libs/masonry/masonry.pkgd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/fyxemmmm/fyxemmmm.github.io/libs/aos/aos.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/fyxemmmm/fyxemmmm.github.io/libs/scrollprogress/scrollProgress.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/fyxemmmm/fyxemmmm.github.io/libs/lightGallery/js/lightgallery-all.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/fyxemmmm/fyxemmmm.github.io/js/matery.js"></script>
+
+    <!-- Baidu Analytics -->
+
+    <!-- Baidu Push -->
+
+    
+    
+
+    
+
+    
+
+    <!--腾讯兔小巢-->
+    
+    
+
+    
+
+    
+
+    
+    <script src="https://cdn.jsdelivr.net/gh/fyxemmmm/fyxemmmm.github.io/libs/instantpage/instantpage.js" type="module"></script>
+    
+
+</body>
+
+</html>
