@@ -8,7 +8,7 @@ cover: false
 coverImg: 
 toc: true
 mathjax: false
-summary: Rust 所有权、借用等关键技术点
+summary: Rust 所有权、借用等核心技术点
 categories: rust
 tags:
   - 所有权
