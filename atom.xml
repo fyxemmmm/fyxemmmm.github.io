@@ -6,7 +6,7 @@
   <link href="https://fyxemmmm.github.io/atom.xml" rel="self"/>
   
   <link href="https://fyxemmmm.github.io/"/>
-  <updated>2021-10-03T14:36:58.423Z</updated>
+  <updated>2021-10-19T11:55:05.145Z</updated>
   <id>https://fyxemmmm.github.io/</id>
   
   <author>
@@ -15,6 +15,89 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>limit, offset 为什么会慢?</title>
+    <link href="https://fyxemmmm.github.io/2021/10/19/mysql-fen-ye-cha-xun/"/>
+    <id>https://fyxemmmm.github.io/2021/10/19/mysql-fen-ye-cha-xun/</id>
+    <published>2021-10-19T11:49:06.000Z</published>
+    <updated>2021-10-19T11:55:05.145Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h2 id=&quot;从一个问题说起&quot;&gt;&lt;a href=&quot;#从一个问题说起&quot; class=&quot;headerlink&quot; title=&quot;从一个问题说起&quot;&gt;&lt;/a&gt;从一个问题说起&lt;/h2&gt;&lt;p&gt;五年前发现分页场景下，mysql请求速度非常慢。数据量只有10w的情况下，select xx</summary>
+        
+      
+    
+    
+    
+    <category term="mysql" scheme="https://fyxemmmm.github.io/categories/mysql/"/>
+    
+    
+    <category term="limit" scheme="https://fyxemmmm.github.io/tags/limit/"/>
+    
+    <category term="offset" scheme="https://fyxemmmm.github.io/tags/offset/"/>
+    
+    <category term="分页" scheme="https://fyxemmmm.github.io/tags/%E5%88%86%E9%A1%B5/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>简单说说 [跨域请求]</title>
+    <link href="https://fyxemmmm.github.io/2021/10/14/cors/"/>
+    <id>https://fyxemmmm.github.io/2021/10/14/cors/</id>
+    <published>2021-10-14T09:48:27.000Z</published>
+    <updated>2021-10-19T11:51:16.186Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;“前端如何解决跨域问题？” 这个是前段在知乎看到的一个提问，这几乎是做前端都会遇到的一个问题，产生的情况可能会很多，解决一个问题还是要先了解下为什么会产生这样问题，学习最好的方法就是结合一些实际的案例来学习，理解和掌握也会更加的深刻，本文结合 Node.js 写一些</summary>
+        
+      
+    
+    
+    
+    <category term="协议" scheme="https://fyxemmmm.github.io/categories/%E5%8D%8F%E8%AE%AE/"/>
+    
+    
+    <category term="http" scheme="https://fyxemmmm.github.io/tags/http/"/>
+    
+    <category term="cors" scheme="https://fyxemmmm.github.io/tags/cors/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>kubernetes nfs-provider</title>
+    <link href="https://fyxemmmm.github.io/2021/10/09/k8s-nfs-provider/"/>
+    <id>https://fyxemmmm.github.io/2021/10/09/k8s-nfs-provider/</id>
+    <published>2021-10-09T09:38:26.000Z</published>
+    <updated>2021-10-19T11:51:19.654Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h3 id=&quot;一、什么是StorageClass&quot;&gt;&lt;a href=&quot;#一、什么是StorageClass&quot; class=&quot;headerlink&quot; title=&quot;一、什么是StorageClass&quot;&gt;&lt;/a&gt;一、什么是StorageClass&lt;/h3&gt;&lt;pre</summary>
+        
+      
+    
+    
+    
+    <category term="kubernetes" scheme="https://fyxemmmm.github.io/categories/kubernetes/"/>
+    
+    
+    <category term="kubernetes" scheme="https://fyxemmmm.github.io/tags/kubernetes/"/>
+    
+    <category term="StorageClass" scheme="https://fyxemmmm.github.io/tags/StorageClass/"/>
+    
+  </entry>
   
   <entry>
     <title>golang pprof 实操</title>
@@ -76,7 +159,7 @@
     <link href="https://fyxemmmm.github.io/2021/09/26/rust-suo-you-quan/"/>
     <id>https://fyxemmmm.github.io/2021/09/26/rust-suo-you-quan/</id>
     <published>2021-09-26T13:44:34.000Z</published>
-    <updated>2021-10-03T13:55:30.729Z</updated>
+    <updated>2021-10-19T10:50:37.658Z</updated>
     
     
       
@@ -478,82 +561,6 @@
     <category term="ca" scheme="https://fyxemmmm.github.io/tags/ca/"/>
     
     <category term="自签" scheme="https://fyxemmmm.github.io/tags/%E8%87%AA%E7%AD%BE/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>图解http协议</title>
-    <link href="https://fyxemmmm.github.io/2021/08/19/yi-zhang-tu-dai-ni-li-jie-http/"/>
-    <id>https://fyxemmmm.github.io/2021/08/19/yi-zhang-tu-dai-ni-li-jie-http/</id>
-    <published>2021-08-19T13:33:03.000Z</published>
-    <updated>2021-09-02T16:31:34.255Z</updated>
-    
-    
-      
-      
-        
-        
-    <summary type="html">&lt;h2 id=&quot;一张图带你弄懂http协议&quot;&gt;&lt;a href=&quot;#一张图带你弄懂http协议&quot; class=&quot;headerlink&quot; title=&quot;一张图带你弄懂http协议&quot;&gt;&lt;/a&gt;一张图带你弄懂http协议&lt;/h2&gt;&lt;p&gt;&lt;img</summary>
-        
-      
-    
-    
-    
-    <category term="协议" scheme="https://fyxemmmm.github.io/categories/%E5%8D%8F%E8%AE%AE/"/>
-    
-    
-    <category term="http" scheme="https://fyxemmmm.github.io/tags/http/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>硬核! 图解 golang [select case] 原理</title>
-    <link href="https://fyxemmmm.github.io/2021/08/18/ying-he-golang-select-yuan-li/"/>
-    <id>https://fyxemmmm.github.io/2021/08/18/ying-he-golang-select-yuan-li/</id>
-    <published>2021-08-18T13:30:03.000Z</published>
-    <updated>2021-09-19T04:55:37.995Z</updated>
-    
-    
-      
-      
-        
-        
-    <summary type="html">&lt;p&gt;Go 的select语句是一种仅能用于channl发送和接收消息的专用语句，此语句运行期间是阻塞的；当select中没有case语句的时候，会阻塞当前的groutine。所以，有人也会说select是用来阻塞监听goroutine的。&lt;br&gt;</summary>
-        
-      
-    
-    
-    
-    <category term="golang" scheme="https://fyxemmmm.github.io/categories/golang/"/>
-    
-    
-    <category term="golang" scheme="https://fyxemmmm.github.io/tags/golang/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>kafka原理分析</title>
-    <link href="https://fyxemmmm.github.io/2021/08/17/kafka/"/>
-    <id>https://fyxemmmm.github.io/2021/08/17/kafka/</id>
-    <published>2021-08-17T13:57:35.000Z</published>
-    <updated>2021-08-29T07:10:39.268Z</updated>
-    
-    
-      
-      
-        
-        
-    <summary type="html">&lt;p&gt;&lt;strong&gt;Kafka痛点分析&amp;amp;核心目标&lt;/strong&gt;&lt;/p&gt;
-&lt;p&gt;当Kafka支撑的实时作业数量很多，单机承载的Topic和Partition数量很大。这种场景下很容易出现的问题是：同一台机器上不同Partition间竞争PageCache资源，相互影响</summary>
-        
-      
-    
-    
-    
-    <category term="消息队列" scheme="https://fyxemmmm.github.io/categories/%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/"/>
-    
-    
-    <category term="kafka" scheme="https://fyxemmmm.github.io/tags/kafka/"/>
     
   </entry>
   
