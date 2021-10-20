@@ -6,7 +6,7 @@
   <link href="https://fyxemmmm.github.io/atom.xml" rel="self"/>
   
   <link href="https://fyxemmmm.github.io/"/>
-  <updated>2021-10-19T11:55:05.145Z</updated>
+  <updated>2021-10-20T05:58:20.029Z</updated>
   <id>https://fyxemmmm.github.io/</id>
   
   <author>
@@ -17,11 +17,11 @@
   <generator uri="https://hexo.io/">Hexo</generator>
   
   <entry>
-    <title>limit, offset 为什么会慢?</title>
+    <title>limit &amp; offset 为什么会慢</title>
     <link href="https://fyxemmmm.github.io/2021/10/19/mysql-fen-ye-cha-xun/"/>
     <id>https://fyxemmmm.github.io/2021/10/19/mysql-fen-ye-cha-xun/</id>
     <published>2021-10-19T11:49:06.000Z</published>
-    <updated>2021-10-19T11:55:05.145Z</updated>
+    <updated>2021-10-20T05:58:20.029Z</updated>
     
     
       
@@ -46,11 +46,11 @@
   </entry>
   
   <entry>
-    <title>简单说说 [跨域请求]</title>
+    <title>简单说说「跨域请求」</title>
     <link href="https://fyxemmmm.github.io/2021/10/14/cors/"/>
     <id>https://fyxemmmm.github.io/2021/10/14/cors/</id>
     <published>2021-10-14T09:48:27.000Z</published>
-    <updated>2021-10-19T11:51:16.186Z</updated>
+    <updated>2021-10-20T05:58:36.656Z</updated>
     
     
       

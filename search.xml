@@ -4,7 +4,7 @@
   
     
     <entry>
-      <title>limit, offset 为什么会慢?</title>
+      <title>limit &amp; offset 为什么会慢</title>
       <link href="/2021/10/19/mysql-fen-ye-cha-xun/"/>
       <url>/2021/10/19/mysql-fen-ye-cha-xun/</url>
       
@@ -33,7 +33,7 @@
     
     
     <entry>
-      <title>简单说说 [跨域请求]</title>
+      <title>简单说说「跨域请求」</title>
       <link href="/2021/10/14/cors/"/>
       <url>/2021/10/14/cors/</url>
       
