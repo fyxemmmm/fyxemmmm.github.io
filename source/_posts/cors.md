@@ -1,8 +1,8 @@
 ---
-title: 简单说说 [跨域请求]
+title: 简单说说「跨域请求」
 date: 2021-10-14 17:48:27
 author: yuxuan
-img: https://image.fyxemmmm.cn/blog/images/ins-160.jpg
+img: https://image.fyxemmmm.cn/blog/images/ins-175.jpg
 top: false
 hide: false
 cover: false

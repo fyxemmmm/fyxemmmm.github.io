@@ -1,5 +1,5 @@
 ---
-title: limit, offset 为什么会慢?
+title: limit & offset 为什么会慢
 date: 2021-10-19 19:49:06
 author: yuxuan
 img: https://image.fyxemmmm.cn/blog/images/ins-193.jpg
@@ -9,7 +9,7 @@ cover: false
 coverImg: 
 toc: true
 mathjax: false
-summary: emmmm 分页到底做错了什么
+summary: 一探究竟分页查询
 categories: mysql
 tags:
   - limit
