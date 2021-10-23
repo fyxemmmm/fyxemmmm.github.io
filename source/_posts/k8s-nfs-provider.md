@@ -102,6 +102,9 @@ rules:
   - apiGroups: [""]
     resources: ["events"]
     verbs: ["create", "update", "patch"]
+  - apiGroups: [""]
+    resources: ["endpoints"]
+    verbs: ["get", "list", "watch", "create", "update", "patch"]
 ---
 kind: ClusterRoleBinding
 apiVersion: rbac.authorization.k8s.io/v1
@@ -179,9 +182,6 @@ spec:
       app: nfs-client-provisioner
   strategy:
     type: Recreate
-  selector:
-    matchLabels:
-      app: nfs-client-provisioner
   template:
     metadata:
       labels:
@@ -550,3 +550,5 @@ reclaimPolicy: Retain   #只有NFS 和hostPth支持两种回收策略
 ```
 
 参考文档:https://github.com/kubernetes-incubator/external-storage/tree/master/nfs-client
+
+> issue: https://github.com/kubernetes-sigs/nfs-subdir-external-provisioner/issues/25
