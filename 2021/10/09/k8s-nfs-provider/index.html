@@ -501,6 +501,9 @@ Export PATH: /data/volumes/<span aria-hidden="true" class="line-numbers-rows"><s
   <span class="token punctuation">-</span> <span class="token key atrule">apiGroups</span><span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token string">""</span><span class="token punctuation">]</span>
     <span class="token key atrule">resources</span><span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token string">"events"</span><span class="token punctuation">]</span>
     <span class="token key atrule">verbs</span><span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token string">"create"</span><span class="token punctuation">,</span> <span class="token string">"update"</span><span class="token punctuation">,</span> <span class="token string">"patch"</span><span class="token punctuation">]</span>
+  <span class="token punctuation">-</span> <span class="token key atrule">apiGroups</span><span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token string">""</span><span class="token punctuation">]</span>
+    <span class="token key atrule">resources</span><span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token string">"endpoints"</span><span class="token punctuation">]</span>
+    <span class="token key atrule">verbs</span><span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token string">"get"</span><span class="token punctuation">,</span> <span class="token string">"list"</span><span class="token punctuation">,</span> <span class="token string">"watch"</span><span class="token punctuation">,</span> <span class="token string">"create"</span><span class="token punctuation">,</span> <span class="token string">"update"</span><span class="token punctuation">,</span> <span class="token string">"patch"</span><span class="token punctuation">]</span>
 <span class="token punctuation">---</span>
 <span class="token key atrule">kind</span><span class="token punctuation">:</span> ClusterRoleBinding
 <span class="token key atrule">apiVersion</span><span class="token punctuation">:</span> rbac.authorization.k8s.io/v1
@@ -539,7 +542,7 @@ Export PATH: /data/volumes/<span aria-hidden="true" class="line-numbers-rows"><s
 <span class="token key atrule">roleRef</span><span class="token punctuation">:</span>
   <span class="token key atrule">kind</span><span class="token punctuation">:</span> Role
   <span class="token key atrule">name</span><span class="token punctuation">:</span> leader<span class="token punctuation">-</span>locking<span class="token punctuation">-</span>nfs<span class="token punctuation">-</span>client<span class="token punctuation">-</span>provisioner
-  <span class="token key atrule">apiGroup</span><span class="token punctuation">:</span> rbac.authorization.k8s.io<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+  <span class="token key atrule">apiGroup</span><span class="token punctuation">:</span> rbac.authorization.k8s.io<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
 
 
@@ -568,9 +571,6 @@ Export PATH: /data/volumes/<span aria-hidden="true" class="line-numbers-rows"><s
       <span class="token key atrule">app</span><span class="token punctuation">:</span> nfs<span class="token punctuation">-</span>client<span class="token punctuation">-</span>provisioner
   <span class="token key atrule">strategy</span><span class="token punctuation">:</span>
     <span class="token key atrule">type</span><span class="token punctuation">:</span> Recreate
-  <span class="token key atrule">selector</span><span class="token punctuation">:</span>
-    <span class="token key atrule">matchLabels</span><span class="token punctuation">:</span>
-      <span class="token key atrule">app</span><span class="token punctuation">:</span> nfs<span class="token punctuation">-</span>client<span class="token punctuation">-</span>provisioner
   <span class="token key atrule">template</span><span class="token punctuation">:</span>
     <span class="token key atrule">metadata</span><span class="token punctuation">:</span>
       <span class="token key atrule">labels</span><span class="token punctuation">:</span>
@@ -594,7 +594,7 @@ Export PATH: /data/volumes/<span aria-hidden="true" class="line-numbers-rows"><s
         <span class="token punctuation">-</span> <span class="token key atrule">name</span><span class="token punctuation">:</span> nfs<span class="token punctuation">-</span>client<span class="token punctuation">-</span>root
           <span class="token key atrule">nfs</span><span class="token punctuation">:</span>
             <span class="token key atrule">server</span><span class="token punctuation">:</span> 172.16.155.227  <span class="token comment">#NFS Server IP地址</span>
-            <span class="token key atrule">path</span><span class="token punctuation">:</span> /data/volumes     <span class="token comment">#NFS 挂载卷</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+            <span class="token key atrule">path</span><span class="token punctuation">:</span> /data/volumes     <span class="token comment">#NFS 挂载卷</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
 
 
@@ -843,6 +843,9 @@ managed-nfs-storage   qgg-nfs-storage   20h<span aria-hidden="true" class="line-
 <h6 id="5-当删除PersistentVolumeClaim-PVC-会发生什么"><a href="#5-当删除PersistentVolumeClaim-PVC-会发生什么" class="headerlink" title="5.当删除PersistentVolumeClaim(PVC)会发生什么"></a>5.当删除PersistentVolumeClaim(PVC)会发生什么</h6><pre class="line-numbers language-none"><code class="language-none">如果一个卷是动态配置的卷，则默认的回收策略为“删除”。这意味着，在默认的情况下，当PVC被删除时，基础的PV和对应的存储也会被删除。如果需要保留存储在卷上的数据，则必须在PV被设置之后将回收策略从delete更改为retain。<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 
 <p>参考文档:<a target="_blank" rel="noopener" href="https://github.com/kubernetes-incubator/external-storage/tree/master/nfs-client">https://github.com/kubernetes-incubator/external-storage/tree/master/nfs-client</a></p>
+<blockquote>
+<p>issue: <a target="_blank" rel="noopener" href="https://github.com/kubernetes-sigs/nfs-subdir-external-provisioner/issues/25">https://github.com/kubernetes-sigs/nfs-subdir-external-provisioner/issues/25</a></p>
+</blockquote>
 
                 
             </div>
