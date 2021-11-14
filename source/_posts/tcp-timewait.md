@@ -2,7 +2,7 @@
 title: 深入理解 tcp timewait
 date: 2021-08-17 21:26:15
 author: yuxuan
-img: https://image.fyxemmmm.cn/blog/images/djsy.jpg
+img: https://image.fyxemmmm.cn/blog/images/ins-148.jpg
 top: true
 hide: false
 cover: false
