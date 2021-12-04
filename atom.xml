@@ -6,7 +6,7 @@
   <link href="https://fyxemmmm.github.io/atom.xml" rel="self"/>
   
   <link href="https://fyxemmmm.github.io/"/>
-  <updated>2021-11-14T06:55:15.796Z</updated>
+  <updated>2021-12-04T09:39:04.891Z</updated>
   <id>https://fyxemmmm.github.io/</id>
   
   <author>
@@ -17,11 +17,96 @@
   <generator uri="https://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>Golang字符串底层原理</title>
+    <link href="https://fyxemmmm.github.io/2021/12/04/zi-fu-chuan-di-ceng-yuan-li/"/>
+    <id>https://fyxemmmm.github.io/2021/12/04/zi-fu-chuan-di-ceng-yuan-li/</id>
+    <published>2021-12-04T03:12:30.000Z</published>
+    <updated>2021-12-04T09:39:04.891Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;string 是 Go 语言的基础类型，在实际项目中针对字符串的各种操作使用频率也较高。本文就介绍一下在使用 string 时容易犯的一些错误以及如何避免。&lt;/p&gt;
+&lt;h4 id=&quot;&quot;&gt;&lt;a href=&quot;#&quot; class=&quot;headerlink&quot;</summary>
+        
+      
+    
+    
+    
+    <category term="golang" scheme="https://fyxemmmm.github.io/categories/golang/"/>
+    
+    
+    <category term="utf-8" scheme="https://fyxemmmm.github.io/tags/utf-8/"/>
+    
+    <category term="字符串" scheme="https://fyxemmmm.github.io/tags/%E5%AD%97%E7%AC%A6%E4%B8%B2/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>线程间的资源共享</title>
+    <link href="https://fyxemmmm.github.io/2021/11/27/xian-cheng-gong-xiang-liao-shi-me/"/>
+    <id>https://fyxemmmm.github.io/2021/11/27/xian-cheng-gong-xiang-liao-shi-me/</id>
+    <published>2021-11-27T09:35:36.000Z</published>
+    <updated>2021-12-04T09:38:23.944Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;进程和线程这两个话题是程序员绕不开的，操作系统提供的这两个抽象概念实在是太重要了。&lt;/p&gt;
+&lt;p&gt;关于进程和线程有一个&lt;strong&gt;极其经典&lt;/strong&gt;的问题，那就是进程和线程的区别是什么？相信很多同学对答案似懂非懂。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;记住了不一定真懂</summary>
+        
+      
+    
+    
+    
+    <category term="操作系统" scheme="https://fyxemmmm.github.io/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/"/>
+    
+    
+    <category term="线程" scheme="https://fyxemmmm.github.io/tags/%E7%BA%BF%E7%A8%8B/"/>
+    
+    <category term="共享组员" scheme="https://fyxemmmm.github.io/tags/%E5%85%B1%E4%BA%AB%E7%BB%84%E5%91%98/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>进程、线程切换的区别</title>
+    <link href="https://fyxemmmm.github.io/2021/11/20/jin-cheng-xian-cheng-qie-huan-qu-bie/"/>
+    <id>https://fyxemmmm.github.io/2021/11/20/jin-cheng-xian-cheng-qie-huan-qu-bie/</id>
+    <published>2021-11-20T09:14:32.000Z</published>
+    <updated>2021-12-04T09:17:24.717Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;注意这个题目问的是进程&lt;strong&gt;切换&lt;/strong&gt;与线程&lt;strong&gt;切换&lt;/strong&gt;的区别，不是进程与线程的区别。当然这里的&lt;strong&gt;线程指的是同一个进程中的线程&lt;/strong&gt;。&lt;/p&gt;
+&lt;p&gt;这个问题能很好的考察面试者对进程和线程的理解深度，</summary>
+        
+      
+    
+    
+    
+    <category term="操作系统" scheme="https://fyxemmmm.github.io/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/"/>
+    
+    
+    <category term="线程" scheme="https://fyxemmmm.github.io/tags/%E7%BA%BF%E7%A8%8B/"/>
+    
+    <category term="进程" scheme="https://fyxemmmm.github.io/tags/%E8%BF%9B%E7%A8%8B/"/>
+    
+  </entry>
+  
+  <entry>
     <title>深入理解 tcp rst 标志位</title>
     <link href="https://fyxemmmm.github.io/2021/11/14/tcp-rst/"/>
     <id>https://fyxemmmm.github.io/2021/11/14/tcp-rst/</id>
     <published>2021-11-14T06:49:06.000Z</published>
-    <updated>2021-11-14T06:55:15.796Z</updated>
+    <updated>2021-11-14T06:57:22.906Z</updated>
     
     
       
@@ -485,85 +570,6 @@
     <category term="golang" scheme="https://fyxemmmm.github.io/tags/golang/"/>
     
     <category term="内存管理" scheme="https://fyxemmmm.github.io/tags/%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>一文带你搞懂 golang channel 实现原理</title>
-    <link href="https://fyxemmmm.github.io/2021/09/01/channel-shi-xian-yuan-li/"/>
-    <id>https://fyxemmmm.github.io/2021/09/01/channel-shi-xian-yuan-li/</id>
-    <published>2021-08-31T16:11:55.000Z</published>
-    <updated>2021-11-14T06:52:17.783Z</updated>
-    
-    
-      
-      
-        
-        
-    <summary type="html">&lt;h1 id=&quot;Section1-channel使用实例&quot;&gt;&lt;a href=&quot;#Section1-channel使用实例&quot; class=&quot;headerlink&quot; title=&quot;Section1 channel使用实例&quot;&gt;&lt;/a&gt;Section1</summary>
-        
-      
-    
-    
-    
-    <category term="golang" scheme="https://fyxemmmm.github.io/categories/golang/"/>
-    
-    
-    <category term="golang" scheme="https://fyxemmmm.github.io/tags/golang/"/>
-    
-    <category term="channel" scheme="https://fyxemmmm.github.io/tags/channel/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>golang [ 内存管理 ]</title>
-    <link href="https://fyxemmmm.github.io/2021/08/27/golang-nei-cun-guan-li/"/>
-    <id>https://fyxemmmm.github.io/2021/08/27/golang-nei-cun-guan-li/</id>
-    <published>2021-08-27T13:41:26.000Z</published>
-    <updated>2021-09-02T16:33:43.710Z</updated>
-    
-    
-      
-      
-        
-        
-    <summary type="html">&lt;h2 id=&quot;引言&quot;&gt;&lt;a href=&quot;#引言&quot; class=&quot;headerlink&quot; title=&quot;引言&quot;&gt;&lt;/a&gt;引言&lt;/h2&gt;&lt;p&gt;要搞明白 Go 语言的内存管理，就必须先理解操作系统以及机器硬件是如何管理内存的。因为 Go</summary>
-        
-      
-    
-    
-    
-    <category term="golang" scheme="https://fyxemmmm.github.io/categories/golang/"/>
-    
-    
-    <category term="golang" scheme="https://fyxemmmm.github.io/tags/golang/"/>
-    
-    <category term="内存管理" scheme="https://fyxemmmm.github.io/tags/%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>http2详解 [下]</title>
-    <link href="https://fyxemmmm.github.io/2021/08/26/http2-xiang-jie-xia/"/>
-    <id>https://fyxemmmm.github.io/2021/08/26/http2-xiang-jie-xia/</id>
-    <published>2021-08-26T13:11:57.000Z</published>
-    <updated>2021-08-29T07:16:04.765Z</updated>
-    
-    
-      
-      
-        
-        
-    <summary type="html">&lt;h1 id=&quot;8-http2的世界&quot;&gt;&lt;a href=&quot;#8-http2的世界&quot; class=&quot;headerlink&quot; title=&quot;8. http2的世界&quot;&gt;&lt;/a&gt;8.</summary>
-        
-      
-    
-    
-    
-    <category term="协议" scheme="https://fyxemmmm.github.io/categories/%E5%8D%8F%E8%AE%AE/"/>
-    
-    
-    <category term="http2" scheme="https://fyxemmmm.github.io/tags/http2/"/>
     
   </entry>
   
