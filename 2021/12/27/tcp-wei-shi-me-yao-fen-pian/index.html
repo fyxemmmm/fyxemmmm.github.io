@@ -544,7 +544,7 @@ p2p0: flags=8843&lt;UP,BROADCAST,RUNNING,SIMPLEX,MULTICAST&gt; mtu 2304
 <li>因为TCP的可靠性，会尝试重传这个消息，同时以这个新MTU值计算出MSS进行分段，此时新的IP包就可以顺利被刚才的路由器转发。</li>
 <li>如果路径上还有更小的MTU的路由器，那上面发生的事情还会再发生一次。</li>
 </ul>
-<p><img src="https://mmbiz.qpic.cn/mmbiz_gif/FmVWPHrDdnkibqoGDoqpbongQDojtvSCsMjznqsW0ia89nzNg41m81lAzPBWOHfDp1GP4cKua6Un8noZEFZNwzeA/640?wx_fmt=gif&amp;tp=webp&amp;wxfrom=5&amp;wx_lazy=1" alt="获得pmtu后的TCP重传"></p>
+<p><img src="https://image.fyxemmmm.cn/blog/images/dir1/tcp03-12.jpg" alt="获得pmtu后的TCP重传"></p>
 <h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><ul>
 <li>数据在TCP分段，在IP层就不需要分片，同时发生重传的时候只重传分段后的小份数据</li>
 <li>TCP分段时使用MSS，IP分片时使用MTU</li>
