@@ -4,7 +4,7 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="keywords" content="golang context 实现原理, yuxuanの博客">
+    <meta name="keywords" content="没有accept, 是否能建立tcp?, yuxuanの博客">
     <meta name="description" content="">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
@@ -16,7 +16,7 @@
     <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-    <title>golang context 实现原理 | yuxuanの博客</title>
+    <title>没有accept, 是否能建立tcp? | yuxuanの博客</title>
     <link rel="icon" type="image/png" href="/favicon.png">
 
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/fyxemmmm/fyxemmmm.github.io/libs/awesome/css/all.css">
@@ -269,12 +269,12 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('https://image.fyxemmmm.cn/blog/images/ins-21.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('https://image.fyxemmmm.cn/blog/images/ins-26.jpg')">
     <div class="container" style="right: 0px;left: 0px;">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title">golang context 实现原理</h1>
+                    <h1 class="description center-align post-title">没有accept, 是否能建立tcp?</h1>
                 </div>
             </div>
         </div>
@@ -390,12 +390,16 @@
                     
                     <div class="article-tag">
                         
-                            <a href="/tags/golang/">
-                                <span class="chip bg-color">golang</span>
+                            <a href="/tags/tcp/">
+                                <span class="chip bg-color">tcp</span>
                             </a>
                         
-                            <a href="/tags/context/">
-                                <span class="chip bg-color">context</span>
+                            <a href="/tags/%E5%8D%8F%E8%AE%AE/">
+                                <span class="chip bg-color">协议</span>
+                            </a>
+                        
+                            <a href="/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/">
+                                <span class="chip bg-color">操作系统</span>
                             </a>
                         
                     </div>
@@ -406,8 +410,8 @@
                     <div class="post-cate">
                         <i class="fas fa-bookmark fa-fw icon-category"></i>
                         
-                            <a href="/categories/golang/" class="post-category">
-                                golang
+                            <a href="/categories/%E5%8D%8F%E8%AE%AE/" class="post-category">
+                                协议
                             </a>
                         
                     </div>
@@ -419,7 +423,7 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
-                    2021-08-14
+                    2021-12-15
                 </div>
                 
 
@@ -430,7 +434,7 @@
                 
                 <div class="info-break-policy">
                     <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
-                    6 分
+                    13 分
                 </div>
                 
 
@@ -448,128 +452,161 @@
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h2 id="0-引言"><a href="#0-引言" class="headerlink" title="0 引言"></a>0 引言</h2><p>本文主要谈谈以下几个方面的内容：</p>
-<ol>
-<li>context的使用。</li>
-<li>context实现原理，哪些是需要注意的地方</li>
-<li>context的最佳实践。</li>
-</ol>
-<p><code>context</code>是Go中广泛使用的程序包，由Google官方开发，在1.7版本引入。它用来简化在多个go routine传递上下文数据、(手动/超时)中止routine树等操作，比如，官方http包使用context传递请求的上下文数据，gRpc使用context来终止某个请求产生的routine树。由于它使用简单，现在基本成了编写go基础库的通用规范。笔者在使用context上有一些经验，遂分享下。</p>
-<p>本文主要谈谈以下几个方面的内容：</p>
-<ol>
-<li>context的使用。</li>
-<li>context实现原理，哪些是需要注意的地方。</li>
-<li>在实践中遇到的问题，分析问题产生的原因。</li>
-</ol>
-<h2 id="1-使用"><a href="#1-使用" class="headerlink" title="1 使用"></a>1 使用</h2><h3 id="核心接口Context"><a href="#核心接口Context" class="headerlink" title="核心接口Context"></a>核心接口Context</h3><pre class="line-numbers language-go" data-language="go"><code class="language-go"><span class="token keyword">type</span> Context <span class="token keyword">interface</span> <span class="token punctuation">{</span>
-    <span class="token comment">// Deadline returns the time when work done on behalf of this context</span>
-    <span class="token comment">// should be canceled. Deadline returns ok==false when no deadline is</span>
-    <span class="token comment">// set.</span>
-    <span class="token function">Deadline</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">(</span>deadline time<span class="token punctuation">.</span>Time<span class="token punctuation">,</span> ok <span class="token builtin">bool</span><span class="token punctuation">)</span>
-    <span class="token comment">// Done returns a channel that's closed when work done on behalf of this</span>
-    <span class="token comment">// context should be canceled.</span>
-    <span class="token function">Done</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">&lt;-</span><span class="token keyword">chan</span> <span class="token keyword">struct</span><span class="token punctuation">{</span><span class="token punctuation">}</span>
-    <span class="token comment">// Err returns a non-nil error value after Done is closed.</span>
-    <span class="token function">Err</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token builtin">error</span>
-    <span class="token comment">// Value returns the value associated with this context for key.</span>
-    <span class="token function">Value</span><span class="token punctuation">(</span>key <span class="token keyword">interface</span><span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">)</span> <span class="token keyword">interface</span><span class="token punctuation">{</span><span class="token punctuation">}</span>
-<span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+                <p><img src="https://image.fyxemmmm.cn/blog/images/dir1/tcp01-0.gif" alt="握手建立连接流程"></p>
+<p>上面这个动图，是我们平时客户端和服务端建立连接时的代码流程。</p>
+<p>对应的是下面一段简化过的服务端伪代码。</p>
+<pre class="line-numbers language-go" data-language="go"><code class="language-go"><span class="token builtin">int</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span class="token punctuation">{</span>
+    <span class="token comment">/*Step 1: 创建服务器端监听socket描述符listen_fd*/</span>    
+    listen_fd <span class="token operator">=</span> <span class="token function">socket</span><span class="token punctuation">(</span>AF_INET<span class="token punctuation">,</span> SOCK_STREAM<span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-<p>简单介绍一下其中的方法：<br>- <code>Done</code>会返回一个channel，当该context被取消的时候，该channel会被关闭，同时对应的使用该context的routine也应该结束并返回。<br>- <code>Context</code>中的方法是协程安全的，这也就代表了在父routine中创建的context，可以传递给任意数量的routine并让他们同时访问。<br>- <code>Deadline</code>会返回一个超时时间，routine获得了超时时间后，可以对某些io操作设定超时时间。<br>- <code>Value</code>可以让routine共享一些数据，当然获得数据是协程安全的。</p>
-<p>在请求处理的过程中，会调用各层的函数，每层的函数会创建自己的routine，是一个routine树。所以，context也应该反映并实现成一棵树。</p>
-<p>要创建context树，第一步是要有一个根结点。<code>context.Background</code>函数的返回值是一个空的context，经常作为树的根结点，它一般由接收请求的第一个routine创建，不能被取消、没有值、也没有过期时间。</p>
-<pre class="line-numbers language-go" data-language="go"><code class="language-go"><span class="token keyword">func</span> <span class="token function">Background</span><span class="token punctuation">(</span><span class="token punctuation">)</span> Context<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+    <span class="token comment">/*Step 2: bind绑定服务器端的IP和端口，所有客户端都向这个IP和端口发送和请求数据*/</span>    
+    <span class="token function">bind</span><span class="token punctuation">(</span>listen_fd<span class="token punctuation">,</span> xxx<span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-<p>之后该怎么创建其它的子孙节点呢？context包为我们提供了以下函数：</p>
-<pre class="line-numbers language-go" data-language="go"><code class="language-go"><span class="token keyword">func</span> <span class="token function">WithCancel</span><span class="token punctuation">(</span>parent Context<span class="token punctuation">)</span> <span class="token punctuation">(</span>ctx Context<span class="token punctuation">,</span> cancel CancelFunc<span class="token punctuation">)</span>
-<span class="token keyword">func</span> <span class="token function">WithDeadline</span><span class="token punctuation">(</span>parent Context<span class="token punctuation">,</span> deadline time<span class="token punctuation">.</span>Time<span class="token punctuation">)</span> <span class="token punctuation">(</span>Context<span class="token punctuation">,</span> CancelFunc<span class="token punctuation">)</span>
-<span class="token keyword">func</span> <span class="token function">WithTimeout</span><span class="token punctuation">(</span>parent Context<span class="token punctuation">,</span> timeout time<span class="token punctuation">.</span>Duration<span class="token punctuation">)</span> <span class="token punctuation">(</span>Context<span class="token punctuation">,</span> CancelFunc<span class="token punctuation">)</span>
-<span class="token keyword">func</span> <span class="token function">WithValue</span><span class="token punctuation">(</span>parent Context<span class="token punctuation">,</span> key <span class="token keyword">interface</span><span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">,</span> val <span class="token keyword">interface</span><span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">)</span> Context<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+    <span class="token comment">/*Step 3: 服务端开启监听*/</span>    
+    <span class="token function">listen</span><span class="token punctuation">(</span>listen_fd<span class="token punctuation">,</span> <span class="token number">128</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-<p>这四个函数的第一个参数都是父context，返回一个Context类型的值，这样就层层创建出不同的节点。子节点是从复制父节点得到的，并且根据接收的函数参数保存子节点的一些状态值，然后就可以将它传递给下层的routine了。</p>
-<p><code>WithCancel</code>函数，返回一个额外的CancelFunc函数类型变量，该函数类型的定义为：</p>
-<pre class="line-numbers language-go" data-language="go"><code class="language-go"><span class="token keyword">type</span> CancelFunc <span class="token keyword">func</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+    <span class="token comment">/*Step 4: 服务器等待客户端的链接，返回值cfd为客户端的socket描述符*/</span>    
+    cfd <span class="token operator">=</span> <span class="token function">accept</span><span class="token punctuation">(</span>listen_fd<span class="token punctuation">,</span> xxx<span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-<p>调用CancelFunc对象将撤销对应的Context对象，这样父结点的所在的环境中，获得了撤销子节点context的权利，当触发某些条件时，可以调用CancelFunc对象来终止子结点树的所有routine。在子节点的routine中，需要用类似下面的代码来判断何时退出routine：</p>
-<pre class="line-numbers language-go" data-language="go"><code class="language-go"><span class="token keyword">select</span> <span class="token punctuation">{</span>
-    <span class="token keyword">case</span> <span class="token operator">&lt;-</span>cxt<span class="token punctuation">.</span><span class="token function">Done</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
-        <span class="token comment">// do some cleaning and return</span>
-<span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+      <span class="token comment">/*Step 5: 读取客户端发来的数据*/</span>
+      n <span class="token operator">=</span> <span class="token function">read</span><span class="token punctuation">(</span>cfd<span class="token punctuation">,</span> buf<span class="token punctuation">,</span> <span class="token function">sizeof</span><span class="token punctuation">(</span>buf<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
-<p>根据cxt.Done()判断是否结束。当顶层的Request请求处理结束，或者外部取消了这次请求，就可以cancel掉顶层context，从而使整个请求的routine树得以退出。</p>
-<p><code>WithDeadline</code>和<code>WithTimeout</code>比<code>WithCancel</code>多了一个时间参数，它指示context存活的最长时间。如果超过了过期时间，会自动撤销它的子context。所以context的生命期是由父context的routine和<code>deadline</code>共同决定的。</p>
-<p><code>WithValue</code>返回parent的一个副本，该副本保存了传入的key/value，而调用Context接口的Value(key)方法就可以得到val。注意在同一个context中设置key/value，若key相同，值会被覆盖。</p>
-<h2 id="2-原理"><a href="#2-原理" class="headerlink" title="2 原理"></a>2 原理</h2><h2 id="2-1-上下文数据的存储与查询"><a href="#2-1-上下文数据的存储与查询" class="headerlink" title="2.1 上下文数据的存储与查询"></a>2.1 上下文数据的存储与查询</h2><pre class="line-numbers language-go" data-language="go"><code class="language-go"><span class="token keyword">type</span> valueCtx <span class="token keyword">struct</span> <span class="token punctuation">{</span>
-    Context
-    key<span class="token punctuation">,</span> val <span class="token keyword">interface</span><span class="token punctuation">{</span><span class="token punctuation">}</span>
-<span class="token punctuation">}</span>
+<p>估计大家也是老熟悉这段伪代码了。</p>
+<p>需要注意的是，在执行<code>listen()</code>方法之后还会执行一个<code>accept()</code>方法。</p>
+<p><strong>一般情况</strong>下，如果启动服务器，会发现最后程序会<strong>阻塞在</strong><code>accept()</code>里。</p>
+<p>此时服务端就算ok了，就等客户端了。</p>
+<p>那么，再看下简化过的客户端伪代码。</p>
+<pre class="line-numbers language-go" data-language="go"><code class="language-go"><span class="token builtin">int</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span class="token punctuation">{</span>
+    <span class="token comment">/*Step 1: 创建客户端端socket描述符cfd*/</span>    
+    cfd <span class="token operator">=</span> <span class="token function">socket</span><span class="token punctuation">(</span>AF_INET<span class="token punctuation">,</span> SOCK_STREAM<span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-<span class="token keyword">func</span> <span class="token function">WithValue</span><span class="token punctuation">(</span>parent Context<span class="token punctuation">,</span> key<span class="token punctuation">,</span> val <span class="token keyword">interface</span><span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">)</span> Context <span class="token punctuation">{</span>
-    <span class="token keyword">if</span> key <span class="token operator">==</span> <span class="token boolean">nil</span> <span class="token punctuation">{</span>
-        <span class="token function">panic</span><span class="token punctuation">(</span><span class="token string">"nil key"</span><span class="token punctuation">)</span>
-    <span class="token punctuation">}</span>
-    <span class="token operator">...</span><span class="token operator">...</span>
-    <span class="token keyword">return</span> <span class="token operator">&amp;</span>valueCtx<span class="token punctuation">{</span>parent<span class="token punctuation">,</span> key<span class="token punctuation">,</span> val<span class="token punctuation">}</span>
-<span class="token punctuation">}</span>
+    <span class="token comment">/*Step 2: connect方法,对服务器端的IP和端口号发起连接*/</span>    
+    ret <span class="token operator">=</span> <span class="token function">connect</span><span class="token punctuation">(</span>cfd<span class="token punctuation">,</span> xxxx<span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-<span class="token keyword">func</span> <span class="token punctuation">(</span>c <span class="token operator">*</span>valueCtx<span class="token punctuation">)</span> <span class="token function">Value</span><span class="token punctuation">(</span>key <span class="token keyword">interface</span><span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">)</span> <span class="token keyword">interface</span><span class="token punctuation">{</span><span class="token punctuation">}</span> <span class="token punctuation">{</span>
-    <span class="token keyword">if</span> c<span class="token punctuation">.</span>key <span class="token operator">==</span> key <span class="token punctuation">{</span>
-        <span class="token keyword">return</span> c<span class="token punctuation">.</span>val
-    <span class="token punctuation">}</span>
-    <span class="token keyword">return</span> c<span class="token punctuation">.</span>Context<span class="token punctuation">.</span><span class="token function">Value</span><span class="token punctuation">(</span>key<span class="token punctuation">)</span>
-<span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+    <span class="token comment">/*Step 4: 向服务器端写数据*/</span>
+    <span class="token function">write</span><span class="token punctuation">(</span>cfd<span class="token punctuation">,</span> buf<span class="token punctuation">,</span> <span class="token function">strlen</span><span class="token punctuation">(</span>buf<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
-<p>context上下文数据的存储就像一个树，每个结点只存储一个key/value对。<code>WithValue()</code>保存一个key/value对，它将父context嵌入到新的子context，并在节点中保存了key/value数据。<code>Value()</code>查询key对应的value数据，会从当前context中查询，如果查不到，会递归查询父context中的数据。</p>
-<p>值得注意的是，<strong>context中的上下文数据并不是全局的，它只查询本节点及父节点们的数据，不能查询兄弟节点的数据。</strong></p>
-<h2 id="2-2-手动cancel和超时cancel"><a href="#2-2-手动cancel和超时cancel" class="headerlink" title="2.2 手动cancel和超时cancel"></a>2.2 手动cancel和超时cancel</h2><p><code>cancelCtx</code>中嵌入了父Context，实现了canceler接口：</p>
-<pre class="line-numbers language-go" data-language="go"><code class="language-go"><span class="token keyword">type</span> cancelCtx <span class="token keyword">struct</span> <span class="token punctuation">{</span>
-    Context      <span class="token comment">// 保存parent Context</span>
-    done <span class="token keyword">chan</span> <span class="token keyword">struct</span><span class="token punctuation">{</span><span class="token punctuation">}</span>
-    mu       sync<span class="token punctuation">.</span>Mutex
-    children <span class="token keyword">map</span><span class="token punctuation">[</span>canceler<span class="token punctuation">]</span><span class="token keyword">struct</span><span class="token punctuation">{</span><span class="token punctuation">}</span>
-    err      <span class="token builtin">error</span>
-<span class="token punctuation">}</span>
+<p>客户端比较简单，创建好<code>socket</code>之后，直接就发起<code>connect</code>方法。</p>
+<p>此时回到服务端，会发现<strong>之前一直阻塞的accept方法，返回结果了</strong>。</p>
+<p>这就算两端成功建立好了一条连接。之后就可以愉快的进行读写操作了。</p>
+<p>那么，我们今天的问题是，<strong>如果没有这个accept方法，TCP连接还能建立起来吗？</strong></p>
+<p>其实只要在执行<code>accept()</code> 之前执行一个 <code>sleep(20)</code>，然后立刻执行客户端相关的方法，同时抓个包，就能得出结论。</p>
+<p><img src="https://image.fyxemmmm.cn/blog/images/dir1/tcp01-1.jpg" alt="不执行accept时抓包结果"></p>
+<p>从抓包结果看来，<strong>就算不执行accept()方法，三次握手照常进行，并顺利建立连接。</strong></p>
+<p>更骚气的是，<strong>在服务端执行accept()前，如果客户端发送消息给服务端，服务端是能够正常回复ack确认包的。</strong></p>
+<p>并且，<code>sleep(20)</code>结束后，服务端正常执行<code>accept()</code>，客户端前面发送的消息，还是能正常收到的。</p>
+<p>通过这个现象，我们可以多想想为什么。顺便好好了解下三次握手的细节。</p>
+<h3 id="三次握手的细节分析"><a href="#三次握手的细节分析" class="headerlink" title="三次握手的细节分析"></a>三次握手的细节分析</h3><p>我们先看面试八股文的老股，三次握手。</p>
+<p><img src="https://image.fyxemmmm.cn/blog/images/dir1/tcp01-2.jpg" alt="TCP三次握手"></p>
+<p>服务端代码，对socket执行bind方法可以绑定监听端口，然后执行<code>listen方法</code>后，就会进入监听（<code>LISTEN</code>）状态。内核会为每一个处于<code>LISTEN</code>状态的<code>socket</code> 分配两个队列，分别叫<strong>半连接队列和全连接队列</strong>。</p>
+<p><img src="https://image.fyxemmmm.cn/blog/images/dir1/tcp01-3.jpg" alt="每个listen Socket都有一个全连接和半连接队列"></p>
+<h4 id="半连接队列、全连接队列是什么"><a href="#半连接队列、全连接队列是什么" class="headerlink" title="半连接队列、全连接队列是什么"></a>半连接队列、全连接队列是什么</h4><p><img src="https://image.fyxemmmm.cn/blog/images/dir1/tcp01-4.jpg" alt="半连接队列和全连接队列"></p>
+<ul>
+<li><strong>半连接队列（SYN队列）</strong>，服务端收到<strong>第一次握手</strong>后，会将<code>sock</code>加入到这个队列中，队列内的<code>sock</code>都处于<code>SYN_RECV</code> 状态。</li>
+<li><strong>全连接队列（ACCEPT队列）</strong>，在服务端收到<strong>第三次握手</strong>后，会将半连接队列的<code>sock</code>取出，放到全连接队列中。队列里的<code>sock</code>都处于 <code>ESTABLISHED</code>状态。这里面的连接，就<strong>等着服务端执行accept()后被取出了。</strong></li>
+</ul>
+<p>看到这里，文章开头的问题就有了答案，建立连接的过程中根本不需要<code>accept()</code> 参与， <strong>执行accept()只是为了从全连接队列里取出一条连接。</strong></p>
+<p>我们把话题再重新回到这两个队列上。</p>
+<p>虽然都叫<strong>队列</strong>，但其实<strong>全连接队列（icsk_accept_queue）是个链表</strong>，而<strong>半连接队列（syn_table）是个哈希表</strong>。</p>
+<p><img src="https://image.fyxemmmm.cn/blog/images/dir1/tcp01-5.jpg" alt="半连接全连接队列的内部结构"></p>
+<h4 id="为什么半连接队列要设计成哈希表"><a href="#为什么半连接队列要设计成哈希表" class="headerlink" title="为什么半连接队列要设计成哈希表"></a>为什么半连接队列要设计成哈希表</h4><p>先对比下<strong>全连接里队列</strong>，他本质是个链表，因为也是线性结构，说它是个队列也没毛病。它里面放的都是已经建立完成的连接，这些连接正等待被取走。而服务端取走连接的过程中，并不关心具体是哪个连接，只要是个连接就行，所以直接从队列头取就行了。这个过程算法复杂度为<code>O(1)</code>。</p>
+<p>而<strong>半连接队列</strong>却不太一样，因为队列里的都是不完整的连接，嗷嗷等待着第三次握手的到来。那么现在有一个第三次握手来了，则需要从队列里把相应IP端口的连接取出，<strong>如果半连接队列还是个链表，那我们就需要依次遍历，才能拿到我们想要的那个连接，算法复杂度就是O(n)。</strong></p>
+<p>而如果将半连接队列设计成哈希表，那么查找半连接的算法复杂度就回到<code>O(1)</code>了。</p>
+<p>因此出于效率考虑，全连接队列被设计成链表，而半连接队列被设计为哈希表。</p>
+<h4 id="怎么观察两个队列的大小"><a href="#怎么观察两个队列的大小" class="headerlink" title="怎么观察两个队列的大小"></a>怎么观察两个队列的大小</h4><h5 id="查看全连接队列"><a href="#查看全连接队列" class="headerlink" title="查看全连接队列"></a>查看全连接队列</h5><pre class="line-numbers language-none"><code class="language-none"># ss -lnt
+State      Recv-Q Send-Q     Local Address:Port           Peer Address:Port
+LISTEN     0      128        127.0.0.1:46269              *:*              <span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
 
-<span class="token comment">// A canceler is a context type that can be canceled directly. The</span>
-<span class="token comment">// implementations are *cancelCtx and *timerCtx.</span>
-<span class="token keyword">type</span> canceler <span class="token keyword">interface</span> <span class="token punctuation">{</span>
-    <span class="token function">cancel</span><span class="token punctuation">(</span>removeFromParent <span class="token builtin">bool</span><span class="token punctuation">,</span> err <span class="token builtin">error</span><span class="token punctuation">)</span>
-    <span class="token function">Done</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">&lt;-</span><span class="token keyword">chan</span> <span class="token keyword">struct</span><span class="token punctuation">{</span><span class="token punctuation">}</span>
-<span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>通过<code>ss -lnt</code>命令，可以看到全连接队列的大小，其中<code>Send-Q</code>是指全连接队列的最大值，可以看到我这上面的最大值是<code>128</code>；<code>Recv-Q</code>是指当前的全连接队列的使用值，我这边用了<code>0</code>个，也就是全连接队列里为空，连接都被取出来了。</p>
+<p>当上面<code>Send-Q</code>和<code>Recv-Q</code>数值很接近的时候，那么全连接队列可能已经满了。可以通过下面的命令查看是否发生过队列<strong>溢出</strong>。</p>
+<pre class="line-numbers language-none"><code class="language-none"># netstat -s | grep overflowed
+    4343 times the listen queue of a socket overflowed<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
 
-<p><code>cancelCtx</code>结构体中<code>children</code>保存它的所有<code>子canceler</code>， 当外部触发cancel时，会调用<code>children</code>中的所有<code>cancel()</code>来终止所有的<code>cancelCtx</code>。<code>done</code>用来标识是否已被cancel。当外部触发cancel、或者父Context的channel关闭时，此done也会关闭。</p>
-<pre class="line-numbers language-go" data-language="go"><code class="language-go"><span class="token keyword">type</span> timerCtx <span class="token keyword">struct</span> <span class="token punctuation">{</span>
-    cancelCtx     <span class="token comment">//cancelCtx.Done()关闭的时机：1）用户调用cancel 2）deadline到了 3）父Context的done关闭了</span>
-    timer    <span class="token operator">*</span>time<span class="token punctuation">.</span>Timer
-    deadline time<span class="token punctuation">.</span>Time
-<span class="token punctuation">}</span>
+<p>上面说明发生过<code>4343次</code>全连接队列溢出的情况。这个查看到的是<strong>历史发生过的次数</strong>。</p>
+<p>如果配合使用<code>watch -d</code> 命令，可以自动每<code>2s</code>间隔执行相同命令，还能高亮显示变化的数字部分，如果溢出的数字不断变多，说明<strong>正在发生</strong>溢出的行为。</p>
+<pre class="line-numbers language-none"><code class="language-none"># watch -d 'netstat -s | grep overflowed'
+Every 2.0s: netstat -s | grep overflowed                                Fri Sep 17 09:00:45 2021
 
-<span class="token keyword">func</span> <span class="token function">WithDeadline</span><span class="token punctuation">(</span>parent Context<span class="token punctuation">,</span> deadline time<span class="token punctuation">.</span>Time<span class="token punctuation">)</span> <span class="token punctuation">(</span>Context<span class="token punctuation">,</span> CancelFunc<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-    <span class="token operator">...</span><span class="token operator">...</span>
-    c <span class="token operator">:=</span> <span class="token operator">&amp;</span>timerCtx<span class="token punctuation">{</span>
-        cancelCtx<span class="token punctuation">:</span> <span class="token function">newCancelCtx</span><span class="token punctuation">(</span>parent<span class="token punctuation">)</span><span class="token punctuation">,</span>
-        deadline<span class="token punctuation">:</span>  deadline<span class="token punctuation">,</span>
-    <span class="token punctuation">}</span>
-    <span class="token function">propagateCancel</span><span class="token punctuation">(</span>parent<span class="token punctuation">,</span> c<span class="token punctuation">)</span>
-    d <span class="token operator">:=</span> time<span class="token punctuation">.</span><span class="token function">Until</span><span class="token punctuation">(</span>deadline<span class="token punctuation">)</span>
-    <span class="token keyword">if</span> d <span class="token operator">&lt;=</span> <span class="token number">0</span> <span class="token punctuation">{</span>
-        c<span class="token punctuation">.</span><span class="token function">cancel</span><span class="token punctuation">(</span><span class="token boolean">true</span><span class="token punctuation">,</span> DeadlineExceeded<span class="token punctuation">)</span> <span class="token comment">// deadline has already passed</span>
-        <span class="token keyword">return</span> c<span class="token punctuation">,</span> <span class="token keyword">func</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span> c<span class="token punctuation">.</span><span class="token function">cancel</span><span class="token punctuation">(</span><span class="token boolean">true</span><span class="token punctuation">,</span> Canceled<span class="token punctuation">)</span> <span class="token punctuation">}</span>
-    <span class="token punctuation">}</span>
-    c<span class="token punctuation">.</span>mu<span class="token punctuation">.</span><span class="token function">Lock</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
-    <span class="token keyword">defer</span> c<span class="token punctuation">.</span>mu<span class="token punctuation">.</span><span class="token function">Unlock</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
-    <span class="token keyword">if</span> c<span class="token punctuation">.</span>err <span class="token operator">==</span> <span class="token boolean">nil</span> <span class="token punctuation">{</span>
-        c<span class="token punctuation">.</span>timer <span class="token operator">=</span> time<span class="token punctuation">.</span><span class="token function">AfterFunc</span><span class="token punctuation">(</span>d<span class="token punctuation">,</span> <span class="token keyword">func</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-            c<span class="token punctuation">.</span><span class="token function">cancel</span><span class="token punctuation">(</span><span class="token boolean">true</span><span class="token punctuation">,</span> DeadlineExceeded<span class="token punctuation">)</span>
-        <span class="token punctuation">}</span><span class="token punctuation">)</span>
-    <span class="token punctuation">}</span>
-    <span class="token keyword">return</span> c<span class="token punctuation">,</span> <span class="token keyword">func</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span> c<span class="token punctuation">.</span><span class="token function">cancel</span><span class="token punctuation">(</span><span class="token boolean">true</span><span class="token punctuation">,</span> Canceled<span class="token punctuation">)</span> <span class="token punctuation">}</span>
-<span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+    4343 times the listen queue of a socket overflowed<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
 
-<p><code>timerCtx</code>结构体中<code>deadline</code>保存了超时的时间，当超过这个时间，会触发<code>cancel</code>。</p>
-<p><img src="https://image.fyxemmmm.cn/blog/images/ctx1.jpg"></p>
-<p>可以看出，<strong>cancelCtx也是一棵树，当触发cancel时，会cancel本结点和其子树的所有cancelCtx</strong>。</p>
-<h2 id="3-最佳实践"><a href="#3-最佳实践" class="headerlink" title="3 最佳实践"></a>3 最佳实践</h2><p>由于go大量的官方库、第三方库使用了context，所以调用<code>接收context的函数</code>时要小心，要清楚context在什么时候cancel，什么行为会触发cancel。笔者在程序经常使用gRpc传出来的context，产生了一些非预期的结果，之后花时间总结了gRpc、内部基础库中context的生命期及行为，以避免出现同样的问题。</p>
+
+
+<h5 id="查看半连接队列"><a href="#查看半连接队列" class="headerlink" title="查看半连接队列"></a>查看半连接队列</h5><p>半连接队列没有命令可以直接查看到，但因为半连接队列里，放的都是<code>SYN_RECV</code> 状态的连接，那可以通过统计处于这个状态的连接的数量，间接获得半连接队列的长度。</p>
+<pre class="line-numbers language-none"><code class="language-none"># netstat -nt | grep -i '127.0.0.1:8080' | grep -i 'SYN_RECV' | wc -l
+0<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+
+<p>注意半连接队列和全连接队列都是挂在某个<code>Listen socket</code>上的，我这里用的是<code>127.0.0.1:8080</code>，大家可以替换成自己想要查看的<strong>IP端口</strong>。</p>
+<p>可以看到我的机器上的半连接队列长度为<code>0</code>，这个很正常，<strong>正经连接谁会没事老待在半连接队列里。</strong></p>
+<p>当队列里的半连接不断增多，最终也是会发生溢出，可以通过下面的命令查看。</p>
+<pre class="line-numbers language-none"><code class="language-none"># netstat -s | grep -i "SYNs to LISTEN sockets dropped" 
+    26395 SYNs to LISTEN sockets dropped<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+
+<p>可以看到，我的机器上一共发生了<code>26395</code>次半连接队列溢出。同样建议配合<code>watch -d</code> 命令使用。</p>
+<pre class="line-numbers language-none"><code class="language-none"># watch -d 'netstat -s | grep -i "SYNs to LISTEN sockets dropped"'
+Every 2.0s: netstat -s | grep -i "SYNs to LISTEN sockets dropped"       Fri Sep 17 08:36:38 2021
+
+    26395 SYNs to LISTEN sockets dropped<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+
+
+
+<h4 id="全连接队列满了会怎么样？"><a href="#全连接队列满了会怎么样？" class="headerlink" title="全连接队列满了会怎么样？"></a>全连接队列满了会怎么样？</h4><p>如果队列满了，服务端还收到客户端的第三次握手ACK，默认当然会丢弃这个ACK。</p>
+<p>但除了丢弃之外，还有一些附带行为，这会受 <code>tcp_abort_on_overflow</code> 参数的影响。</p>
+<pre class="line-numbers language-none"><code class="language-none"># cat /proc/sys/net/ipv4/tcp_abort_on_overflow
+0<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+
+<ul>
+<li><code>tcp_abort_on_overflow</code>设置为 0，全连接队列满了之后，会丢弃这个第三次握手ACK包，并且开启定时器，重传第二次握手的SYN+ACK，如果重传超过一定限制次数，还会把对应的<strong>半连接队列里的连接</strong>给删掉。</li>
+</ul>
+<p><img src="https://image.fyxemmmm.cn/blog/images/dir1/tcp01-6.jpg" alt="tcp_abort_on_overflow为0"></p>
+<ul>
+<li><code>tcp_abort_on_overflow</code>设置为 1，全连接队列满了之后，就直接发RST给客户端，效果上看就是连接断了。</li>
+</ul>
+<p>这个现象是不是很熟悉，服务端<strong>端口未监听</strong>时，客户端尝试去连接，服务端也会回一个RST。这两个情况长一样，所以客户端这时候收到RST之后，其实无法区分到底是<strong>端口未监听</strong>，还是<strong>全连接队列满了</strong>。</p>
+<p><img src="https://image.fyxemmmm.cn/blog/images/dir1/tcp01-7.jpg" alt="tcp_abort_on_overflow为1"></p>
+<h4 id="半连接队列要是满了会怎么样"><a href="#半连接队列要是满了会怎么样" class="headerlink" title="半连接队列要是满了会怎么样"></a>半连接队列要是满了会怎么样</h4><p><strong>一般是丢弃</strong>，但这个行为可以通过 <code>tcp_syncookies</code> 参数去控制。但比起这个，更重要的是先了解下半连接队列为什么会被打满。</p>
+<p>首先我们需要明白，一般情况下，半连接的”生存”时间其实很短，只有在第一次和第三次握手间，如果半连接都满了，说明服务端疯狂收到第一次握手请求，如果是线上游戏应用，能有这么多请求进来，那说明你可能要富了。但现实往往比较骨感，你可能遇到了<strong>SYN Flood攻击</strong>。</p>
+<p>所谓<strong>SYN Flood攻击</strong>，可以简单理解为，攻击方模拟客户端疯狂发第一次握手请求过来，在服务端憨憨地回复第二次握手过去之后，客户端死活不发第三次握手过来，这样做，可以把服务端半连接队列打满，从而导致正常连接不能正常进来。</p>
+<p><img src="https://image.fyxemmmm.cn/blog/images/dir1/tcp01-8.jpg" alt="syn攻击"></p>
+<p>那这种情况怎么处理？有没有一种方法可以<strong>绕过半连接队列</strong>？</p>
+<p>有，上面提到的<code>tcp_syncookies</code>派上用场了。</p>
+<pre class="line-numbers language-none"><code class="language-none"># cat /proc/sys/net/ipv4/tcp_syncookies
+1<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+
+<p>当它被设置为1的时候，客户端发来<strong>第一次握手</strong>SYN时，服务端<strong>不会将其放入半连接队列中</strong>，而是直接生成一个<code>cookies</code>，这个<code>cookies</code>会跟着<strong>第二次握手</strong>，发回客户端。客户端在发<strong>第三次握手</strong>的时候带上这个<code>cookies</code>，服务端验证到它就是当初发出去的那个，就会建立连接并放入到全连接队列中。可以看出整个过程不再需要半连接队列的参与。</p>
+<p><img src="https://image.fyxemmmm.cn/blog/images/dir1/tcp01-9.jpg" alt="tcp_syncookies=1"></p>
+<h5 id="会有一个cookies队列吗"><a href="#会有一个cookies队列吗" class="headerlink" title="会有一个cookies队列吗"></a>会有一个cookies队列吗</h5><p>生成是<code>cookies</code>，保存在哪呢？<strong>是不是会有一个队列保存这些cookies？</strong></p>
+<p>我们可以反过来想一下，如果有<code>cookies</code>队列，那它会跟半连接队列一样，到头来，还是会被<strong>SYN Flood 攻击</strong>打满。</p>
+<p>实际上<code>cookies</code>并不会有一个专门的队列保存，它是通过<strong>通信双方的IP地址端口、时间戳、MSS</strong>等信息进行<strong>实时计算</strong>的，保存在<strong>TCP报头</strong>的<code>seq</code>里。</p>
+<p><img src="https://image.fyxemmmm.cn/blog/images/dir1/tcp01-10.jpg" alt="tcp报头_seq的位置"></p>
+<p>当服务端收到客户端发来的第三次握手包时，会通过seq还原出<strong>通信双方的IP地址端口、时间戳、MSS</strong>，验证通过则建立连接。</p>
+<h5 id="cookies方案为什么不直接取代半连接队列？"><a href="#cookies方案为什么不直接取代半连接队列？" class="headerlink" title="cookies方案为什么不直接取代半连接队列？"></a>cookies方案为什么不直接取代半连接队列？</h5><p>目前看下来<code>syn cookies</code>方案省下了半连接队列所需要的队列内存，还能解决 <strong>SYN Flood攻击</strong>，那为什么不直接取代半连接队列？</p>
+<p>凡事皆有利弊，<code>cookies</code>方案虽然能防 <strong>SYN Flood攻击</strong>，但是也有一些问题。因为服务端并不会保存连接信息，所以如果传输过程中数据包丢了，也不会重发第二次握手的信息。</p>
+<p>另外，编码解码<code>cookies</code>，都是比较<strong>耗CPU</strong>的，利用这一点，如果此时攻击者构造大量的<strong>第三次握手包（ACK包）</strong>，同时带上各种瞎编的<code>cookies</code>信息，服务端收到<code>ACK包</code>后<strong>以为是正经cookies</strong>，憨憨地跑去解码（<strong>耗CPU</strong>），最后发现不是正经数据包后才丢弃。</p>
+<p>这种通过构造大量<code>ACK包</code>去消耗服务端资源的攻击，叫<strong>ACK攻击</strong>，受到攻击的服务器可能会因为<strong>CPU资源耗尽</strong>导致没能响应正经请求。</p>
+<p><img src="https://image.fyxemmmm.cn/blog/images/dir1/tcp01-11.gif" alt="ack攻击"></p>
+<h4 id="没有listen，为什么还能建立连接"><a href="#没有listen，为什么还能建立连接" class="headerlink" title="没有listen，为什么还能建立连接"></a>没有listen，为什么还能建立连接</h4><p>那既然没有<code>accept</code>方法能建立连接，那是不是没有<code>listen</code>方法，也能建立连接？是的，之前写的一篇文章提到过客户端是可以自己连自己的形成连接（<strong>TCP自连接</strong>），也可以两个客户端同时向对方发出请求建立连接（<strong>TCP同时打开</strong>），这两个情况都有个共同点，就是<strong>没有服务端参与，也就是没有listen，就能建立连接。</strong></p>
+<p>当时文章最后也留了个疑问，<strong>没有listen，为什么还能建立连接？</strong></p>
+<p>我们知道执行<code>listen</code>方法时，会创建半连接队列和全连接队列。</p>
+<p>三次握手的过程中会在这两个队列中暂存连接信息。</p>
+<p>所以形成连接，前提是你得<strong>有个地方存放着</strong>，方便握手的时候能根据IP端口等信息找到socket信息。</p>
+<p><strong>那么客户端会有半连接队列吗？</strong></p>
+<p><strong>显然没有</strong>，因为客户端没有执行<code>listen</code>，因为半连接队列和全连接队列都是在执行<code>listen</code>方法时，内核自动创建的。</p>
+<p>但内核还有个<strong>全局hash表</strong>，可以用于存放<code>sock</code>连接的信息。这个全局<code>hash</code>表其实还细分为<code>ehash，bhash和listen_hash</code>等，但因为过于细节，大家理解成有一个<strong>全局hash</strong>就够了，</p>
+<p>在TCP自连接的情况中，客户端在<code>connect</code>方法时，最后会将自己的连接信息放入到这个<strong>全局hash表</strong>中，然后将信息发出，消息在经过回环地址重新回到TCP传输层的时候，就会根据IP端口信息，再一次从这个<strong>全局hash</strong>中取出信息。于是握手包一来一回，最后成功建立连接。</p>
+<p>TCP同时打开的情况也类似，只不过从一个客户端变成了两个客户端而已。</p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><ul>
+<li><strong>每一个</strong><code>socket</code>执行<code>listen</code>时，内核都会自动创建一个半连接队列和全连接队列。</li>
+<li>第三次握手前，TCP连接会放在半连接队列中，直到第三次握手到来，才会被放到全连接队列中。</li>
+<li><code>accept方法</code>只是为了从全连接队列中拿出一条连接，本身跟三次握手几乎<strong>毫无关系</strong>。</li>
+<li>出于效率考虑，虽然都叫队列，但半连接队列其实被设计成了<strong>哈希表</strong>，而全连接队列本质是链表。</li>
+<li>全连接队列满了，再来第三次握手也会丢弃，此时如果<code>tcp_abort_on_overflow=1</code>，还会直接发<code>RST</code>给客户端。</li>
+<li>半连接队列满了，可能是因为受到了<code>SYN Flood</code>攻击，可以设置<code>tcp_syncookies</code>，绕开半连接队列。</li>
+<li>客户端没有半连接队列和全连接队列，但有一个<strong>全局hash</strong>，可以通过它实现自连接或TCP同时打开。</li>
+</ul>
 
                 
             </div>
@@ -584,12 +621,16 @@
                     
                         <div class="article-tag">
                             
-                                <a href="/tags/golang/">
-                                    <span class="chip bg-color">golang</span>
+                                <a href="/tags/tcp/">
+                                    <span class="chip bg-color">tcp</span>
                                 </a>
                             
-                                <a href="/tags/context/">
-                                    <span class="chip bg-color">context</span>
+                                <a href="/tags/%E5%8D%8F%E8%AE%AE/">
+                                    <span class="chip bg-color">协议</span>
+                                </a>
+                            
+                                <a href="/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/">
+                                    <span class="chip bg-color">操作系统</span>
                                 </a>
                             
                         </div>
@@ -635,29 +676,28 @@
 <article id="prenext-posts" class="prev-next articles">
     <div class="row article-row">
         
-        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
+        <div class="article col s12 m6" data-aos="fade-up">
             <div class="article-badge left-badge text-color">
-                <i class="far fa-dot-circle"></i>&nbsp;本篇
-            </div>
+                <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
             <div class="card">
-                <a href="/2021/08/14/context-shi-xian-yuan-li/">
+                <a href="/2021/12/04/zi-fu-chuan-di-ceng-yuan-li/">
                     <div class="card-image">
                         
-                        <img src="https://image.fyxemmmm.cn/blog/images/ins-21.jpg" class="responsive-img" alt="golang context 实现原理">
+                        <img src="https://image.fyxemmmm.cn/blog/images/ins-104.jpg" class="responsive-img" alt="Golang字符串底层原理">
                         
-                        <span class="card-title">golang context 实现原理</span>
+                        <span class="card-title">Golang字符串底层原理</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            golang的context是如何实现的呢?
+                            字符串编码方式、底层详解
                         
                     </div>
                     <div class="publish-info">
-                            <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2021-08-14
-                            </span>
+                        <span class="publish-date">
+                            <i class="far fa-clock fa-fw icon-date"></i>2021-12-04
+                        </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-bookmark fa-fw icon-category"></i>
@@ -670,16 +710,15 @@
                         </span>
                     </div>
                 </div>
-
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/golang/">
-                        <span class="chip bg-color">golang</span>
+                    <a href="/tags/utf-8/">
+                        <span class="chip bg-color">utf-8</span>
                     </a>
                     
-                    <a href="/tags/context/">
-                        <span class="chip bg-color">context</span>
+                    <a href="/tags/%E5%AD%97%E7%AC%A6%E4%B8%B2/">
+                        <span class="chip bg-color">字符串</span>
                     </a>
                     
                 </div>
@@ -693,30 +732,30 @@
                 下一篇&nbsp;<i class="fas fa-chevron-right"></i>
             </div>
             <div class="card">
-                <a href="/2021/08/16/k8s-install/">
+                <a href="/2021/12/21/send-chu-qu-shu-ju-jiu-fa-song-liao-me/">
                     <div class="card-image">
                         
-                        <img src="https://image.fyxemmmm.cn/blog/fj/images/fj-40.jpg" class="responsive-img" alt="Kubernetes高可用集群搭建">
+                        <img src="https://image.fyxemmmm.cn/blog/images/ins-39.jpg" class="responsive-img" alt="send出去, 数据就发送了么?">
                         
-                        <span class="card-title">Kubernetes高可用集群搭建</span>
+                        <span class="card-title">send出去, 数据就发送了么?</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            基于kubeadm & 快速搭建k8s集群
+                            tcp协议的探究 02
                         
                     </div>
                     <div class="publish-info">
                             <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2021-08-16
+                                <i class="far fa-clock fa-fw icon-date"></i>2021-12-21
                             </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-bookmark fa-fw icon-category"></i>
                             
-                            <a href="/categories/golang/" class="post-category">
-                                    golang
+                            <a href="/categories/%E5%8D%8F%E8%AE%AE/" class="post-category">
+                                    协议
                                 </a>
                             
                             
@@ -726,12 +765,16 @@
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/golang/">
-                        <span class="chip bg-color">golang</span>
+                    <a href="/tags/tcp/">
+                        <span class="chip bg-color">tcp</span>
                     </a>
                     
-                    <a href="/tags/kubernetes/">
-                        <span class="chip bg-color">kubernetes</span>
+                    <a href="/tags/%E5%8D%8F%E8%AE%AE/">
+                        <span class="chip bg-color">协议</span>
+                    </a>
+                    
+                    <a href="/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/">
+                        <span class="chip bg-color">操作系统</span>
                     </a>
                     
                 </div>

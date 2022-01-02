@@ -4,7 +4,7 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="keywords" content="http2详解 [中], yuxuanの博客">
+    <meta name="keywords" content="tcp为什么要分片?, yuxuanの博客">
     <meta name="description" content="">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
@@ -16,7 +16,7 @@
     <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-    <title>http2详解 [中] | yuxuanの博客</title>
+    <title>tcp为什么要分片? | yuxuanの博客</title>
     <link rel="icon" type="image/png" href="/favicon.png">
 
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/fyxemmmm/fyxemmmm.github.io/libs/awesome/css/all.css">
@@ -269,12 +269,12 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('https://image.fyxemmmm.cn/blog/fj/images/fj-25.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('https://image.fyxemmmm.cn/blog/images/ins-9.jpg')">
     <div class="container" style="right: 0px;left: 0px;">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title">http2详解 [中]</h1>
+                    <h1 class="description center-align post-title">tcp为什么要分片?</h1>
                 </div>
             </div>
         </div>
@@ -284,10 +284,104 @@
 
 
 
-<main class="container content">
+<main class="post-container content">
 
     
-    <!-- 文章内容详情 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fyxemmmm/fyxemmmm.github.io/libs/tocbot/tocbot.css">
+<style>
+    #articleContent h1::before,
+    #articleContent h2::before,
+    #articleContent h3::before,
+    #articleContent h4::before,
+    #articleContent h5::before,
+    #articleContent h6::before {
+        display: block;
+        content: " ";
+        height: 100px;
+        margin-top: -100px;
+        visibility: hidden;
+    }
+
+    #articleContent :focus {
+        outline: none;
+    }
+
+    .toc-fixed {
+        position: fixed;
+        top: 64px;
+    }
+
+    .toc-widget {
+        width: 345px;
+        padding-left: 20px;
+    }
+
+    .toc-widget .toc-title {
+        padding: 35px 0 15px 17px;
+        font-size: 1.5rem;
+        font-weight: bold;
+        line-height: 1.5rem;
+    }
+
+    .toc-widget ol {
+        padding: 0;
+        list-style: none;
+    }
+
+    #toc-content {
+        padding-bottom: 30px;
+        overflow: auto;
+    }
+
+    #toc-content ol {
+        padding-left: 10px;
+    }
+
+    #toc-content ol li {
+        padding-left: 10px;
+    }
+
+    #toc-content .toc-link:hover {
+        color: #42b983;
+        font-weight: 700;
+        text-decoration: underline;
+    }
+
+    #toc-content .toc-link::before {
+        background-color: transparent;
+        max-height: 25px;
+
+        position: absolute;
+        right: 23.5vw;
+        display: block;
+    }
+
+    #toc-content .is-active-link {
+        color: #42b983;
+    }
+
+    #floating-toc-btn {
+        position: fixed;
+        right: 15px;
+        bottom: 76px;
+        padding-top: 15px;
+        margin-bottom: 0;
+        z-index: 998;
+    }
+
+    #floating-toc-btn .btn-floating {
+        width: 48px;
+        height: 48px;
+    }
+
+    #floating-toc-btn .btn-floating i {
+        line-height: 48px;
+        font-size: 1.4rem;
+    }
+</style>
+<div class="row">
+    <div id="main-content" class="col s12 m12 l9">
+        <!-- 文章内容详情 -->
 <div id="artDetail">
     <div class="card">
         <div class="card-content article-info">
@@ -296,8 +390,16 @@
                     
                     <div class="article-tag">
                         
-                            <a href="/tags/http2/">
-                                <span class="chip bg-color">http2</span>
+                            <a href="/tags/tcp/">
+                                <span class="chip bg-color">tcp</span>
+                            </a>
+                        
+                            <a href="/tags/%E5%8D%8F%E8%AE%AE/">
+                                <span class="chip bg-color">协议</span>
+                            </a>
+                        
+                            <a href="/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/">
+                                <span class="chip bg-color">操作系统</span>
                             </a>
                         
                     </div>
@@ -321,7 +423,7 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
-                    2021-08-25
+                    2021-12-27
                 </div>
                 
 
@@ -332,7 +434,7 @@
                 
                 <div class="info-break-policy">
                     <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
-                    15 分
+                    10 分
                 </div>
                 
 
@@ -350,87 +452,106 @@
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h1 id="5-http2的基本概念"><a href="#5-http2的基本概念" class="headerlink" title="5. http2的基本概念"></a>5. http2的基本概念</h1><p>http2到底做了些什么呢？而HTTPbis小组究竟又应该把它制定到什么样的程度呢？</p>
-<p>事实上，http2有着非常严格的边界，这也给小组成员的创新带来了些许限制。</p>
-<ul>
-<li><p>http2必须维持HTTP的范式。毕竟它只是一个让客户端发送请求到服务器的基于TCP的协议。</p>
-</li>
-<li><p>不能改变 http:// 和 https:// 这样的URL，也不能对其添加新的结构。使用这类URL的网站太多了，没法指望他们全部改变。</p>
-</li>
-<li><p>HTTP1的服务器和客户端依然会存在很久，所以我们必须提供HTTP1到http2服务器的代理。</p>
-</li>
-<li><p>随后，我们也要让这种代理能够将http2的功能一对一的映射到HTTP 1.1的客户端。</p>
-</li>
-<li><p>删除或者减少协议里面那些可选的部分。虽然这并不算的上是一个需求，但是SPDY和Google的团队都非常喜欢这点。通过让协议里所有的内容都成为了强制性要求，可以防止人们在实现的时候偷懒，从而规避一些将来可能会发生的问题。</p>
-</li>
-<li><p>不再使用小版本号。服务器和客户端都必须确定自己是否完整兼容http2或者彻底不兼容。如果将来该协议需要被扩充或者变更，那么新的协议将会是http3，而不是http 2.x。</p>
-</li>
-</ul>
-<h2 id="5-1-http2和现有的URI结构"><a href="#5-1-http2和现有的URI结构" class="headerlink" title="5.1. http2和现有的URI结构"></a>5.1. http2和现有的URI结构</h2><p>如上所述，现有的URI结构正在被HTTP 1.x使用而不能被更换，所以http2也必须沿用该结构。因此不得不找到一种方式将使用的协议升级至http2，比如可以要求服务器让它作响应时使用http2来替代旧的协议。</p>
-<p>HTTP 1.1本身就制定过“升级”的方案：提供一个首部字段，表示允许服务器在收到旧协议请求的同时，可以向客户端发送新协议的响应。但这一方案往往需要花费一次额外的往返通信来作为升级的代价。</p>
-<p>而这一代价是SPDY团队不想接受的。因为他们只实现了基于TLS的SPDY，所以他们开发了一个TLS的扩展去简化协议的协商。这个扩展被称作NPN（Next Protocol Negotiation），借助于此，服务器会通知客户端所有它支持的协议，让客户端从中选择一个合适的来进行通讯。</p>
-<h2 id="5-2-为-https-所准备的http2"><a href="#5-2-为-https-所准备的http2" class="headerlink" title="5.2. 为 https:// 所准备的http2"></a>5.2. 为 https:// 所准备的http2<!--这节比较复杂，需要review--></h2><p>有相当多的人关注到了http2可以在TLS上正常的运作，而SPDY依赖于TLS，所以按理说TLS也应成为http2 必需的组件，不过出乎大家意料的是http2将TLS标记成了可选。然而，全球两大浏览器领导者 —— Firefox和Chrome都明确地表示，他们只会实现基于TLS的http2.</p>
-<p>选择TLS的原因的其中之一是希望保护以及尊重用户的隐私，而早期的评估结果也表明，在TLS上建立新的协议更有可能获得成功。而这其中部分原因是人们普遍认为任何来自80端口的流量都是基于HTTP 1.1亦或者是其某个变种的，而不是另外一种全新的协议。</p>
-<p>关于是否应该强制使用TLS的主题在邮件组内和会议上引起了不小的争议 —— 这到底是好是坏呢？不管怎么样，对于这种备受争议的话题还是请谨慎讨论，尤其是当你面对一个HTTPbis小组成员的时候。</p>
-<p>诸如此类，还有一个激烈而长期的讨论，即：如果选择了使用TLS，那http2是否应该强制规定密码列表，也许应该建立起一个黑名单，又或者它根本就不需要从TLS层得到任何东西。不过这个问题还是留给TLS工作组去解决吧，最后的规范中指定了TLS最低版本为1.2，并且会有加密组的限制。</p>
-<h2 id="5-3-基于TLS之上的http2协商"><a href="#5-3-基于TLS之上的http2协商" class="headerlink" title="5.3 基于TLS之上的http2协商 "></a>5.3 基于TLS之上的http2协商 <!-- 这个标题翻译的不好 --></h2><p>Next Protocol Negotiation (NPN)是一个用来在TLS服务器上协商SPDY的协议。IETF将这个非正式标准进行规范化，从而演变成了ALPN（Application Layer Protocol Negotiation）。ALPN会随着http2的应用被推广，而SPDY的客户端与服务器则会继续使用NPN。</p>
-<p>由于NPN先于ALPN诞生，而ALPN又经历了一些标准化过程，所以许多早期的http2客户端和服务器在协商http2时会将这两者同时实现。与此同时，考虑到SPDY会使用NPN，而许多服务器又会同时提供SPDY以及http2，所以在这些服务器上同时支持ALPN以及NPN显然会成为最理所当然的选择。</p>
-<p>ALPN和NPN的主要区别在于：谁来决定通信协议。在ALPN的描述中，是让客户端先发送一个协议优先级列表给服务器，由服务器最终选择一个合适的。而NPN则正好相反，客户端有着最终的决定权。</p>
-<h2 id="5-4-为-http-所准备的http2"><a href="#5-4-为-http-所准备的http2" class="headerlink" title="5.4 为 http:// 所准备的http2"></a>5.4 为 http:// 所准备的http2</h2><p>正如我们之前所提到的，对于纯文本的HTTP1.1来说，协商http2的方法就是通过给服务器发送一个带<strong>升级</strong>头部的报文。如果服务器支持http2，它将以“101 Switching”作为回复的状态码，并从此开始在该连接上使用http2。也许你很容易就发现这样一个升级的流程会需要消耗掉一整个的往返时延，但好处是http2连接相比HTTP1可以被更大限度地重用和保持。</p>
-<p>虽然有些浏览器厂商的发言人宣称他们不会实现这样的http2会话方式，但IE团队已公开表示他们会实现，与此同时，curl也已经支持了这种方式。</p>
-<p>直到今天，没有任何主流浏览器支持非TLS的http2.</p>
-<h1 id="6-http2协议"><a href="#6-http2协议" class="headerlink" title="6. http2协议"></a>6. http2协议</h1><p>背景介绍就到此为止了，历史的脚步已经将我们推到了今天。现在让我们深入看看该协议的规范，看看那些细节和概念。</p>
-<h2 id="6-1-二进制"><a href="#6-1-二进制" class="headerlink" title="6.1. 二进制"></a>6.1. 二进制</h2><p>http2是一个二进制协议。</p>
-<p>仔细想想，如果你是一个曾经跟互联网协议打过交道，那你很可能会本能反对二进制协议，你甚至准备好了一大堆理由来证明基于文本/ascii的协议是多么的有用，正如你曾无数次地通过telnet等应用手工地输入HTTP来发起请求。</p>
-<p>基于二进制的http2可以使成帧的使用变得更为便捷。在HTTP1.1和其他基于文本的协议中，对帧的起始和结束识别起来相当复杂。而通过移除掉可选的空白符以及其他冗余后，再来实现这些会变得更容易。</p>
-<p>而另一方面，这项决议同样使得我们可以更加便捷的从帧结构中分离出那部分协议本身的内容。而在HTTP1中，各个部分相互交织，犹如一团乱麻。</p>
-<p>事实上，由于协议提供了压缩这一特性，而其经常运行在TLS之上的事实又再次降低了基于纯文本实现的价值，反正也没办法直接从数据流上看到文本。因此通常情况下，我们必须习惯使用类似Wireshark这样的工具对http2的协议层一探究竟。</p>
-<p>我们可以使用curl这样的工具来调试协议，而如果要进一步地分析网络数据流则需要诸如Wireshark这样的http2解析器。</p>
-<h2 id="6-2-二进制格式"><a href="#6-2-二进制格式" class="headerlink" title="6.2. 二进制格式"></a>6.2. 二进制格式</h2><img style="float: right;" src="https://image.fyxemmmm.cn/blog/images/h26.png">
+                <p><img src="https://image.fyxemmmm.cn/blog/images/dir1/tcp03-0.jpg"></p>
+<h3 id="什么是TCP分段和IP分片"><a href="#什么是TCP分段和IP分片" class="headerlink" title="什么是TCP分段和IP分片"></a>什么是TCP分段和IP分片</h3><p>我们知道网络就像一根管子，而管子吧，就会有粗细。</p>
+<p>一个数据包想从管子的一端到另一端，得过这个管子。<em>（废话）</em></p>
+<p>但数据包的量<strong>有大有小</strong>，想过管子，数据包不能大于这根管子的粗细。</p>
+<p>问题来了，数据包过大时怎么办？</p>
+<p>答案比较简单。会把数据包切分小块。这样数据就可以由大变小，顺利传输。</p>
+<p><img src="https://image.fyxemmmm.cn/blog/images/dir1/tcp03-1.jpg" alt="数据分片"></p>
+<p>回去看下网络分层协议，数据先过传输层，再到网络层。</p>
+<p>这个行为在<strong>传输层和网络层</strong>都有可能发生。</p>
+<p>在传输层（<code>TCP</code>协议）里，叫<strong>分段</strong>。</p>
+<p>在网络层（<code>IP</code>层），叫<strong>分片</strong>。（注意以下提到的IP没有特殊说明的情况下，都是指<strong>IPV4</strong>）</p>
+<p>那么不管是分片还是分段，肯定需要<strong>按照一定的长度</strong>切分。</p>
+<p>在<code>TCP</code>里，这个长度是<code>MSS</code>。</p>
+<p>在<code>IP</code>层里，这个长度是<code>MTU</code>。</p>
+<h3 id="MSS是什么"><a href="#MSS是什么" class="headerlink" title="MSS是什么"></a>MSS是什么</h3><p><strong>MSS：Maximum Segment Size</strong> 。TCP 提交给 IP 层最大分段大小，不包含 TCP Header 和  TCP Option，只包含 TCP Payload ，MSS 是 TCP 用来限制应用层最大的发送字节数。<br>假设 MTU= 1500 byte，那么 <strong>MSS = 1500- 20(IP Header) -20 (TCP Header) = 1460 byte</strong>，如果应用层有 <strong>2000 byte</strong> 发送，那么需要两个切片才可以完成发送，第一个 TCP 切片 = 1460，第二个 TCP 切片 = 540。</p>
+<p><img src="https://image.fyxemmmm.cn/blog/images/dir1/tcp03-2.jpg" alt="MSS分段"></p>
+<h4 id="如何查看MSS？"><a href="#如何查看MSS？" class="headerlink" title="如何查看MSS？"></a>如何查看MSS？</h4><p>我们都知道TCP三次握手，而<code>MSS</code>会在三次握手的过程中传递给对方，用于通知对端本地最大可以接收的TCP报文数据大小（不包含TCP和IP报文首部）。</p>
+<p><img src="https://image.fyxemmmm.cn/blog/images/dir1/tcp03-3.jpg" alt="抓包mss"></p>
+<p>比如上图中，B将自己的MSS发送给A，建议A在发数据给B的时候，采用<code>MSS=1420</code>进行分段。而B在发数据给A的时候，同样会带上<code>MSS=1372</code>。两者在对比后，会采用<strong>小的</strong>那个值（1372）作为通信的<code>MSS值</code>，这个过程叫<code>MSS协商</code>。</p>
+<blockquote>
+<p>另外，一般情况下MSS + 20（TCP头）+ 20（IP头）= MTU，上面抓包的图里对应的MTU分别是1372+40 和 1420+40。同一个路径上，<strong>MTU不一定是对称的</strong>，也就是说A到B和B到A，两条路径上的MTU可以是不同的，对应的MSS也一样。</p>
+</blockquote>
+<h4 id="三次握手中协商了MSS就不会改变了吗？"><a href="#三次握手中协商了MSS就不会改变了吗？" class="headerlink" title="三次握手中协商了MSS就不会改变了吗？"></a>三次握手中协商了MSS就不会改变了吗？</h4><p>当然不是，每次执行TCP发送消息的函数时，会重新计算一次MSS，再进行分段操作。</p>
+<h4 id="对端不传MSS会怎么样？"><a href="#对端不传MSS会怎么样？" class="headerlink" title="对端不传MSS会怎么样？"></a>对端不传MSS会怎么样？</h4><p>我们再看TCP的报头。</p>
+<p><img src="https://image.fyxemmmm.cn/blog/images/dir1/tcp03-4.jpg" alt="TCP报头"></p>
+<p>其实MSS是作为可选项引入的，只不过一般情况下MSS都会传，但是万一遇到了哪台机器的实现上比较调皮，<strong>不传MSS</strong>这个可选项。那对端该怎么办？</p>
+<p><strong>如果没有接收到对端TCP的MSS，本端TCP默认采用MSS=536Byte</strong>。</p>
+<p>那为什么会是<code>536</code>？</p>
+<pre class="line-numbers language-none"><code class="language-none">536（data） + 20（tcp头）+20（ip头）= 576Byte<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 
-<p>http2会发送有着不同类型的二进制帧，但他们都有如下的公共字段：Type, Length, Flags, Stream Identifier和frame payload <!-- 这些字段要翻译么？ --></p>
-<p>规范中一共定义了10种不同的帧，其中最基础的两种分别对应于HTTP 1.1的DATA和HEADERS。之后我会更详细的介绍它们其中的一部分。</p>
-<h2 id="6-3-多路复用的流"><a href="#6-3-多路复用的流" class="headerlink" title="6.3. 多路复用的流"></a>6.3. 多路复用的流</h2><p>上一节提到的Stream Identifier将http2连接上传输的每个帧都关联到一个“流”。流是一个独立的，双向的帧序列可以通过一个http2的连接在服务端与客户端之间不断的交换数据。<!-- 这一句翻译的不太好。 --></p>
-<p>每个单独的http2连接都可以包含多个并发的流，这些流中交错的包含着来自两端的帧。流既可以被客户端/服务器端单方面的建立和使用，也可以被双方共享，或者被任意一边关闭。在流里面，每一帧发送的顺序非常关键。接收方会按照收到帧的顺序来进行处理。</p>
-<p>流的多路复用意味着在同一连接中来自各个流的数据包会被混合在一起。就好像两个（或者更多）独立的“数据列车”被拼凑到了一辆列车上，但它们最终会在终点站被分开。下图就是两列“数据火车”的示例</p>
-<p><img src="https://image.fyxemmmm.cn/blog/images/h27.jpg" alt="one train"><br><img src="https://image.fyxemmmm.cn/blog/images/h28.jpg" alt="another train"></p>
-<p>它们就是这样通过多路复用的方式被组装到了同一列火车上。</p>
-<p><img src="https://image.fyxemmmm.cn/blog/images/h29.jpg" alt="multiplexed train"></p>
-<h2 id="6-4-优先级和依赖性"><a href="#6-4-优先级和依赖性" class="headerlink" title="6.4. 优先级和依赖性"></a>6.4. 优先级和依赖性</h2><p>每个流都包含一个优先级（也就是“权重”），它被用来告诉对端哪个流更重要。当资源有限的时候，服务器会根据优先级来选择应该先发送哪些流。</p>
-<p>借助于PRIORITY帧，客户端同样可以告知服务器当前的流依赖于其他哪个流。该功能让客户端能建立一个优先级“树”，所有“子流”会依赖于“父流”的传输完成情况。</p>
-<p>优先级和依赖关系可以在传输过程中被动态的改变。这样当用户滚动一个全是图片的页面的时候，浏览器就能够指定哪个图片拥有更高的优先级。或者是在你切换标签页的时候，浏览器可以提升新切换到页面所包含流的优先级。 <!--或者是当你在切换标签页的时候，浏览器可以提升那个突然被切换到的页面所包含的流的优先级--></p>
-<h2 id="6-5-头压缩"><a href="#6-5-头压缩" class="headerlink" title="6.5. 头压缩"></a>6.5. 头压缩</h2><p>HTTP是一种无状态的协议。简而言之，这意味着每个请求必须要携带服务器需要的所有细节，而不是让服务器保存住之前请求的元数据。因为http2并没有改变这个范式，所以它也以同样原理工作。</p>
-<p>这也保证了HTTP可重复性。当一个客户端从同一服务器请求了大量资源（例如页面的图片）的时候，所有这些请求看起来几乎都是一致的，而这些大量一致的东西则正好值得被压缩。</p>
-<p>每个页面请求的资源数量在增多（如前所述），同时 cookies 的使用和请求的大小也在日渐增长。cookies需要被包含在所有请求中，且他们在多个请求中经常是一模一样的。</p>
-<p>HTTP 1.1请求的大小正变得越来越大，有时甚至会大于TCP窗口的初始大小，这会严重拖累发送请求的速度。因为它们需要等待带着ACK的响应回来以后，才能继续被发送。这也是另一个需要压缩的理由。</p>
-<h3 id="6-5-1-压缩是非常棘手的课题"><a href="#6-5-1-压缩是非常棘手的课题" class="headerlink" title="6.5.1. 压缩是非常棘手的课题"></a>6.5.1. 压缩是非常棘手的课题</h3><p>HTTPS和SPDY的压缩机制被发现有受<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/BREACH_%28security_exploit%29">BREACH</a>和<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/CRIME">CRIME</a>攻击的隐患。通过向流中注入一些已知的文本来观察输出的变化，攻击者可以从加密的载荷中推导出原始发送的数据。</p>
-<p>为协议的动态内容进行压缩并使其免于被攻击，需要仔细且全面的考虑，而这也正是HTTPbis小组尝试去做的。</p>
-<p><a target="_blank" rel="noopener" href="https://www.rfc-editor.org/rfc/rfc7541.txt">HPACK</a>，HTTP/2头部压缩，顾名思义它是一个专为http2头部设计的压缩格式。确切的讲，它甚至被制定写入在另外一个单独的草案里。新的格式同时引入了一些其他对策让破解压缩变得困难，例如采用帧的可选填充和用一个bit作为标记，来让中间人不压缩指定的头部。<!-- 最后这句不太好 --> <!--这里中间人翻译成代理会不会更好，中间人一般都会自然联想到MITM攻击（比如我...）--></p>
-<p>用Roberto Peon（HPACK的设计者之一）的话说</p>
-<blockquote>
-<p>“HPACK旨在提供一个一致性的实现使信息量的损失尽可能少，使编解码快速而方便，使接收方能控制压缩文本的大小，允许代理重新建立索引（如，通过代理在前后端共享状态），以及对哈夫曼编码串的更快速比较”<!-- 这一段需要review --></p>
-</blockquote>
-<h2 id="6-6-重置-后悔药"><a href="#6-6-重置-后悔药" class="headerlink" title="6.6. 重置 - 后悔药"></a>6.6. 重置 - 后悔药<!-- 这个翻译太别扭了。。--></h2><p>HTTP 1.1的有一个缺点是：当一个含有确切值的Content-Length的HTTP消息被送出之后，你就很难中断它了。当然，通常你可以断开整个TCP链接（但也不总是可以这样），但这样导致的代价就是需要通过三次握手来重新建立一个新的TCP连接。</p>
-<p>一个更好的方案是只终止当前传输的消息并重新发送一个新的。在http2里面，我们可以通过发送RST_STREAM帧来实现这种需求，从而避免浪费带宽和中断已有的连接。</p>
-<h2 id="6-7-服务器推送"><a href="#6-7-服务器推送" class="headerlink" title="6.7. 服务器推送"></a>6.7. 服务器推送</h2><p>这个功能通常被称作“缓存推送”。主要的思想是：当一个客户端请求资源X，而服务器知道它很可能也需要资源Z的情况下，服务器可以在客户端发送请求前，主动将资源Z推送给客户端。这个功能帮助客户端将Z放进缓存以备将来之需。</p>
-<p>服务器推送需要客户端显式的允许服务器提供该功能。但即使如此，客户端依然能自主选择是否需要中断该推送的流。如果不需要的话，客户端可以通过发送一个RST_STREAM帧来中止。</p>
-<h2 id="6-8-流量控制"><a href="#6-8-流量控制" class="headerlink" title="6.8. 流量控制"></a>6.8. 流量控制</h2><p>每个http2流都拥有自己的公示的流量窗口，它可以限制另一端发送数据。如果你正好知道SSH的工作原理的话，这两者非常相似。</p>
-<p>对于每个流来说，两端都必须告诉对方自己还有足够的空间来处理新的数据，而在该窗口被扩大前，另一端只被允许发送这么多数据。</p>
-<p>而只有数据帧会受到流量控制。</p>
-<h1 id="7-扩展"><a href="#7-扩展" class="headerlink" title="7. 扩展"></a>7. 扩展</h1><p>http2协议强制规定了接收方必须读取并忽略掉所有未知帧（即未知帧类型的帧）。双方可以在逐跳原则（hop-by-hop basis）基础上协商使用新的帧，但这些帧的状态无法被改变，也不受流控制。</p>
-<p>是否应该允许添加扩展的这个话题在制定http2协议的时候被反复讨论了很久，但在draft-12之后，最终尘埃落定确定了允许添加扩展。</p>
-<p>但扩展不再是协议本身的一部分，它被记录在核心协议规范之外。现在已经有两种类型的帧被工作组记录在案，它们很可能率先被纳入协议的扩展部分，而这两个曾被当作“原生”的帧非常流行，所以接下来我会详细讨论它们。</p>
-<h2 id="7-1-备选服务（Alternative-Services）"><a href="#7-1-备选服务（Alternative-Services）" class="headerlink" title="7.1. 备选服务（Alternative Services）"></a>7.1. 备选服务（Alternative Services）</h2><p>随着http2逐渐被接受，我们有理由相信，相对于HTTP 1.x，TCP连接会更长并被保持的更久。对客户端来讲，最好是到每个主机/站点的每一条连接都可以做尽可能多的事情，而这也需要每个连接可以保持更长的时间。</p>
-<p>但这会影响到HTTP负载均衡器的正常工作，比如在一个网站会出于性能的考虑，当然也可能是正常的维护或者一些类似的原因，想建议客户端连接到另外一个主机的时候。<!-- 这一段需要review --></p>
-<p>服务器将会通过发送<a target="_blank" rel="noopener" href="https://tools.ietf.org/html/draft-ietf-httpbis-alt-svc-10">Alt-Svc头</a>（或者http2的ALTSVC帧）来告知客户端另一个备选服务。即另外一条指向不同的服务源、主机或端口，但却能获取同样内容的路由。</p>
-<p>客户端应该尝试异步的去连接到该服务，如果连接成功的话，即可以使用该备选服务。<!-- 这一段需要review --></p>
-<h3 id="7-1-1-机会型TLS（Opportunistic-TLS）"><a href="#7-1-1-机会型TLS（Opportunistic-TLS）" class="headerlink" title="7.1.1. 机会型TLS（Opportunistic TLS）"></a>7.1.1. 机会型TLS（Opportunistic TLS）</h3><p>Alt-Svc头部意味着允许服务器基于<code>http://</code>提供内容，与此同时，这个头部也意味着告知客户端：同样的内容也可以通过TLS连接来获取。</p>
-<p>这是个还在讨论中的功能。因为这样的连接会产生一个未认证的、在任何地方也不会被标示为“安全”的TLS连接，也不会在客户端界面上出现任何锁标识，所以没法让用户知道这其实不是常规的HTTP连接。这就是很多人强烈反对机会型TLS的原因。</p>
-<h2 id="7-2-阻塞（Blocked）"><a href="#7-2-阻塞（Blocked）" class="headerlink" title="7.2. 阻塞（Blocked）"></a>7.2. 阻塞（Blocked）</h2><p>这个类型的帧意味着：当服务端存在需要发送的内容，但流控制却禁止发送任何数据时，那么此类型的帧将会被发送且<strong>仅</strong>发送一次。这种帧设计的目的在于，如果你接收到了此帧，那么连接中必然有错误发生或者是得到了低于期望的传输速度。<!-- 这一段需要review --></p>
-<p>在此帧被放到协议扩展部分之前，draft-12中的一段话：</p>
-<blockquote>
-<p>”阻塞帧被包含在草案版本中作为实验性的特性，如果它无法获得良好的反馈，那么该特性最后会被移除。”</p>
-</blockquote>
+<p>前面提到了IP会切片，那会切片，也就会重组，而这个576正好是 IP 最小重组缓冲区的大小。</p>
+<h3 id="MTU是什么"><a href="#MTU是什么" class="headerlink" title="MTU是什么"></a>MTU是什么</h3><p><strong>MTU: Maximum Transmit Unit</strong>，最大传输单元。其实这个是由<strong>数据链路层</strong>提供，为了告诉上层IP层，自己的传输能力是多大。IP层就会根据它进行数据包切分。一般 MTU=<strong>1500 Byte</strong>。<br>假设IP层有 &lt;= <code>1500</code> byte 需要发送，只需要一个 IP 包就可以完成发送任务；假设 IP 层有 &gt; <code>1500</code> byte 数据需要发送，需要分片才能完成发送，分片后的 IP Header ID 相同，同时为了分片后能在接收端把切片组装起来，还需要在分片后的IP包里加上各种信息。比如这个分片在原来的IP包里的偏移offset。</p>
+<p><img src="https://image.fyxemmmm.cn/blog/images/dir1/tcp03-5.jpg" alt="MTU分片"></p>
+<h4 id="如何查看MTU"><a href="#如何查看MTU" class="headerlink" title="如何查看MTU"></a>如何查看MTU</h4><p>在<code>mac</code>控制台输入 <code>ifconfig</code>命令，可以看到MTU的值为多大。</p>
+<pre class="line-numbers language-none"><code class="language-none">$ ipconfig
+lo0: flags=8049&lt;UP,LOOPBACK,RUNNING,MULTICAST&gt; mtu 16384
+    ...
+en0: flags=8863&lt;UP,BROADCAST,SMART,RUNNING,SIMPLEX,MULTICAST&gt; mtu 1500
+    ...
+p2p0: flags=8843&lt;UP,BROADCAST,RUNNING,SIMPLEX,MULTICAST&gt; mtu 2304
+    ...<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>可以看到这上面有好几个<strong>MTU</strong>，可以简单理解为每个网卡的处理能力不同，所以对应的MTU也不同。当然这个值是可以修改的，但不在今天的讨论范畴内，不再展开。</p>
+<p>在一台机器的应用层到这台机器的网卡，<strong>这条链路上</strong>，基本上可以保证，<code>MSS &lt; MTU</code>。</p>
+<p><img src="https://image.fyxemmmm.cn/blog/images/dir1/tcp03-6.jpg" alt="MSS和MTU的区别"></p>
+<h4 id="为什么MTU一般是1500"><a href="#为什么MTU一般是1500" class="headerlink" title="为什么MTU一般是1500"></a>为什么MTU一般是1500</h4><p>这其实是由传输效率决定的。首先，虽然我们平时用的网络感觉挺稳定的，但其实这是因为TCP在背地里做了各种重传等保证了传输的可靠，其实背地里线路是动不动就丢包的，而越大的包，发生丢包的概率就越大。</p>
+<p>那是不是包越小就越好？也不是</p>
+<p>但是如果选择一个比较小的长度，假设选择<code>MTU</code>为<code>300Byte</code>，<code>TCP payload = 300 - IP Header - TCP Header = 300 - 20 - 20 = 260 byte</code>。那有效传输效率<code>= 260 / 300 = 86%</code></p>
+<p>而如果以太网长度为1500，那有效传输效率<code>= 1460 / 1500 = 96%</code> ，显然比 <code>86%</code> 高多了。</p>
+<p>所以，包越小越不容易丢包，包越大，传输效率又越高，因此权衡之下，选了<code>1500</code>。</p>
+<h3 id="为什么IP层会分片，TCP还要分段"><a href="#为什么IP层会分片，TCP还要分段" class="headerlink" title="为什么IP层会分片，TCP还要分段"></a>为什么IP层会分片，TCP还要分段</h3><p>由于本身IP层就会做分片这件事情。<strong>就算TCP不分段</strong>，到了IP层，数据包也会被分片，数据也能<strong>正常传输</strong>。</p>
+<p>既然网络层就会分片了，那么TCP为什么还要分段？是不是有些多此一举？</p>
+<p>假设有一份数据，较大，且在TCP层不分段，如果这份数据在发送的过程中出现<strong>丢包</strong>现象，TCP会发生重传，那么重传的就是这一大份数据（虽然IP层会把数据切分为MTU长度的N多个小包，但是TCP重传的单位却是那一大份数据）。</p>
+<p><img src="https://image.fyxemmmm.cn/blog/images/dir1/tcp03-7.jpg" alt="假设TCP不分段"></p>
+<p>如果TCP把这份数据，分段为N个小于等于MSS长度的数据包，到了IP层后加上IP头和TCP头，还是小于MTU，那么IP层也不会再进行分包。此时在传输路上发生了丢包，那么TCP重传的时候也只是重传那一小部分的MSS段。效率会比TCP不分段时更高。</p>
+<p><img src="https://image.fyxemmmm.cn/blog/images/dir1/tcp03-8.jpg" alt="假设TCP分段"></p>
+<p>类似的，传输层除了TCP外，还有UDP协议，但UDP本身不会分段，所以当数据量较大时，只能交给IP层去分片，然后传到底层进行发送。</p>
+<p>也就是说，正常情况下，在一台机器的传输层到网络层<strong>这条链路上</strong>，如果传输层对数据做了分段，那么IP层就不会再分片。如果传输层没分段，那么IP层就可能会进行分片。</p>
+<p>说白了，<strong>数据在TCP分段，就是为了在IP层不需要分片，同时发生重传的时候只重传分段后的小份数据</strong>。</p>
+<h3 id="TCP分段了，IP层就一定不会分片了吗"><a href="#TCP分段了，IP层就一定不会分片了吗" class="headerlink" title="TCP分段了，IP层就一定不会分片了吗"></a>TCP分段了，IP层就一定不会分片了吗</h3><p>上面提到了，在发送端，TCP分段后，IP层就不会再分片了。</p>
+<p>但是整个传输链路中，可能还会有其他网络层设备，而这些设备的MTU可能小于发送端的MTU。此时虽然数据包在发送端已经<strong>分段</strong>过了，但是在IP层就还会再分片一次。</p>
+<p>如果链路上还有设备有<strong>更小的MTU</strong>，那么还会再分片，最后所有的分片都会在<strong>接收端</strong>处进行组装。</p>
+<p><img src="https://image.fyxemmmm.cn/blog/images/dir1/tcp03-9.jpg" alt="IP分片再分片"></p>
+<p>因此，就算TCP分段过后，在链路上的其他节点的IP层也是有可能再分片的，而且哪怕数据被第一次IP分片过了，也是有可能被其他机器的IP层进行二次、三次、四次….分片的。</p>
+<h3 id="IP层怎么做到不分片"><a href="#IP层怎么做到不分片" class="headerlink" title="IP层怎么做到不分片"></a>IP层怎么做到不分片</h3><p>上面提到的IP层在传输过程中<strong>因为各个节点间MTU</strong>可能不同，导致数据是可能被多次分片的。而且每次分片都要加上各种信息便于在接收端进行分片重组。那么IP层是否可以做到不分片？</p>
+<p>如果有办法知道整个链路上，最小的MTU是多少，并且以最小MTU长度发送数据，那么不管数据传到哪个节点，都不会发生分片。</p>
+<p>整个链路上，<strong>最小的MTU，就叫PMTU</strong>（path MTU）。</p>
+<p>有一个<strong>获得这个PMTU的方法，叫 Path MTU Discovery</strong>。</p>
+<pre class="line-numbers language-none"><code class="language-none">$cat /proc/sys/net/ipv4/ip_no_pmtu_disc
+0<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+
+<p>默认为<code>0</code>，意思是开启PMTU发现的功能。现在一般机器上都是开启的状态。</p>
+<p>原理比较简单，首先我们先回去看下IP的数据报头。</p>
+<p><img src="https://image.fyxemmmm.cn/blog/images/dir1/tcp03-10.jpg" alt="IP报头DF"></p>
+<p>这里有个标红的标志位<code>DF</code>（Don’t Fragment），当它置为1，意味着这个IP报文不分片。</p>
+<p>当链路上某个路由器，收到了这个报文，当IP报文长度大于路由器的MTU时，路由器会看下这个IP报文的<code>DF</code></p>
+<ul>
+<li>如果为<code>0</code>（允许分片），就会分片并把分片后的数据传到下一个路由器</li>
+<li>如果为<code>1</code>，就会把数据丢弃，同时返回一个ICMP包给发送端，并告诉它*”达咩!”*数据不可达，需要分片，同时带上当前机器的MTU</li>
+</ul>
+<p>理解了上面的原理后，我们再看下PMTU发现是怎么实现的。</p>
+<ul>
+<li>应用通过TCP正常发送消息，传输层<strong>TCP分段</strong>后，到<strong>网络层</strong>加上IP头，<strong>DF置为1</strong>，消息再到更底层执行发送</li>
+<li>此时链路上有台<strong>路由器</strong>由于各种原因<strong>MTU变小了</strong></li>
+<li>IP消息到这台路由器了，路由器发现消息长度大于自己的MTU，且消息自带DF不让分片。就把消息丢弃。同时返回一个<code>ICMP</code>错误给发送端，同时带上自己的<code>MTU</code>。</li>
+</ul>
+<p><img src="https://image.fyxemmmm.cn/blog/images/dir1/tcp03-11.jpg" alt="获得pmtu"></p>
+<ul>
+<li>发送端收到这个ICMP消息，会更新自己的MTU，同时记录到一个<strong>PMTU表</strong>中。</li>
+<li>因为TCP的可靠性，会尝试重传这个消息，同时以这个新MTU值计算出MSS进行分段，此时新的IP包就可以顺利被刚才的路由器转发。</li>
+<li>如果路径上还有更小的MTU的路由器，那上面发生的事情还会再发生一次。</li>
+</ul>
+<p><img src="https://mmbiz.qpic.cn/mmbiz_gif/FmVWPHrDdnkibqoGDoqpbongQDojtvSCsMjznqsW0ia89nzNg41m81lAzPBWOHfDp1GP4cKua6Un8noZEFZNwzeA/640?wx_fmt=gif&amp;tp=webp&amp;wxfrom=5&amp;wx_lazy=1" alt="获得pmtu后的TCP重传"></p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><ul>
+<li>数据在TCP分段，在IP层就不需要分片，同时发生重传的时候只重传分段后的小份数据</li>
+<li>TCP分段时使用MSS，IP分片时使用MTU</li>
+<li>MSS是通过MTU计算得到，在三次握手和发送消息时都有可能产生变化。</li>
+<li>IP分片是<strong>不得已</strong>的行为，尽量不在IP层分片，尤其是链路上中间设备的IP分片。因此，在IPv6中已经禁止中间节点设备对IP报文进行分片，分片只能在链路的最开头和最末尾两端进行。</li>
+<li>建立连接后，路径上节点的MTU值改变时，可以通过PMTU发现更新发送端MTU的值。这种情况下，PMTU发现通过浪费N次发送机会来换取的PMTU，TCP因为有重传可以保证可靠性，在UDP就相当于消息直接丢了。</li>
+</ul>
 
                 
             </div>
@@ -445,8 +566,16 @@
                     
                         <div class="article-tag">
                             
-                                <a href="/tags/http2/">
-                                    <span class="chip bg-color">http2</span>
+                                <a href="/tags/tcp/">
+                                    <span class="chip bg-color">tcp</span>
+                                </a>
+                            
+                                <a href="/tags/%E5%8D%8F%E8%AE%AE/">
+                                    <span class="chip bg-color">协议</span>
+                                </a>
+                            
+                                <a href="/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/">
+                                    <span class="chip bg-color">操作系统</span>
                                 </a>
                             
                         </div>
@@ -496,23 +625,23 @@
             <div class="article-badge left-badge text-color">
                 <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
             <div class="card">
-                <a href="/2021/08/24/http2-xiang-jie-shang/">
+                <a href="/2021/12/21/send-chu-qu-shu-ju-jiu-fa-song-liao-me/">
                     <div class="card-image">
                         
-                        <img src="https://image.fyxemmmm.cn/blog/fj/images/fj-66.jpg" class="responsive-img" alt="http2详解 [上]">
+                        <img src="https://image.fyxemmmm.cn/blog/images/ins-39.jpg" class="responsive-img" alt="send出去, 数据就发送了么?">
                         
-                        <span class="card-title">http2详解 [上]</span>
+                        <span class="card-title">send出去, 数据就发送了么?</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            http2协议详解 上篇
+                            tcp协议的探究 02
                         
                     </div>
                     <div class="publish-info">
                         <span class="publish-date">
-                            <i class="far fa-clock fa-fw icon-date"></i>2021-08-24
+                            <i class="far fa-clock fa-fw icon-date"></i>2021-12-21
                         </span>
                         <span class="publish-author">
                             
@@ -529,8 +658,16 @@
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/http2/">
-                        <span class="chip bg-color">http2</span>
+                    <a href="/tags/tcp/">
+                        <span class="chip bg-color">tcp</span>
+                    </a>
+                    
+                    <a href="/tags/%E5%8D%8F%E8%AE%AE/">
+                        <span class="chip bg-color">协议</span>
+                    </a>
+                    
+                    <a href="/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/">
+                        <span class="chip bg-color">操作系统</span>
                     </a>
                     
                 </div>
@@ -541,26 +678,26 @@
         
         <div class="article col s12 m6" data-aos="fade-up">
             <div class="article-badge right-badge text-color">
-                下一篇&nbsp;<i class="fas fa-chevron-right"></i>
+                本篇&nbsp;<i class="far fa-dot-circle"></i>
             </div>
             <div class="card">
-                <a href="/2021/08/26/http2-xiang-jie-xia/">
+                <a href="/2021/12/27/tcp-wei-shi-me-yao-fen-pian/">
                     <div class="card-image">
                         
-                        <img src="https://image.fyxemmmm.cn/blog/fj/images/fj-16.jpg" class="responsive-img" alt="http2详解 [下]">
+                        <img src="https://image.fyxemmmm.cn/blog/images/ins-9.jpg" class="responsive-img" alt="tcp为什么要分片?">
                         
-                        <span class="card-title">http2详解 [下]</span>
+                        <span class="card-title">tcp为什么要分片?</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            http2协议详解 下篇
+                            tcp协议的探究 03
                         
                     </div>
                     <div class="publish-info">
                             <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2021-08-26
+                                <i class="far fa-clock fa-fw icon-date"></i>2021-12-27
                             </span>
                         <span class="publish-author">
                             
@@ -574,11 +711,20 @@
                         </span>
                     </div>
                 </div>
+
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/http2/">
-                        <span class="chip bg-color">http2</span>
+                    <a href="/tags/tcp/">
+                        <span class="chip bg-color">tcp</span>
+                    </a>
+                    
+                    <a href="/tags/%E5%8D%8F%E8%AE%AE/">
+                        <span class="chip bg-color">协议</span>
+                    </a>
+                    
+                    <a href="/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/">
+                        <span class="chip bg-color">操作系统</span>
                     </a>
                     
                 </div>
@@ -610,6 +756,100 @@
 
 <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/fyxemmmm/fyxemmmm.github.io/libs/codeBlock/codeShrink.js"></script>
 
+
+    </div>
+    <div id="toc-aside" class="expanded col l3 hide-on-med-and-down">
+        <div class="toc-widget card" style="background-color: white;">
+            <div class="toc-title"><i class="far fa-list-alt"></i>&nbsp;&nbsp;目录</div>
+            <div id="toc-content"></div>
+        </div>
+    </div>
+</div>
+
+<!-- TOC 悬浮按钮. -->
+
+<div id="floating-toc-btn" class="hide-on-med-and-down">
+    <a class="btn-floating btn-large bg-color">
+        <i class="fas fa-list-ul"></i>
+    </a>
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/gh/fyxemmmm/fyxemmmm.github.io/libs/tocbot/tocbot.min.js"></script>
+<script>
+    $(function () {
+        tocbot.init({
+            tocSelector: '#toc-content',
+            contentSelector: '#articleContent',
+            headingsOffset: -($(window).height() * 0.4 - 45),
+            collapseDepth: Number('0'),
+            headingSelector: 'h1, h2, h3, h4'
+        });
+
+        // modify the toc link href to support Chinese.
+        let i = 0;
+        let tocHeading = 'toc-heading-';
+        $('#toc-content a').each(function () {
+            $(this).attr('href', '#' + tocHeading + (++i));
+        });
+
+        // modify the heading title id to support Chinese.
+        i = 0;
+        $('#articleContent').children('h1, h2, h3, h4').each(function () {
+            $(this).attr('id', tocHeading + (++i));
+        });
+
+        // Set scroll toc fixed.
+        let tocHeight = parseInt($(window).height() * 0.4 - 64);
+        let $tocWidget = $('.toc-widget');
+        $(window).scroll(function () {
+            let scroll = $(window).scrollTop();
+            /* add post toc fixed. */
+            if (scroll > tocHeight) {
+                $tocWidget.addClass('toc-fixed');
+            } else {
+                $tocWidget.removeClass('toc-fixed');
+            }
+        });
+
+        
+        /* 修复文章卡片 div 的宽度. */
+        let fixPostCardWidth = function (srcId, targetId) {
+            let srcDiv = $('#' + srcId);
+            if (srcDiv.length === 0) {
+                return;
+            }
+
+            let w = srcDiv.width();
+            if (w >= 450) {
+                w = w + 21;
+            } else if (w >= 350 && w < 450) {
+                w = w + 18;
+            } else if (w >= 300 && w < 350) {
+                w = w + 16;
+            } else {
+                w = w + 14;
+            }
+            $('#' + targetId).width(w);
+        };
+
+        // 切换TOC目录展开收缩的相关操作.
+        const expandedClass = 'expanded';
+        let $tocAside = $('#toc-aside');
+        let $mainContent = $('#main-content');
+        $('#floating-toc-btn .btn-floating').click(function () {
+            if ($tocAside.hasClass(expandedClass)) {
+                $tocAside.removeClass(expandedClass).hide();
+                $mainContent.removeClass('l9');
+            } else {
+                $tocAside.addClass(expandedClass).show();
+                $mainContent.addClass('l9');
+            }
+            fixPostCardWidth('artDetail', 'prenext-posts');
+        });
+        
+    });
+</script>
 
     
 
