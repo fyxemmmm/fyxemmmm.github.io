@@ -451,17 +451,17 @@
                 <p>string 是 Go 语言的基础类型，在实际项目中针对字符串的各种操作使用频率也较高。本文就介绍一下在使用 string 时容易犯的一些错误以及如何避免。</p>
 <h4 id=""><a href="#" class="headerlink" title=""></a></h4><p><strong>01 字符串的一些基本概念</strong></p>
 <p>首先我们看下字符串的基本的数据结构：</p>
-<pre class="line-numbers language-none"><code class="language-none">type stringStruct struct {
-    str unsafe.Pointer
-    len int
-}<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+<pre class="line-numbers language-go" data-language="go"><code class="language-go"><span class="token keyword">type</span> stringStruct <span class="token keyword">struct</span> <span class="token punctuation">{</span>
+    str unsafe<span class="token punctuation">.</span>Pointer
+    <span class="token builtin">len</span> <span class="token builtin">int</span>
+<span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
 
 <p>由字符串的数据结构可知，字符串只包含两个成员：</p>
 <ul>
 <li>stringStruct.str：一个指向底层数据的指针</li>
 <li>stringStruct.len：字符串的字节长度，非字符个数。假设，我们定义了一个字符串 “中国”， 如下：</li>
 </ul>
-<pre class="line-numbers language-none"><code class="language-none">a := "中国"<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<pre class="line-numbers language-go" data-language="go"><code class="language-go">a <span class="token operator">:=</span> <span class="token string">"中国"</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 
 <p>因为 Go 语言对源代码默认使用 utf-8 编码方式，utf-8 对” 中 “使用 3 个字节，对应的编码是（我们这里每个字节编码用 10 进制表示）：228 184 173。同样 “国” 的 utf-8 编码是：229 155 189。如下存储示意图：</p>
 <p><img src="https://image.fyxemmmm.cn/blog/images/dir1/zfcdc1-0.jpg"></p>
@@ -471,28 +471,28 @@
 <p>字符集只是将每个字符给了一个唯一的编码而已。而要想在计算机中进行存储，则必须要<strong>通过特定的编码转换成对应的二进制</strong>才行。所以就有了像 ASCII、UTF-8、UTF-16 等这样的编码方式。而在 Go 中默认是使用 UTF-8 字符编码进行编码的。所有 unicode 字符集合和字符编码之间的关系如下图所示：</p>
 <p><img src="https://image.fyxemmmm.cn/blog/images/dir1/zfcdc1-1.jpg"></p>
 <p>我们知道，UTF-8 字符编码是一种变长字节的编码方式，用 1 到 4 个字节对字符进行编码，即最多 4 个字节，按位表示就是 32 位。所以，在 Go 的源码中，我们会看到对 rune 的定义是 int32 的别名：</p>
-<pre class="line-numbers language-none"><code class="language-none">// rune is an alias for int32 and is equivalent to int32 in all ways. It is
-// used, by convention, to distinguish character values from integer values.
-type rune = int32<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<pre class="line-numbers language-go" data-language="go"><code class="language-go"><span class="token comment">// rune is an alias for int32 and is equivalent to int32 in all ways. It is</span>
+<span class="token comment">// used, by convention, to distinguish character values from integer values.</span>
+<span class="token keyword">type</span> <span class="token builtin">rune</span> <span class="token operator">=</span> <span class="token builtin">int32</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
 
 <p>好，有了以上基础知识，我们来看看在使用 string 过程中有哪些需要注意的地方。</p>
 <h4 id="-2"><a href="#-2" class="headerlink" title=""></a></h4><p><strong>03 strings.TrimRight 和 strings.TrimSuffix 的区别</strong></p>
 <p><strong>strings.TrimRight 函数</strong></p>
 <p>该函数的定义如下：</p>
-<pre class="line-numbers language-none"><code class="language-none">func TrimRight(s, cutset string) string<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<pre class="line-numbers language-go" data-language="go"><code class="language-go"><span class="token keyword">func</span> <span class="token function">TrimRight</span><span class="token punctuation">(</span>s<span class="token punctuation">,</span> cutset <span class="token builtin">string</span><span class="token punctuation">)</span> <span class="token builtin">string</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 
 <p>该函数的功能是：从 s 字符串的末尾依次查找每一个字符，如果该字符包含在 cutset 中，则被移除，直到遇到第一个不在 cutset 中的字符。例如：</p>
-<pre class="line-numbers language-none"><code class="language-none">fmt.Println(strings.TrimRight("123abbc", "bac"))<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<pre class="line-numbers language-go" data-language="go"><code class="language-go">fmt<span class="token punctuation">.</span><span class="token function">Println</span><span class="token punctuation">(</span>strings<span class="token punctuation">.</span><span class="token function">TrimRight</span><span class="token punctuation">(</span><span class="token string">"123abbc"</span><span class="token punctuation">,</span> <span class="token string">"bac"</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 
 <p>执行示例代码，会将字符串末尾的 abbc 都去除掉，打印出”123”。执行逻辑如下：</p>
 <p><img src="https://image.fyxemmmm.cn/blog/images/dir1/zfcdc1-2.jpg"></p>
 <p><strong>strings.TrimSuffix 函数</strong></p>
 <p>该函数是将字符串指定的后缀字符串移除。定义如下：</p>
-<pre class="line-numbers language-none"><code class="language-none">func TrimSuffix(s, suffix string) string<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<pre class="line-numbers language-go" data-language="go"><code class="language-go"><span class="token keyword">func</span> <span class="token function">TrimSuffix</span><span class="token punctuation">(</span>s<span class="token punctuation">,</span> suffix <span class="token builtin">string</span><span class="token punctuation">)</span> <span class="token builtin">string</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 
 <p>此函数的实现原理是，从字符串 s 中截取末尾的长度和 suffix 字符串长度相等的子字符串，然后和 suffix 字符串进行比较，如果相等，则将 s 字符串末尾的子字符串移除，如果不等，则返回原来的 s 字符串，该函数只截取一次。</p>
 <p>我们通过如下示例来了解下其执行逻辑：</p>
-<pre class="line-numbers language-none"><code class="language-none">fmt.Println(strings.TrimSuffix("123abab", "ab"))<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<pre class="line-numbers language-go" data-language="go"><code class="language-go">fmt<span class="token punctuation">.</span><span class="token function">Println</span><span class="token punctuation">(</span>strings<span class="token punctuation">.</span><span class="token function">TrimSuffix</span><span class="token punctuation">(</span><span class="token string">"123abab"</span><span class="token punctuation">,</span> <span class="token string">"ab"</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 
 <p>我们注意到，该字符串末尾有两个 ab，但最终只有末尾的一个 ab 被去除掉，保留” 123ab”。执行逻辑如下图所示：</p>
 <p><img src="https://image.fyxemmmm.cn/blog/images/dir1/zfcdc1-3.jpg"></p>
@@ -500,30 +500,30 @@ type rune = int32<span aria-hidden="true" class="line-numbers-rows"><span></span
 <h4 id="-3"><a href="#-3" class="headerlink" title=""></a></h4><p><strong>04 字符串拼接性能问题</strong></p>
 <p>拼接字符串是在项目中经常使用的一个场景。然而，拼接字符串时的性能问题会常常被忽略。性能问题其本质上就是要注意在拼接字符串时<strong>是否会频繁的产生内存分配以及数据拷贝的操作</strong>。</p>
 <p>我们来看一个性能较低的拼接字符串的例子：</p>
-<pre class="line-numbers language-none"><code class="language-none">func concat(ids []string) string {
-    s := ""
-    for _, id := range ids {
-        s += id
-    }
-    return s
-}<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<pre class="line-numbers language-go" data-language="go"><code class="language-go"><span class="token keyword">func</span> <span class="token function">concat</span><span class="token punctuation">(</span>ids <span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token builtin">string</span><span class="token punctuation">)</span> <span class="token builtin">string</span> <span class="token punctuation">{</span>
+    s <span class="token operator">:=</span> <span class="token string">""</span>
+    <span class="token keyword">for</span> <span class="token boolean">_</span><span class="token punctuation">,</span> id <span class="token operator">:=</span> <span class="token keyword">range</span> ids <span class="token punctuation">{</span>
+        s <span class="token operator">+=</span> id
+    <span class="token punctuation">}</span>
+    <span class="token keyword">return</span> s
+<span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
 <p>这段代码执行逻辑上不会有任何问题，但是在进行 s += id 进行拼接时，由于字符串是不可变的，所以每次都会分配新的内存空间，并将两个字符串的内容拷贝到新的空间去，然后再让 s 指向新的空间字符串。由于分配的内存次数多，当然就会对性能造成影响。如下图所示：</p>
 <p><img src="https://image.fyxemmmm.cn/blog/images/dir1/zfcdc1-4.jpg"></p>
 <p>那该如何提高拼接的性能呢？<strong>可以通过 strings.Builder 进行改进。strings.Builder 本质上是分配了一个字节切片，然后通过 append 的操作，将字符串的字节依次加入到该字节切片中。因为切片预分配空间的特性，可参考切片扩容，以有效的减少内存分配的次数，以提高性能。</strong></p>
-<pre class="line-numbers language-none"><code class="language-none">func concat(ids []string) string {
-    sb := strings.Builder{} 
-    for _, id := range ids {
-        _, _ = sb.WriteString(id) 
-    }
-    return sb.String() 
-}<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<pre class="line-numbers language-go" data-language="go"><code class="language-go"><span class="token keyword">func</span> <span class="token function">concat</span><span class="token punctuation">(</span>ids <span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token builtin">string</span><span class="token punctuation">)</span> <span class="token builtin">string</span> <span class="token punctuation">{</span>
+    sb <span class="token operator">:=</span> strings<span class="token punctuation">.</span>Builder<span class="token punctuation">{</span><span class="token punctuation">}</span> 
+    <span class="token keyword">for</span> <span class="token boolean">_</span><span class="token punctuation">,</span> id <span class="token operator">:=</span> <span class="token keyword">range</span> ids <span class="token punctuation">{</span>
+        <span class="token boolean">_</span><span class="token punctuation">,</span> <span class="token boolean">_</span> <span class="token operator">=</span> sb<span class="token punctuation">.</span><span class="token function">WriteString</span><span class="token punctuation">(</span>id<span class="token punctuation">)</span> 
+    <span class="token punctuation">}</span>
+    <span class="token keyword">return</span> sb<span class="token punctuation">.</span><span class="token function">String</span><span class="token punctuation">(</span><span class="token punctuation">)</span> 
+<span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
 <p>我们看下 strings.Builder 的数据结构：</p>
-<pre class="line-numbers language-none"><code class="language-none">type Builder struct {
-    addr *Builder // of receiver, to detect copies by value
-    buf  []byte
-}<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+<pre class="line-numbers language-go" data-language="go"><code class="language-go"><span class="token keyword">type</span> Builder <span class="token keyword">struct</span> <span class="token punctuation">{</span>
+    addr <span class="token operator">*</span>Builder <span class="token comment">// of receiver, to detect copies by value</span>
+    buf  <span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token builtin">byte</span>
+<span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
 
 <p>由此可见，Builder 的结构体中有一个 buf [] byte，当执行 sb.WriteString(id) 方法时，实际上是调用了 append 的方法，将字符串的每个字节都存储到了字节切片 buf 中。如下图所示：</p>
 <p><img src="https://image.fyxemmmm.cn/blog/images/dir1/zfcdc1-5.jpg"></p>
@@ -531,65 +531,65 @@ type rune = int32<span aria-hidden="true" class="line-numbers-rows"><span></span
 <p>如果我们能提前知道要拼接的字符串的长度，我们还可以提前使用Builder 的 Grow 方法来预分配内存，这样在整个字符串拼接过程中只需要分配一次内存就好了，极大的提高了字符串拼接的性能。如下图所示及代码：</p>
 <p><img src="https://image.fyxemmmm.cn/blog/images/dir1/zfcdc1-6.jpg"></p>
 <p>示例代码：</p>
-<pre class="line-numbers language-none"><code class="language-none">func concat(ids []string) string {
-    total := 0
-    for i := 0; i &lt; len(ids); i++ { 
-        total += len(ids[i])
-    }
+<pre class="line-numbers language-go" data-language="go"><code class="language-go"><span class="token keyword">func</span> <span class="token function">concat</span><span class="token punctuation">(</span>ids <span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token builtin">string</span><span class="token punctuation">)</span> <span class="token builtin">string</span> <span class="token punctuation">{</span>
+    total <span class="token operator">:=</span> <span class="token number">0</span>
+    <span class="token keyword">for</span> i <span class="token operator">:=</span> <span class="token number">0</span><span class="token punctuation">;</span> i <span class="token operator">&lt;</span> <span class="token function">len</span><span class="token punctuation">(</span>ids<span class="token punctuation">)</span><span class="token punctuation">;</span> i<span class="token operator">++</span> <span class="token punctuation">{</span> 
+        total <span class="token operator">+=</span> <span class="token function">len</span><span class="token punctuation">(</span>ids<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">)</span>
+    <span class="token punctuation">}</span>
 
-    sb := strings.Builder{}
-    sb.Grow(total) 
-    for _, id := range ids {
-        _, _ = sb.WriteString(id)
-    }
-    return sb.String()
-}<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+    sb <span class="token operator">:=</span> strings<span class="token punctuation">.</span>Builder<span class="token punctuation">{</span><span class="token punctuation">}</span>
+    sb<span class="token punctuation">.</span><span class="token function">Grow</span><span class="token punctuation">(</span>total<span class="token punctuation">)</span> 
+    <span class="token keyword">for</span> <span class="token boolean">_</span><span class="token punctuation">,</span> id <span class="token operator">:=</span> <span class="token keyword">range</span> ids <span class="token punctuation">{</span>
+        <span class="token boolean">_</span><span class="token punctuation">,</span> <span class="token boolean">_</span> <span class="token operator">=</span> sb<span class="token punctuation">.</span><span class="token function">WriteString</span><span class="token punctuation">(</span>id<span class="token punctuation">)</span>
+    <span class="token punctuation">}</span>
+    <span class="token keyword">return</span> sb<span class="token punctuation">.</span><span class="token function">String</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
 <p><strong>strings.Builder 的使用场景一般是在循环中对字符串进行拼接</strong>，如果只是拼接两个或少数几个字符串的话，推荐使用 “+”操作符，例如: s := s1 + s2 + s3，该操作并非每个 + 操作符都计算一次长度，而是会首先<strong>计算三个字符串的总长度</strong>，然后分配对应的内存，再将三个字符串都拷贝到新申请的内存中去。</p>
 <h4 id="-4"><a href="#-4" class="headerlink" title=""></a></h4><p><strong>05 无用字符串的转换</strong></p>
 <p>我们在实际项目中往往会遇到这种场景：是选择字节切片还是字符串的场景。而大多数程序员会倾向于选择字符串。但是，很多 IO 的操作实际上是使用字节切片的。其实，bytes 包中也有很多和 strings 包中相同操作的函数。</p>
 <p>我们看这样一个例子：实现一个 getBytes 函数，该函数接收一个 io.Reader 参数作为读取的数据源，然后调用 sanitize 函数，该函数的作用是去除字符串内容两端的空白字符。我们看下第一个实现：</p>
-<pre class="line-numbers language-none"><code class="language-none">func getBytes(reader io.Reader) ([]byte, error) {
- b, err := io.ReadAll(reader)
- if err != nil {
- return nil, err
- }
- // Call sanitize
- return []byte(sanitize(string(b))), nil
-}<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<pre class="line-numbers language-go" data-language="go"><code class="language-go"><span class="token keyword">func</span> <span class="token function">getBytes</span><span class="token punctuation">(</span>reader io<span class="token punctuation">.</span>Reader<span class="token punctuation">)</span> <span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token builtin">byte</span><span class="token punctuation">,</span> <span class="token builtin">error</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+ b<span class="token punctuation">,</span> err <span class="token operator">:=</span> io<span class="token punctuation">.</span><span class="token function">ReadAll</span><span class="token punctuation">(</span>reader<span class="token punctuation">)</span>
+ <span class="token keyword">if</span> err <span class="token operator">!=</span> <span class="token boolean">nil</span> <span class="token punctuation">{</span>
+ <span class="token keyword">return</span> <span class="token boolean">nil</span><span class="token punctuation">,</span> err
+ <span class="token punctuation">}</span>
+ <span class="token comment">// Call sanitize</span>
+ <span class="token keyword">return</span> <span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token function">byte</span><span class="token punctuation">(</span><span class="token function">sanitize</span><span class="token punctuation">(</span><span class="token function">string</span><span class="token punctuation">(</span>b<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token boolean">nil</span>
+<span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
 <p>函数 sanitize 接收一个字符串类型的参数的实现：</p>
-<pre class="line-numbers language-none"><code class="language-none">func sanitize(s string) string {
- return strings.TrimSpace(s)
-}<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<pre class="line-numbers language-go" data-language="go"><code class="language-go"><span class="token keyword">func</span> <span class="token function">sanitize</span><span class="token punctuation">(</span>s <span class="token builtin">string</span><span class="token punctuation">)</span> <span class="token builtin">string</span> <span class="token punctuation">{</span>
+ <span class="token keyword">return</span> strings<span class="token punctuation">.</span><span class="token function">TrimSpace</span><span class="token punctuation">(</span>s<span class="token punctuation">)</span>
+<span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
 
 <p>这其实是将<strong>字节切片先转换成了字符串，然后又将字符串转换成字节切片</strong>返回了。其实，在 bytes 包中有同样的去除空格的函数<strong>bytes.TrimSpace</strong>，使用该函数就避免了对字节切片到字符串多余的转换。</p>
-<pre class="line-numbers language-none"><code class="language-none">func sanitize(s []byte) []byte {
-    return bytes.TrimSpace(s)
-}<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<pre class="line-numbers language-go" data-language="go"><code class="language-go"><span class="token keyword">func</span> <span class="token function">sanitize</span><span class="token punctuation">(</span>s <span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token builtin">byte</span><span class="token punctuation">)</span> <span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token builtin">byte</span> <span class="token punctuation">{</span>
+    <span class="token keyword">return</span> bytes<span class="token punctuation">.</span><span class="token function">TrimSpace</span><span class="token punctuation">(</span>s<span class="token punctuation">)</span>
+<span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
 
 <h4 id="-5"><a href="#-5" class="headerlink" title=""></a></h4><p><strong>06 子字符串操作及内存泄露</strong></p>
 <p>字符串的切分也会跟切片的切分一样，可能会造成内存泄露。下面我们看一个例子：有一个 handleLog 的函数，接收一个 string 类型的参数 log，假设 log 的前 4 个字节存储的是 log 的 message 类型值，我们需要从 log 中提取出 message 类型，并存储到内存中。下面是相关代码：</p>
-<pre class="line-numbers language-none"><code class="language-none">func (s store) handleLog(log string) error {
-    if len(log) &lt; 4 {
-        return errors.New("log is not correctly formatted")
-    }
-    message := log[:4]
-    s.store(message)
-    // Do something
-}<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<pre class="line-numbers language-go" data-language="go"><code class="language-go"><span class="token keyword">func</span> <span class="token punctuation">(</span>s store<span class="token punctuation">)</span> <span class="token function">handleLog</span><span class="token punctuation">(</span>log <span class="token builtin">string</span><span class="token punctuation">)</span> <span class="token builtin">error</span> <span class="token punctuation">{</span>
+    <span class="token keyword">if</span> <span class="token function">len</span><span class="token punctuation">(</span>log<span class="token punctuation">)</span> <span class="token operator">&lt;</span> <span class="token number">4</span> <span class="token punctuation">{</span>
+        <span class="token keyword">return</span> errors<span class="token punctuation">.</span><span class="token function">New</span><span class="token punctuation">(</span><span class="token string">"log is not correctly formatted"</span><span class="token punctuation">)</span>
+    <span class="token punctuation">}</span>
+    message <span class="token operator">:=</span> log<span class="token punctuation">[</span><span class="token punctuation">:</span><span class="token number">4</span><span class="token punctuation">]</span>
+    s<span class="token punctuation">.</span><span class="token function">store</span><span class="token punctuation">(</span>message<span class="token punctuation">)</span>
+    <span class="token comment">// Do something</span>
+<span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
 <p>我们使用 log[:4] 的方式提取出了 message，那么该实现有什么问题吗？我们假设参数 log 是一个包含成千上万个字符的字符串。当我们使用 log[:4] 操作时，实际上是返回了一个字节切片，该切片的长度是 4，而容量则是 log 字符串的整体长度。那么实际上我们存储的 message 不是包含 4 个字节的空间，而是整个 log 字符串长度的空间。所以就有可能会造成内存泄露。如下图所示：</p>
 <p><img src="https://image.fyxemmmm.cn/blog/images/dir1/zfcdc1-7.jpg"></p>
 <p>那怎么避免呢？使用拷贝。将 uuid 提取后拷贝到一个字节切片中，这时该字节切片的长度和容量都是 36。如下：</p>
-<pre class="line-numbers language-none"><code class="language-none">func (s store) handleLog(log string) error {
- if len(log) &lt; 36 {
- return errors.New("log is not correctly formatted")
- }
- uuid := string([]byte(log[:36])) 
- s.store(uuid)
- // Do something
-}<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<pre class="line-numbers language-go" data-language="go"><code class="language-go"><span class="token keyword">func</span> <span class="token punctuation">(</span>s store<span class="token punctuation">)</span> <span class="token function">handleLog</span><span class="token punctuation">(</span>log <span class="token builtin">string</span><span class="token punctuation">)</span> <span class="token builtin">error</span> <span class="token punctuation">{</span>
+ <span class="token keyword">if</span> <span class="token function">len</span><span class="token punctuation">(</span>log<span class="token punctuation">)</span> <span class="token operator">&lt;</span> <span class="token number">36</span> <span class="token punctuation">{</span>
+ <span class="token keyword">return</span> errors<span class="token punctuation">.</span><span class="token function">New</span><span class="token punctuation">(</span><span class="token string">"log is not correctly formatted"</span><span class="token punctuation">)</span>
+ <span class="token punctuation">}</span>
+ uuid <span class="token operator">:=</span> <span class="token function">string</span><span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token function">byte</span><span class="token punctuation">(</span>log<span class="token punctuation">[</span><span class="token punctuation">:</span><span class="token number">36</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">)</span> 
+ s<span class="token punctuation">.</span><span class="token function">store</span><span class="token punctuation">(</span>uuid<span class="token punctuation">)</span>
+ <span class="token comment">// Do something</span>
+<span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
 
 <p><strong>07 小结</strong> </p>

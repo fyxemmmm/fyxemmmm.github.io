@@ -586,7 +586,7 @@
 
 <p>看来我们分析的没错，全局变量在两个线程分别加1后最终变为3。</p>
 <p>接下来我们对变量a的定义稍作修改，其它代码不做改动：</p>
-<pre class="line-numbers language-none"><code class="language-none">__thread int a = 1; // 线程局部存储<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<pre class="line-numbers language-c" data-language="c"><code class="language-c">__thread <span class="token keyword">int</span> a <span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">;</span> <span class="token comment">// 线程局部存储</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 
 <p>我们看到全局变量a前面加了一个__thread关键词用来修饰，也就是说我们告诉编译器把变量a放在线程局部存储中，那这会对程序带来哪些改变呢？</p>
 <p>简单运行一下就知道了：</p>
