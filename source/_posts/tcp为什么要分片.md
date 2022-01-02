@@ -196,7 +196,7 @@ $cat /proc/sys/net/ipv4/ip_no_pmtu_disc
 - 因为TCP的可靠性，会尝试重传这个消息，同时以这个新MTU值计算出MSS进行分段，此时新的IP包就可以顺利被刚才的路由器转发。
 - 如果路径上还有更小的MTU的路由器，那上面发生的事情还会再发生一次。
 
-![获得pmtu后的TCP重传](https://mmbiz.qpic.cn/mmbiz_gif/FmVWPHrDdnkibqoGDoqpbongQDojtvSCsMjznqsW0ia89nzNg41m81lAzPBWOHfDp1GP4cKua6Un8noZEFZNwzeA/640?wx_fmt=gif&tp=webp&wxfrom=5&wx_lazy=1)
+![获得pmtu后的TCP重传](https://image.fyxemmmm.cn/blog/images/dir1/tcp03-12.jpg)
 
 ### 总结
 
