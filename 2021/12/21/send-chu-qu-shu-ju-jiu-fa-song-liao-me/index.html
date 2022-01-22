@@ -571,7 +571,7 @@ tcp        0     60 172.22.66.69:22         122.14.220.252:59889    ESTABLISHED<
 <h3 id="如果socket缓冲区还有数据，执行close了，会怎么样？"><a href="#如果socket缓冲区还有数据，执行close了，会怎么样？" class="headerlink" title="如果socket缓冲区还有数据，执行close了，会怎么样？"></a>如果socket缓冲区还有数据，执行close了，会怎么样？</h3><p>首先我们要知道，<strong>一般正常情况下，发送缓冲区和接收缓冲区 都应该是空的。</strong></p>
 <p>如果发送、接收缓冲区长时间非空，说明有数据堆积，这往往是由于一些网络问题或用户应用层问题，导致数据没有正常处理。</p>
 <p>那么正常情况下，如果 <code>socket</code> 缓冲区<strong>为空</strong>，执行 <code>close</code>。就会触发四次挥手。</p>
-<p><img src="https://mmbiz.qpic.cn/mmbiz_png/FmVWPHrDdnlQB0CrBiboEZGfE8keHGEsjSfT17HEmqQ3YnuSic8aL9XJhGOEgdXkB14txCYzPSqjR8NDu0up6nRA/640?wx_fmt=png&amp;tp=webp&amp;wxfrom=5&amp;wx_lazy=1&amp;wx_co=1" alt="图片">TCP四次挥手</p>
+<p><img src="https://image.fyxemmmm.cn/blog/images/dir1/tcp02-11.jpg" alt="TCP四次挥手"></p>
 <p>这个也是面试老八股文内容了，<strong>这里我们只需要关注第一次挥手，发的是 <code>FIN</code> 就够了</strong>。</p>
 <h4 id="如果接收缓冲区有数据时，执行close了，会怎么样？"><a href="#如果接收缓冲区有数据时，执行close了，会怎么样？" class="headerlink" title="如果接收缓冲区有数据时，执行close了，会怎么样？"></a>如果接收缓冲区有数据时，执行close了，会怎么样？</h4><p><code>socket close</code> 时，主要的逻辑在 <code>tcp_close()</code> 里实现。</p>
 <p>先说结论，关闭过程主要有两种情况：</p>
@@ -600,7 +600,7 @@ tcp        0     60 172.22.66.69:22         122.14.220.252:59889    ESTABLISHED<
     <span class="token function">sk_stream_wait_close</span><span class="token punctuation">(</span>sk<span class="token punctuation">,</span> timeout<span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token punctuation">}</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
-<p><img src="https://mmbiz.qpic.cn/mmbiz_gif/FmVWPHrDdnlQB0CrBiboEZGfE8keHGEsjjP4WDVfnF2bmf32kZ6icQHfOa8OibmS5MZG9TFMQ96GNltYibOFDGFTkg/640?wx_fmt=gif&amp;tp=webp&amp;wxfrom=5&amp;wx_lazy=1" alt="图片">recvbuf非空</p>
+<p><img src="https://image.fyxemmmm.cn/blog/images/dir1/tcp02-12.jpg" alt="recvbuf非空"></p>
 <h4 id="如果发送缓冲区有数据时，执行close了，会怎么样？"><a href="#如果发送缓冲区有数据时，执行close了，会怎么样？" class="headerlink" title="如果发送缓冲区有数据时，执行close了，会怎么样？"></a>如果发送缓冲区有数据时，执行close了，会怎么样？</h4><p>以前以为，这种情况下，内核会把发送缓冲区数据清空，然后四次挥手。</p>
 <p>但是发现源码<strong>并不是这样的</strong>。</p>
 <pre class="line-numbers language-c" data-language="c"><code class="language-c"><span class="token keyword">void</span> <span class="token function">tcp_send_fin</span><span class="token punctuation">(</span><span class="token keyword">struct</span> <span class="token class-name">sock</span> <span class="token operator">*</span>sk<span class="token punctuation">)</span>
@@ -624,7 +624,7 @@ tcp        0     60 172.22.66.69:22         122.14.220.252:59889    ESTABLISHED<
 <p>此时，还有些数据没发出去，内核会把发送缓冲区最后一个数据块拿出来。然后置为 FIN。</p>
 <p><code>socket</code> 缓冲区是个<strong>先进先出</strong>的队列，这种情况是指内核会等待TCP层安静把发送缓冲区数据都发完，最后再执行 四次挥手的第一次挥手（FIN包）。</p>
 <p>有一点需要注意的是，只有在<strong>接收缓冲区为空的前提下</strong>，我们才有可能走到 <code>tcp_send_fin()</code> 。而只有在进入了这个方法之后，我们才有可能考虑发送缓冲区是否为空的场景。</p>
-<p><img src="https://mmbiz.qpic.cn/mmbiz_gif/FmVWPHrDdnlQB0CrBiboEZGfE8keHGEsjWnK0M8ibXAAxOl5mudeZcVDYZU0icOfn4WcCME5iaHBdXib3oqZH7kyic1g/640?wx_fmt=gif&amp;tp=webp&amp;wxfrom=5&amp;wx_lazy=1" alt="图片">sendbuf非空</p>
+<p><img src="https://image.fyxemmmm.cn/blog/images/dir1/tcp02-13.jpg" alt="sendbuf非空"></p>
 <h2 id="UDP部分"><a href="#UDP部分" class="headerlink" title="UDP部分"></a>UDP部分</h2><h3 id="UDP也有缓冲区吗"><a href="#UDP也有缓冲区吗" class="headerlink" title="UDP也有缓冲区吗"></a>UDP也有缓冲区吗</h3><p>说完TCP了，我们聊聊UDP。这对好基友，同时都是传输层里的重要协议。既然前面提到TCP有发送、接收缓冲区，那UDP有吗？</p>
 <p>以前我以为。</p>
 <blockquote>
