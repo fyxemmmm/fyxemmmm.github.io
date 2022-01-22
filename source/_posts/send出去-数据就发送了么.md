@@ -218,7 +218,7 @@ int sk_stream_wait_memory(struct sock *sk, long *timeo_p)
 
 那么正常情况下，如果 `socket` 缓冲区**为空**，执行 `close`。就会触发四次挥手。
 
-![图片](https://mmbiz.qpic.cn/mmbiz_png/FmVWPHrDdnlQB0CrBiboEZGfE8keHGEsjSfT17HEmqQ3YnuSic8aL9XJhGOEgdXkB14txCYzPSqjR8NDu0up6nRA/640?wx_fmt=png&tp=webp&wxfrom=5&wx_lazy=1&wx_co=1)TCP四次挥手
+![TCP四次挥手](https://image.fyxemmmm.cn/blog/images/dir1/tcp02-11.jpg)
 
 这个也是面试老八股文内容了，**这里我们只需要关注第一次挥手，发的是 `FIN` 就够了**。
 
@@ -256,7 +256,7 @@ void tcp_close(struct sock *sk, long timeout)
 }
 ```
 
-![图片](https://mmbiz.qpic.cn/mmbiz_gif/FmVWPHrDdnlQB0CrBiboEZGfE8keHGEsjjP4WDVfnF2bmf32kZ6icQHfOa8OibmS5MZG9TFMQ96GNltYibOFDGFTkg/640?wx_fmt=gif&tp=webp&wxfrom=5&wx_lazy=1)recvbuf非空
+![recvbuf非空](https://image.fyxemmmm.cn/blog/images/dir1/tcp02-12.jpg)
 
 
 
@@ -292,7 +292,7 @@ void tcp_send_fin(struct sock *sk)
 
 有一点需要注意的是，只有在**接收缓冲区为空的前提下**，我们才有可能走到 `tcp_send_fin()` 。而只有在进入了这个方法之后，我们才有可能考虑发送缓冲区是否为空的场景。
 
-![图片](https://mmbiz.qpic.cn/mmbiz_gif/FmVWPHrDdnlQB0CrBiboEZGfE8keHGEsjWnK0M8ibXAAxOl5mudeZcVDYZU0icOfn4WcCME5iaHBdXib3oqZH7kyic1g/640?wx_fmt=gif&tp=webp&wxfrom=5&wx_lazy=1)sendbuf非空
+![sendbuf非空](https://image.fyxemmmm.cn/blog/images/dir1/tcp02-13.jpg)
 
 
 
