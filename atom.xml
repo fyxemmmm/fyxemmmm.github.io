@@ -6,7 +6,7 @@
   <link href="https://fyxemmmm.github.io/atom.xml" rel="self"/>
   
   <link href="https://fyxemmmm.github.io/"/>
-  <updated>2022-01-02T15:18:16.595Z</updated>
+  <updated>2022-01-22T03:46:42.967Z</updated>
   <id>https://fyxemmmm.github.io/</id>
   
   <author>
@@ -15,6 +15,116 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>找寻两个文件的公共url</title>
+    <link href="https://fyxemmmm.github.io/2022/01/23/liang-ge-wen-jian-de-gong-gong-url/"/>
+    <id>https://fyxemmmm.github.io/2022/01/23/liang-ge-wen-jian-de-gong-gong-url/</id>
+    <published>2022-01-23T03:44:20.000Z</published>
+    <updated>2022-01-22T03:46:42.967Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;今天，我们来看一道非常经典的面试题目。&lt;/p&gt;
+&lt;p&gt;A文件有32亿个url链接，B文件有64亿个url链接，求A和B中的公共url链接。&lt;/p&gt;
+&lt;p&gt;&lt;img</summary>
+        
+      
+    
+    
+    
+    <category term="通用" scheme="https://fyxemmmm.github.io/categories/%E9%80%9A%E7%94%A8/"/>
+    
+    
+    <category term="公共url" scheme="https://fyxemmmm.github.io/tags/%E5%85%AC%E5%85%B1url/"/>
+    
+    <category term="分治" scheme="https://fyxemmmm.github.io/tags/%E5%88%86%E6%B2%BB/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>高性能短链接服务</title>
+    <link href="https://fyxemmmm.github.io/2022/01/18/gao-xing-neng-duan-lian-jie-fu-wu/"/>
+    <id>https://fyxemmmm.github.io/2022/01/18/gao-xing-neng-duan-lian-jie-fu-wu/</id>
+    <published>2022-01-18T03:37:20.000Z</published>
+    <updated>2022-01-22T03:38:58.790Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h2 id=&quot;前-言&quot;&gt;&lt;a href=&quot;#前-言&quot; class=&quot;headerlink&quot; title=&quot;前 言&quot;&gt;&lt;/a&gt;前</summary>
+        
+      
+    
+    
+    
+    <category term="短链接" scheme="https://fyxemmmm.github.io/categories/%E7%9F%AD%E9%93%BE%E6%8E%A5/"/>
+    
+    
+    <category term="短链接" scheme="https://fyxemmmm.github.io/tags/%E7%9F%AD%E9%93%BE%E6%8E%A5/"/>
+    
+    <category term="哈希" scheme="https://fyxemmmm.github.io/tags/%E5%93%88%E5%B8%8C/"/>
+    
+    <category term="算法" scheme="https://fyxemmmm.github.io/tags/%E7%AE%97%E6%B3%95/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>微信扫码原理</title>
+    <link href="https://fyxemmmm.github.io/2022/01/12/wei-xin-sao-ma-yuan-li/"/>
+    <id>https://fyxemmmm.github.io/2022/01/12/wei-xin-sao-ma-yuan-li/</id>
+    <published>2022-01-12T03:28:46.000Z</published>
+    <updated>2022-01-22T03:30:18.447Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;可能有些同学对于付款码支付这个听起来很陌生，其实这个功能我们可能每天都在被使用。&lt;/p&gt;
+&lt;p&gt;像我们在便利店买个早饭，最后结账时，使用支付宝/微信支付付款。收银员会让我们展示支付宝/微信付款码，然后使用扫码枪获取此码，最后上送给微信/支付宝服务端完成一次扣款。&lt;/p&gt;
+&lt;</summary>
+        
+      
+    
+    
+    
+    <category term="支付" scheme="https://fyxemmmm.github.io/categories/%E6%94%AF%E4%BB%98/"/>
+    
+    
+    <category term="微信扫码" scheme="https://fyxemmmm.github.io/tags/%E5%BE%AE%E4%BF%A1%E6%89%AB%E7%A0%81/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>百亿数据分表</title>
+    <link href="https://fyxemmmm.github.io/2022/01/05/bai-yi-shu-ju-fen-biao/"/>
+    <id>https://fyxemmmm.github.io/2022/01/05/bai-yi-shu-ju-fen-biao/</id>
+    <published>2022-01-05T03:18:10.000Z</published>
+    <updated>2022-01-22T03:29:12.955Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;&lt;strong&gt;当业务规模达到一定规模之后&lt;/strong&gt;，像淘宝日订单量在5000万单以上，美团3000万单以上。数据库面对海量的数据压力，分库分表就是必须进行的操作了。而分库分表之后一些常规的查询可能都会产生问题，最常见的就是比如分页查询的问题。一般我们把分表的字段称</summary>
+        
+      
+    
+    
+    
+    <category term="数据库" scheme="https://fyxemmmm.github.io/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/"/>
+    
+    
+    <category term="分片" scheme="https://fyxemmmm.github.io/tags/%E5%88%86%E7%89%87/"/>
+    
+  </entry>
   
   <entry>
     <title>tcp为什么要分片?</title>
@@ -185,9 +295,9 @@
     <category term="操作系统" scheme="https://fyxemmmm.github.io/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/"/>
     
     
-    <category term="进程" scheme="https://fyxemmmm.github.io/tags/%E8%BF%9B%E7%A8%8B/"/>
-    
     <category term="线程" scheme="https://fyxemmmm.github.io/tags/%E7%BA%BF%E7%A8%8B/"/>
+    
+    <category term="进程" scheme="https://fyxemmmm.github.io/tags/%E8%BF%9B%E7%A8%8B/"/>
     
   </entry>
   
@@ -464,120 +574,6 @@
     
     
     <category term="安全计数" scheme="https://fyxemmmm.github.io/tags/%E5%AE%89%E5%85%A8%E8%AE%A1%E6%95%B0/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>mysql 索引下推</title>
-    <link href="https://fyxemmmm.github.io/2021/09/15/mysql-suo-yin-xia-tui/"/>
-    <id>https://fyxemmmm.github.io/2021/09/15/mysql-suo-yin-xia-tui/</id>
-    <published>2021-09-15T04:59:58.000Z</published>
-    <updated>2021-09-19T05:02:28.552Z</updated>
-    
-    
-      
-      
-        
-        
-    <summary type="html">&lt;p&gt;&lt;strong&gt;回表操作&lt;/strong&gt;&lt;/p&gt;
-&lt;p&gt;对于数据库来说，只要涉及到索引，必然绕不过去回表操作。当然这也是我们今天所讲内容的前置基础。&lt;/p&gt;
-&lt;p&gt;说到回表，我们需要从索引开始说起。别担心，不会长篇大论，这里只是简单讲下主键索引与普通索引，目的是让大家对回</summary>
-        
-      
-    
-    
-    
-    <category term="mysql" scheme="https://fyxemmmm.github.io/categories/mysql/"/>
-    
-    
-    <category term="索引下推" scheme="https://fyxemmmm.github.io/tags/%E7%B4%A2%E5%BC%95%E4%B8%8B%E6%8E%A8/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>golang string与bytes的转换</title>
-    <link href="https://fyxemmmm.github.io/2021/09/11/golang-string-bytes-mi-mi/"/>
-    <id>https://fyxemmmm.github.io/2021/09/11/golang-string-bytes-mi-mi/</id>
-    <published>2021-09-11T06:26:56.000Z</published>
-    <updated>2021-09-19T04:36:51.194Z</updated>
-    
-    
-      
-      
-        
-        
-    <summary type="html">&lt;h2 id=&quot;byte类型&quot;&gt;&lt;a href=&quot;#byte类型&quot; class=&quot;headerlink&quot; title=&quot;byte类型&quot;&gt;&lt;/a&gt;byte类型&lt;/h2&gt;&lt;p&gt;我们看一下官方对&lt;code&gt;byte&lt;/code&gt;的定义：&lt;/p&gt;
-&lt;pre</summary>
-        
-      
-    
-    
-    
-    <category term="golang" scheme="https://fyxemmmm.github.io/categories/golang/"/>
-    
-    
-    <category term="golang" scheme="https://fyxemmmm.github.io/tags/golang/"/>
-    
-    <category term="string" scheme="https://fyxemmmm.github.io/tags/string/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Linux の 文件系统</title>
-    <link href="https://fyxemmmm.github.io/2021/09/09/linux-wen-jian-xi-tong-mi-mi/"/>
-    <id>https://fyxemmmm.github.io/2021/09/09/linux-wen-jian-xi-tong-mi-mi/</id>
-    <published>2021-09-09T15:50:09.000Z</published>
-    <updated>2021-09-09T16:11:55.610Z</updated>
-    
-    
-      
-      
-        
-        
-    <summary type="html">&lt;h2 id=&quot;文件系统&quot;&gt;&lt;a href=&quot;#文件系统&quot; class=&quot;headerlink&quot;</summary>
-        
-      
-    
-    
-    
-    <category term="操作系统" scheme="https://fyxemmmm.github.io/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/"/>
-    
-    
-    <category term="操作系统" scheme="https://fyxemmmm.github.io/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/"/>
-    
-    <category term="文件系统" scheme="https://fyxemmmm.github.io/tags/%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F/"/>
-    
-    <category term="inode" scheme="https://fyxemmmm.github.io/tags/inode/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>图解「进程间通讯」</title>
-    <link href="https://fyxemmmm.github.io/2021/09/07/jie-du-jin-cheng-jian-tong-xun/"/>
-    <id>https://fyxemmmm.github.io/2021/09/07/jie-du-jin-cheng-jian-tong-xun/</id>
-    <published>2021-09-07T15:37:44.000Z</published>
-    <updated>2021-09-19T04:50:15.358Z</updated>
-    
-    
-      
-      
-        
-        
-    <summary type="html">&lt;h2 id=&quot;前言&quot;&gt;&lt;a href=&quot;#前言&quot; class=&quot;headerlink&quot; title=&quot;前言&quot;&gt;&lt;/a&gt;前言&lt;/h2&gt;&lt;blockquote&gt;
-&lt;p&gt;开场小故事&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;p&gt;&lt;img</summary>
-        
-      
-    
-    
-    
-    <category term="操作系统" scheme="https://fyxemmmm.github.io/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/"/>
-    
-    
-    <category term="进程" scheme="https://fyxemmmm.github.io/tags/%E8%BF%9B%E7%A8%8B/"/>
-    
-    <category term="通讯" scheme="https://fyxemmmm.github.io/tags/%E9%80%9A%E8%AE%AF/"/>
     
   </entry>
   
