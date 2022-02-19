@@ -6,7 +6,7 @@
   <link href="https://fyxemmmm.github.io/atom.xml" rel="self"/>
   
   <link href="https://fyxemmmm.github.io/"/>
-  <updated>2022-01-22T03:46:42.967Z</updated>
+  <updated>2022-02-19T17:14:08.004Z</updated>
   <id>https://fyxemmmm.github.io/</id>
   
   <author>
@@ -15,6 +15,84 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>本机网络IO, 性能提升方法</title>
+    <link href="https://fyxemmmm.github.io/2022/02/20/ben-ji-wang-luo-io/"/>
+    <id>https://fyxemmmm.github.io/2022/02/20/ben-ji-wang-luo-io/</id>
+    <published>2022-02-19T17:12:26.000Z</published>
+    <updated>2022-02-19T17:14:08.004Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;今天来看一种本机网络 IO 通信方式 – Unix Domain Socket。看看这种方式在性能开销上和基于 127.0.0.1 的本机网络 IO 有没有啥差异呢。&lt;/p&gt;
+&lt;p&gt;本文中，我们将分析 Unix Domain Socket</summary>
+        
+      
+    
+    
+    
+    <category term="操作系统" scheme="https://fyxemmmm.github.io/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/"/>
+    
+    
+    <category term="网络IO" scheme="https://fyxemmmm.github.io/tags/%E7%BD%91%E7%BB%9CIO/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>计算机时间到底是怎么来的</title>
+    <link href="https://fyxemmmm.github.io/2022/02/11/ji-suan-ji-shi-jian-dao-di-shi-zen-me-lai-de/"/>
+    <id>https://fyxemmmm.github.io/2022/02/11/ji-suan-ji-shi-jian-dao-di-shi-zen-me-lai-de/</id>
+    <published>2022-02-10T17:01:49.000Z</published>
+    <updated>2022-02-19T17:04:16.056Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h1 id=&quot;时间为什么总是走“不准”？&quot;&gt;&lt;a href=&quot;#时间为什么总是走“不准”？&quot; class=&quot;headerlink&quot;</summary>
+        
+      
+    
+    
+    
+    <category term="计算机" scheme="https://fyxemmmm.github.io/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA/"/>
+    
+    
+    <category term="计算机时间" scheme="https://fyxemmmm.github.io/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E6%97%B6%E9%97%B4/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>连接一个 IP 不存在的主机时，握手过程是怎么样的</title>
+    <link href="https://fyxemmmm.github.io/2022/02/02/lian-jie-yi-ge-ip-bu-cun-zai-de-zhu-ji-shi-wo-shou-guo-cheng/"/>
+    <id>https://fyxemmmm.github.io/2022/02/02/lian-jie-yi-ge-ip-bu-cun-zai-de-zhu-ji-shi-wo-shou-guo-cheng/</id>
+    <published>2022-02-01T16:47:42.000Z</published>
+    <updated>2022-02-19T16:52:22.434Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h2 id=&quot;正常情况的握手过程是怎么样的&quot;&gt;&lt;a href=&quot;#正常情况的握手过程是怎么样的&quot; class=&quot;headerlink&quot;</summary>
+        
+      
+    
+    
+    
+    <category term="协议" scheme="https://fyxemmmm.github.io/categories/%E5%8D%8F%E8%AE%AE/"/>
+    
+    
+    <category term="tcp" scheme="https://fyxemmmm.github.io/tags/tcp/"/>
+    
+    <category term="协议" scheme="https://fyxemmmm.github.io/tags/%E5%8D%8F%E8%AE%AE/"/>
+    
+  </entry>
   
   <entry>
     <title>找寻两个文件的公共url</title>
@@ -494,86 +572,6 @@
     <category term="pprof" scheme="https://fyxemmmm.github.io/tags/pprof/"/>
     
     <category term="性能诊断" scheme="https://fyxemmmm.github.io/tags/%E6%80%A7%E8%83%BD%E8%AF%8A%E6%96%AD/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Linux syscall 原理</title>
-    <link href="https://fyxemmmm.github.io/2021/09/30/linux-syscall-yuan-li/"/>
-    <id>https://fyxemmmm.github.io/2021/09/30/linux-syscall-yuan-li/</id>
-    <published>2021-09-30T14:00:45.000Z</published>
-    <updated>2021-10-03T14:34:26.928Z</updated>
-    
-    
-      
-      
-        
-        
-    <summary type="html">&lt;h2 id=&quot;一、Syscall意义&quot;&gt;&lt;a href=&quot;#一、Syscall意义&quot; class=&quot;headerlink&quot;</summary>
-        
-      
-    
-    
-    
-    <category term="操作系统" scheme="https://fyxemmmm.github.io/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/"/>
-    
-    
-    <category term="系统调用" scheme="https://fyxemmmm.github.io/tags/%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Rust 核心概念</title>
-    <link href="https://fyxemmmm.github.io/2021/09/26/rust-suo-you-quan/"/>
-    <id>https://fyxemmmm.github.io/2021/09/26/rust-suo-you-quan/</id>
-    <published>2021-09-26T13:44:34.000Z</published>
-    <updated>2021-10-19T10:50:37.658Z</updated>
-    
-    
-      
-      
-        
-        
-    <summary type="html">&lt;h2 id=&quot;1-前言概述&quot;&gt;&lt;a href=&quot;#1-前言概述&quot; class=&quot;headerlink&quot; title=&quot;1. 前言概述&quot;&gt;&lt;/a&gt;1.</summary>
-        
-      
-    
-    
-    
-    <category term="rust" scheme="https://fyxemmmm.github.io/categories/rust/"/>
-    
-    
-    <category term="所有权" scheme="https://fyxemmmm.github.io/tags/%E6%89%80%E6%9C%89%E6%9D%83/"/>
-    
-    <category term="借用" scheme="https://fyxemmmm.github.io/tags/%E5%80%9F%E7%94%A8/"/>
-    
-    <category term="引用" scheme="https://fyxemmmm.github.io/tags/%E5%BC%95%E7%94%A8/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>golang 安全计数</title>
-    <link href="https://fyxemmmm.github.io/2021/09/19/go-yu-yan-shi-xian-an-quan-ji-shu-de-ruo-gan-chong-fang-fa/"/>
-    <id>https://fyxemmmm.github.io/2021/09/19/go-yu-yan-shi-xian-an-quan-ji-shu-de-ruo-gan-chong-fang-fa/</id>
-    <published>2021-09-19T05:04:54.000Z</published>
-    <updated>2021-09-19T05:07:18.416Z</updated>
-    
-    
-      
-      
-        
-        
-    <summary type="html">&lt;p&gt;本文是一篇如何用 goroutine-safe 的方式实现计数器的方法汇总。&lt;/p&gt;
-&lt;h3 id=&quot;不要这样做&quot;&gt;&lt;a href=&quot;#不要这样做&quot; class=&quot;headerlink&quot;</summary>
-        
-      
-    
-    
-    
-    <category term="golang" scheme="https://fyxemmmm.github.io/categories/golang/"/>
-    
-    
-    <category term="安全计数" scheme="https://fyxemmmm.github.io/tags/%E5%AE%89%E5%85%A8%E8%AE%A1%E6%95%B0/"/>
     
   </entry>
   
